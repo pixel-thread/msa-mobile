@@ -3,15 +3,16 @@ import { ExpoConfig, ConfigContext } from 'expo/config';
 export default ({ config }: ConfigContext): ExpoConfig => {
   const variant = process.env.APP_VARIANT || 'production';
 
+  const ASSOCIATION_SLUG = process.env.EXPO_PUBLIC_ASSOCIATION_SLUG;
+
   const getName = () => {
-    if (variant === 'development') return 'msa (Dev)';
-    if (variant === 'preview') return 'msa (Preview)';
-    return 'msa';
+    if (variant === 'development') return `${ASSOCIATION_SLUG?.toUpperCase()} (Dev)`;
+    if (variant === 'preview') return `${ASSOCIATION_SLUG?.toUpperCase()} (Preview)`;
+    return ASSOCIATION_SLUG?.toUpperCase() || 'MFSA';
   };
 
   const getIdentifier = () => {
-    // TODO: change the dev to .dev
-    if (variant === 'development') return 'com.pixelthread.msa';
+    if (variant === 'development') return 'com.pixelthread.msa.dev';
     if (variant === 'preview') return 'com.pixelthread.msa.preview';
     return 'com.pixelthread.msa';
   };

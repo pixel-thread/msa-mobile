@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import http from '@src/shared/utils/http';
 import type { Meeting } from '../types';
 import { useAuthStore } from '@src/shared/store';
+import { meetingEndpoints } from '../utils/constants';
 
 /**
  * Hook to fetch a single meeting by ID.
@@ -14,7 +15,7 @@ export const useMeeting = (id: string) => {
   return useQuery({
     queryKey: ['meetings', id],
     select: (data) => data?.data,
-    queryFn: async () => http.get<Meeting>(`/meetings/${id}`),
+    queryFn: async () => http.get<Meeting>(meetingEndpoints.detail(id)),
     enabled: isAuthenticated && !!id,
   });
 };

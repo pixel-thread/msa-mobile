@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import http from '@src/shared/utils/http';
 import { useAuthStore } from '@src/shared/store';
 import { MeetingAttendee } from '../types/attendee';
+import { meetingEndpoints } from '../utils/constants';
 
 /**
  * Hook to fetch a single meeting by ID.
@@ -14,7 +15,7 @@ export const useMeetingAttendees = (id: string) => {
   return useQuery({
     queryKey: ['meetings', 'attendees', id],
     select: (data) => data?.data,
-    queryFn: () => http.get<MeetingAttendee[]>(`/meetings/${id}/attendees`),
+    queryFn: () => http.get<MeetingAttendee[]>(meetingEndpoints.attendees(id)),
     enabled: isAuthenticated && !!id,
   });
 };

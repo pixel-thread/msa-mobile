@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import http from '@src/shared/utils/http';
 import type { Meeting } from '../types';
 import { useAuthStore } from '@src/shared/store';
+import { meetingEndpoints } from '../utils/constants';
 
 /**
  * Hook to fetch the list of meetings.
@@ -19,7 +20,7 @@ export const useMeetings = (params?: {
   return useQuery({
     queryKey: ['meetings', params],
     select: (data) => data?.data,
-    queryFn: async () => http.get<Meeting[]>('/meetings', { params }),
+    queryFn: async () => http.get<Meeting[]>(meetingEndpoints.list, { params }),
     enabled: isAuthenticated,
   });
 };

@@ -5,9 +5,6 @@ import Animated, {
   useSharedValue,
   withTiming,
   useDerivedValue,
-  measure,
-  useAnimatedRef,
-  runOnUI,
 } from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
 import { Text } from './text';
@@ -20,19 +17,26 @@ const AccordionContext = React.createContext<{
 
 export const Accordion = ({
   children,
-  value,
-  onValueChange,
+  value: controlledValue,
+  onValueChange: controlledOnValueChange,
   className,
 }: {
   children: React.ReactNode;
   value?: string;
   onValueChange?: (value: string) => void;
   className?: string;
-}) => (
-  <AccordionContext.Provider value={{ value, onValueChange }}>
-    <View className={cn('w-full', className)}>{children}</View>
-  </AccordionContext.Provider>
-);
+}) => {
+  const [internalValue, setInternalValue] = React.useState('');
+  
+  const value = controlledValue !== undefined ? controlledValue : internalValue;
+  const onValueChange = controlledOnValueChange !== undefined ? controlledOnValueChange : setInternalValue;
+
+  return (
+    <AccordionContext.Provider value={{ value, onValueChange }}>
+      <View className={cn('w-full', className)}>{children}</View>
+    </AccordionContext.Provider>
+  );
+};
 
 export const AccordionItem = ({
   children,
@@ -87,7 +91,7 @@ export const AccordionTrigger = ({
         }
       }}
       className={cn('flex-row items-center justify-between py-4', className)}>
-      <Text className="flex-1">{children}</Text>
+      <View className="flex-1">{children}</View>
       <Animated.View style={arrowStyle}>
         <Ionicons name="chevron-down" size={18} color="#64748b" />
       </Animated.View>
@@ -104,26 +108,18 @@ export const AccordionContent = ({
   isOpen?: boolean;
   className?: string;
 }) => {
-  const aref = useAnimatedRef<View>();
   const heightValue = useSharedValue(0);
+  const measuredHeight = useSharedValue(0);
 
-  // Smooth height transition using Reanimated
-  // This is much smoother than LayoutAnimation as it stays on the UI thread
   const animatedStyle = useAnimatedStyle(() => ({
     height: heightValue.value,
-    opacity: heightValue.value === 0 ? 0 : 1,
+    opacity: withTiming(isOpen ? 1 : 0, { duration: 200 }),
     overflow: 'hidden',
   }));
 
   React.useEffect(() => {
     if (isOpen) {
-      // Small delay to allow layout calculation
-      runOnUI(() => {
-        const measured = measure(aref);
-        if (measured) {
-          heightValue.value = withTiming(measured.height, { duration: 300 });
-        }
-      })();
+      heightValue.value = withTiming(measuredHeight.value, { duration: 300 });
     } else {
       heightValue.value = withTiming(0, { duration: 250 });
     }
@@ -132,7 +128,12 @@ export const AccordionContent = ({
   return (
     <Animated.View style={animatedStyle}>
       <View
-        ref={aref}
+        onLayout={(e) => {
+          measuredHeight.value = e.nativeEvent.layout.height;
+          if (isOpen) {
+            heightValue.value = withTiming(e.nativeEvent.layout.height, { duration: 300 });
+          }
+        }}
         className={cn('pb-4 pt-0', className)}
         style={{ position: 'absolute', width: '100%' }}>
         {children}

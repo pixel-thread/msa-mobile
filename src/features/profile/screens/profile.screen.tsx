@@ -16,9 +16,9 @@ import {
   AccordionItem,
   AccordionTrigger,
   AccordionContent,
-  Image
 } from '@src/shared/components/ui';
 import { cn } from '@lib/cn';
+import { truncateText } from '@src/shared/utils/text';
 
 export const ProfileScreen = () => {
   const router = useRouter();
@@ -59,10 +59,9 @@ export const ProfileScreen = () => {
                 {user.name.charAt(0).toUpperCase()}
               </Text>
             </View>
-            <TouchableOpacity 
+            <TouchableOpacity
               activeOpacity={0.8}
-              className="absolute bottom-0 right-0 h-9 w-9 items-center justify-center rounded-full border-4 border-slate-50 bg-slate-100 dark:border-slate-950 dark:bg-slate-800"
-            >
+              className="absolute bottom-0 right-0 h-9 w-9 items-center justify-center rounded-full border-4 border-slate-50 bg-slate-100 dark:border-slate-950 dark:bg-slate-800">
               <Ionicons name="camera" size={16} color="#475569" />
             </TouchableOpacity>
           </View>
@@ -78,26 +77,33 @@ export const ProfileScreen = () => {
         <View className="px-4">
           <Card className="border-slate-100 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
             <CardHeader className="pb-2">
-              <CardTitle size="sm" className="text-slate-400 uppercase tracking-widest">
+              <CardTitle size="sm" className="uppercase tracking-widest text-slate-400">
                 Account Information
               </CardTitle>
             </CardHeader>
             <CardContent className="gap-y-4">
               <InfoItem icon="briefcase-outline" label="Role" value={user.role} />
-              <InfoItem 
-                icon="shield-checkmark-outline" 
-                label="MFA Status" 
-                value={user.mfaEnabled ? 'Enabled' : 'Disabled'} 
+              <InfoItem
+                icon="shield-checkmark-outline"
+                label="MFA Status"
+                value={user.mfaEnabled ? 'Enabled' : 'Disabled'}
                 valueClassName={user.mfaEnabled ? 'text-emerald-600' : 'text-slate-400'}
               />
-              <InfoItem icon="finger-print-outline" label="User ID" value={user.id} />
+              <InfoItem
+                icon="finger-print-outline"
+                label="User ID"
+                value={truncateText({ text: user.id, maxLength: 20 })}
+              />
             </CardContent>
           </Card>
         </View>
 
         {/* Preferences & Settings */}
         <View className="mt-6 px-4">
-          <Text variant="label" className="mb-3 ml-1 text-slate-400 uppercase tracking-widest" size="xs">
+          <Text
+            variant="label"
+            className="mb-3 ml-1 uppercase tracking-widest text-slate-400"
+            size="xs">
             Preferences
           </Text>
           <Card className="border-slate-100 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
@@ -111,7 +117,8 @@ export const ProfileScreen = () => {
                 </AccordionTrigger>
                 <AccordionContent>
                   <Text variant="subtext" size="sm">
-                    Configure how you receive updates about meetings and institutional announcements.
+                    Configure how you receive updates about meetings and institutional
+                    announcements.
                   </Text>
                   <Button variant="outline" size="sm" title="Manage Alerts" className="mt-3 h-10" />
                 </AccordionContent>
@@ -128,7 +135,12 @@ export const ProfileScreen = () => {
                   <Text variant="subtext" size="sm">
                     Update your password, manage MFA devices, and view active sessions.
                   </Text>
-                  <Button variant="outline" size="sm" title="Security Settings" className="mt-3 h-10" />
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    title="Security Settings"
+                    className="mt-3 h-10"
+                  />
                 </AccordionContent>
               </AccordionItem>
 
@@ -143,7 +155,12 @@ export const ProfileScreen = () => {
                   <Text variant="subtext" size="sm">
                     Get assistance with your account or report issues with the application.
                   </Text>
-                  <Button variant="outline" size="sm" title="Contact Support" className="mt-3 h-10" />
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    title="Contact Support"
+                    className="mt-3 h-10"
+                  />
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
@@ -152,17 +169,18 @@ export const ProfileScreen = () => {
 
         {/* Action Section */}
         <View className="mt-10 px-4 pb-12">
-          <Button 
-            variant="destructive" 
+          <Button
+            variant="destructive"
             onPress={handleLogout}
-            className="h-14 rounded-2xl shadow-lg shadow-red-100 dark:shadow-none"
-          >
+            className="h-14 rounded-2xl shadow-lg shadow-red-100 dark:shadow-none">
             <View className="flex-row items-center gap-x-2">
               <Ionicons name="log-out-outline" size={20} color="white" />
-              <Text weight="bold" className="text-white">Logout from System</Text>
+              <Text weight="bold" className="text-white">
+                Logout from System
+              </Text>
             </View>
           </Button>
-          
+
           <View className="mt-8 items-center">
             <View className="rounded-full bg-slate-100 px-3 py-1 dark:bg-slate-800">
               <Text variant="subtext" size="xs" weight="medium">
@@ -179,30 +197,31 @@ export const ProfileScreen = () => {
   );
 };
 
-const InfoItem = ({ 
-  icon, 
-  label, 
-  value, 
-  valueClassName 
-}: { 
-  icon: keyof typeof Ionicons.glyphMap, 
-  label: string, 
-  value: string,
-  valueClassName?: string 
+const InfoItem = ({
+  icon,
+  label,
+  value,
+  valueClassName,
+}: {
+  icon: keyof typeof Ionicons.glyphMap;
+  label: string;
+  value: string;
+  valueClassName?: string;
 }) => (
   <View className="flex-row items-center justify-between py-1">
     <View className="flex-row items-center gap-x-3">
       <View className="h-9 w-9 items-center justify-center rounded-xl bg-slate-50 dark:bg-slate-800">
         <Ionicons name={icon} size={18} color="#64748b" />
       </View>
-      <Text variant="label" className="text-slate-500">{label}</Text>
+      <Text variant="label" className="text-slate-500">
+        {label}
+      </Text>
     </View>
-    <Text 
-      weight="semibold" 
-      size="sm" 
+    <Text
+      weight="semibold"
+      size="sm"
       className={cn('text-slate-900 dark:text-slate-100', valueClassName)}
-      numberOfLines={1}
-    >
+      numberOfLines={1}>
       {value}
     </Text>
   </View>

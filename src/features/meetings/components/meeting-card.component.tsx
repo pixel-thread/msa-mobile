@@ -2,8 +2,8 @@ import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import type { Meeting } from '../types';
-import { formattedDate, formattedTime } from '@src/shared/utils/format';
-import { Card, CardContent, CardFooter, Text, Button } from '@src/shared/components/ui';
+import { formattedDate, formattedTime } from '@utils/format';
+import { Card, CardContent, Text } from '@components/ui';
 import { cn } from '@lib/cn';
 import { useRouter } from 'expo-router';
 
@@ -14,7 +14,6 @@ interface MeetingCardProps {
 export const MeetingCard = ({ meeting }: MeetingCardProps) => {
   const date = new Date(meeting.scheduledAt);
   const router = useRouter();
-  console.log(JSON.stringify(meeting, null, 2));
   const onPress = () => {
     router.push(`/meetings/${meeting.id}`);
   };
@@ -109,22 +108,6 @@ export const MeetingCard = ({ meeting }: MeetingCardProps) => {
             </View>
           </CardContent>
         </TouchableOpacity>
-
-        <CardFooter className="flex-row gap-x-3 px-4 pb-4 pt-0">
-          <Button
-            title="Accept Invitation"
-            size="sm"
-            className="h-10 flex-1 rounded-xl bg-indigo-600"
-            onPress={() => {}}
-          />
-          <Button
-            title="Decline"
-            variant="outline"
-            size="sm"
-            className="h-10 flex-1 rounded-xl"
-            onPress={() => {}}
-          />
-        </CardFooter>
       </Card>
     </View>
   );

@@ -3,11 +3,7 @@ import { View, ScrollView, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '@src/shared/store';
 import { Container, StackHeader } from '@src/shared/components';
-import {
-  Card,
-  CardContent,
-  Text,
-} from '@src/shared/components/ui';
+import { Card, CardContent, Text } from '@src/shared/components/ui';
 import { cn } from '@lib/cn';
 import { useRouter } from 'expo-router';
 import { useMeetings } from '@src/features/meetings/hooks';
@@ -23,7 +19,7 @@ export const DashboardScreen = () => {
 
   return (
     <Container className="bg-slate-50 dark:bg-slate-950">
-      <StackHeader title="Dashboard" showBackButton={false} />
+      <StackHeader title="Dashboard" showDrawerButton />
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         {/* Welcome Section */}
         <View className="px-4 pb-8 pt-6">
@@ -67,33 +63,41 @@ export const DashboardScreen = () => {
             <Text variant="heading" size="lg" className="mb-4 px-1 text-slate-900 dark:text-white">
               Next Briefing
             </Text>
-            <TouchableOpacity 
+            <TouchableOpacity
               activeOpacity={0.9}
-              onPress={() => router.push(`/(protected)/meetings/${nextMeeting.id}`)}
-            >
+              onPress={() => router.push(`/(protected)/meetings/${nextMeeting.id}`)}>
               <Card className="border-indigo-100 bg-indigo-50/30 shadow-sm dark:border-indigo-900/30 dark:bg-indigo-950/10">
                 <CardContent className="p-5">
-                  <View className="flex-row items-center justify-between mb-4">
+                  <View className="mb-4 flex-row items-center justify-between">
                     <View className="rounded-full bg-indigo-600 px-3 py-1">
-                      <Text weight="bold" size="xs" className="text-white uppercase tracking-tighter">
+                      <Text
+                        weight="bold"
+                        size="xs"
+                        className="uppercase tracking-tighter text-white">
                         Upcoming
                       </Text>
                     </View>
                     <Ionicons name="arrow-forward" size={18} color="#4f46e5" />
                   </View>
-                  <Text variant="heading" size="xl" className="text-slate-900 dark:text-white mb-2">
+                  <Text variant="heading" size="xl" className="mb-2 text-slate-900 dark:text-white">
                     {nextMeeting.title}
                   </Text>
                   <View className="flex-row items-center gap-x-4">
                     <View className="flex-row items-center gap-x-1.5">
                       <Ionicons name="calendar-outline" size={16} color="#6366f1" />
-                      <Text weight="semibold" size="sm" className="text-indigo-700 dark:text-indigo-400">
+                      <Text
+                        weight="semibold"
+                        size="sm"
+                        className="text-indigo-700 dark:text-indigo-400">
                         {formattedDate(new Date(nextMeeting.scheduledAt))}
                       </Text>
                     </View>
                     <View className="flex-row items-center gap-x-1.5">
                       <Ionicons name="time-outline" size={16} color="#6366f1" />
-                      <Text weight="semibold" size="sm" className="text-indigo-700 dark:text-indigo-400">
+                      <Text
+                        weight="semibold"
+                        size="sm"
+                        className="text-indigo-700 dark:text-indigo-400">
                         {formattedTime(new Date(nextMeeting.scheduledAt))}
                       </Text>
                     </View>

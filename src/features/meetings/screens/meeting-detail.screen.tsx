@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, ScrollView, RefreshControl, TouchableOpacity, Share } from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useMeeting } from '../hooks';
 import { LoadingScreen, ErrorScreen } from '@src/shared/components/screens';
@@ -19,17 +19,23 @@ import {
 import { formattedDate, formattedTime } from '@src/shared/utils/format';
 import { cn } from '@lib/cn';
 import { logger } from '@src/shared/utils/logger';
+import { useMeetingAttendees } from '../hooks/useMeetingAttendees';
+import { useMeetingAgenda } from '../hooks/useMeetingAgenda';
+import { useAuthStore } from '@src/features/auth';
 
 export const MeetingDetailScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const { user } = useAuthStore();
   const { data: meeting, isLoading, isError, refetch, isRefetching } = useMeeting(id as string);
+  const { data: attendees = [] } = useMeetingAttendees(id as string);
+  const { data: agenda = [] } = useMeetingAgenda(id as string);
 
   if (isLoading) return <LoadingScreen message="Loading meeting details..." />;
 
   if (isError || !meeting) {
     return (
       <>
-        <StackHeader title="Meeting Details" />
+        <StackHeader showBackButton title="Meeting Details" />
         <ErrorScreen
           title="Meeting Not Found"
           message="The meeting details could not be retrieved. It may have been cancelled or moved."
@@ -54,6 +60,7 @@ export const MeetingDetailScreen = () => {
   return (
     <Container className="bg-slate-50 dark:bg-slate-950">
       <StackHeader
+        showBackButton
         title="Meeting Details"
         rightAction={
           <TouchableOpacity onPress={handleShare} className="mr-2">
@@ -109,7 +116,7 @@ export const MeetingDetailScreen = () => {
         </View>
 
         {/* Quick Info Grid */}
-        <View className="flex-row flex-wrap gap-4 px-4">
+        <View className="flex-1 flex-row flex-wrap gap-4 px-4">
           <InfoCard
             icon="calendar"
             label="Date"
@@ -126,33 +133,38 @@ export const MeetingDetailScreen = () => {
             icon="location"
             label="Location"
             value={meeting.venue || 'To be announced'}
-            className="w-full"
+            className="w-[45%]"
           />
         </View>
 
         {/* Agenda Section */}
-        {meeting.agenda && meeting.agenda.length > 0 && (
+        {agenda && agenda.length > 0 && (
           <View className="mt-8 px-4">
             <Text variant="heading" size="lg" className="mb-4 px-1 text-slate-900 dark:text-white">
               Order of Business
             </Text>
             <Card className="border-slate-100 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
               <CardContent className="p-0">
-                {meeting.agenda.map((item, index) => (
+                {agenda?.map((item, index) => (
                   <View
                     key={index}
                     className={cn(
-                      'flex-row gap-x-4 p-4',
-                      index !== meeting.agenda!.length - 1 &&
+                      'flex-1 flex-col gap-x-4 p-4',
+                      index !== agenda.length - 1 &&
                         'border-b border-slate-50 dark:border-slate-800'
                     )}>
-                    <View className="h-6 w-6 items-center justify-center rounded-full bg-slate-50 dark:bg-slate-800">
-                      <Text size="xs" weight="bold" className="text-slate-400">
-                        {index + 1}
+                    <View className="flex-row">
+                      <View className="h-6 w-6 items-center justify-center rounded-full bg-slate-50 dark:bg-slate-800">
+                        <Text size="xs" weight="bold" className="text-slate-400">
+                          {index + 1}
+                        </Text>
+                      </View>
+                      <Text className="flex-1 leading-tight text-slate-700 dark:text-slate-300">
+                        {item.title}
                       </Text>
                     </View>
-                    <Text className="flex-1 leading-tight text-slate-700 dark:text-slate-300">
-                      {item}
+                    <Text className="ml-6 flex-1 leading-tight text-slate-700 dark:text-slate-300">
+                      {item.description}
                     </Text>
                   </View>
                 ))}
@@ -170,23 +182,26 @@ export const MeetingDetailScreen = () => {
             <Accordion className="px-4">
               <AccordionItem value="attendees">
                 <AccordionTrigger>
-                  <View className="flex-row items-center gap-x-3">
-                    <Ionicons name="people-outline" size={20} color="#6366f1" />
-                    <Text weight="medium">Registered Attendees</Text>
-                  </View>
+                  <Text>Registered Attendees</Text>
                 </AccordionTrigger>
                 <AccordionContent>
-                  <View className="flex-row items-center justify-between py-2">
-                    <Text variant="subtext" size="sm">
-                      Confirmed headcount
-                    </Text>
-                  </View>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    title="View Full Roster"
-                    className="mt-2 h-10"
-                  />
+                  {attendees?.map((attendee, index) => (
+                    <View key={index} className="flex-row items-center justify-between py-2">
+                      <View className="flex-row items-center gap-x-3">
+                        <View className="h-10 w-10 items-center justify-center rounded-full bg-slate-50 dark:bg-slate-800">
+                          <Text size="xs" weight="bold" className="text-slate-400">
+                            {index + 1}
+                          </Text>
+                        </View>
+                        <Text className="flex-1 leading-tight text-slate-700 dark:text-slate-300">
+                          {attendee.user.name}
+                        </Text>
+                      </View>
+                      <View className="flex-row items-center gap-x-3">
+                        <Text variant={'heading'}>{attendee.rsvpStatus}</Text>
+                      </View>
+                    </View>
+                  ))}
                 </AccordionContent>
               </AccordionItem>
 
@@ -233,7 +248,11 @@ export const MeetingDetailScreen = () => {
 
           <View className="flex-row gap-x-4">
             <Button
-              title="Confirm Attendance"
+              title={
+                attendees?.some((a) => a.user.id === user?.id && a.rsvpStatus === 'PENDING')
+                  ? 'Update Attendance'
+                  : 'Confirm Attendance'
+              }
               className="h-14 flex-[2] rounded-2xl bg-indigo-600 shadow-lg shadow-indigo-100 dark:shadow-none"
             />
             <Button
@@ -242,7 +261,6 @@ export const MeetingDetailScreen = () => {
               className="h-14 flex-1 rounded-2xl"
             />
           </View>
-
           <View className="mt-8 items-center">
             <Text variant="subtext" size="xs" className="opacity-50">
               Reference ID: {meeting.id.toUpperCase()}
@@ -270,7 +288,7 @@ const InfoCard = ({
       'border-slate-100 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900',
       className
     )}>
-    <CardContent className="flex-row items-center gap-x-3 p-4">
+    <CardContent className="flex-row items-center justify-center gap-x-3 p-4">
       <View className="h-10 w-10 items-center justify-center rounded-2xl bg-slate-50 dark:bg-slate-800">
         <Ionicons name={icon} size={20} color="#64748b" />
       </View>

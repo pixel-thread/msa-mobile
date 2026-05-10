@@ -1,12 +1,13 @@
 import { Stack } from 'expo-router';
 import { AuthProvider } from './auth';
-import { Toaster } from 'sonner-native';
+import React from 'react';
 
 export const AppProviders = () => {
   return (
-    <AuthProvider>
-      <Stack screenOptions={{ headerShown: false }} />
-      <Toaster />
-    </AuthProvider>
+    <React.Fragment>
+      <AuthProvider>
+        <Stack screenOptions={{ headerShown: false }} />
+      </AuthProvider>
+    </React.Fragment>
   );
 };

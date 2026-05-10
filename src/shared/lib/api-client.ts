@@ -5,12 +5,12 @@ import { SECURE_STORE_KEYS } from '@src/shared/constants';
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:3000/api';
 
 const AUTH_PATHS = [
-  '/auth/sign-in',
-  '/auth/sign-up',
-  '/auth/sign-up/verify',
-  '/auth/refresh',
-  '/auth/forgot-password',
-  '/auth/reset-password',
+  'auth/sign-in',
+  'auth/sign-in/verify',
+  'auth/sign-up',
+  'auth/refresh',
+  'auth/forgot-password',
+  'auth/reset-password',
 ] as const;
 
 interface QueueItem {
@@ -86,13 +86,13 @@ apiClient.interceptors.response.use(
     };
 
     if (!originalRequest) {
-      return Promise.reject(error);
+      return error;
     }
 
     const requestPath = originalRequest.url ?? '';
 
     if (isAuthPath(requestPath)) {
-      return Promise.reject(error);
+      return error;
     }
 
     if (error.response?.status === 401 && !originalRequest._retry) {
@@ -132,6 +132,6 @@ apiClient.interceptors.response.use(
       }
     }
 
-    return Promise.reject(error);
+    return error;
   }
 );

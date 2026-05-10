@@ -17,15 +17,13 @@ export const useSignIn = () => {
   return useMutation({
     mutationFn: (data: SignInFormData) => http.post<SignInSuccessData>('/auth/sign-in', data),
     onSuccess: (response) => {
-      console.log(response.message);
       if (response.success) {
+        toast.success(response.message);
         if (response.data?.mfaRequired && response.data.tempToken) {
           router.push(`/(auth)/sign-in-verify?tempToken=${response.data.tempToken}`);
         } else {
           router.replace('/(protected)/(tabs)');
-          return response;
         }
-        toast.success(response.message);
         return response;
       } else {
         toast.error(response.message);

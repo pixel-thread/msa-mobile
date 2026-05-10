@@ -7,13 +7,13 @@ interface ContainerProps extends SafeAreaViewProps {
   className?: string;
 }
 
-export const Container: React.FC<ContainerProps> = ({ children, className, ...props }) => {
+export const Container: React.FC<ContainerProps> = ({ children, edges, className, ...props }) => {
   const edge: SafeAreaViewProps['edges'] =
-    Platform.OS === 'android' ? ['left', 'right', 'top', 'bottom'] : ['left', 'right'];
+    Platform.OS === 'android' ? ['left', 'right', 'bottom'] : ['left', 'right'];
   return (
     <SafeAreaView
-      edges={edge}
       className={cn('flex-1 bg-slate-50 dark:bg-slate-950', className)}
+      edges={edges || edge}
       {...props}>
       {children}
     </SafeAreaView>

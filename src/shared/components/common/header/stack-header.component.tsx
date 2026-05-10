@@ -77,6 +77,15 @@ export const StackHeader = ({
         headerStyle: {
           backgroundColor: isDark ? '#020617' : '#f8fafc',
         },
+        contentStyle: {
+          borderBlockColor: '#f8fafc',
+          borderBottomWidth: 2,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.25,
+          shadowRadius: 3.84,
+          elevation: 5,
+        },
         headerTitleStyle: {
           fontWeight: '700',
           fontSize: 17,

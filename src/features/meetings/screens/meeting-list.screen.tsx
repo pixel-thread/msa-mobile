@@ -13,22 +13,24 @@ import { Text } from '@src/shared/components/ui';
  */
 export const MeetingListScreen = () => {
   const { data, isLoading, isError, refetch, isRefetching } = useMeetings();
-  const router = useRouter();
 
   if (isLoading) return <LoadingScreen message="Fetching meetings..." />;
 
   if (isError) {
     return (
-      <ErrorScreen
-        title="Failed to load meetings"
-        message="There was an error retrieving the meeting list. Please try again."
-        onRetry={() => refetch()}
-      />
+      <>
+        <StackHeader showBackButton title="Meetings" />
+        <ErrorScreen
+          title="Failed to load meetings"
+          message="There was an error retrieving the meeting list. Please try again."
+          onRetry={() => refetch()}
+        />
+      </>
     );
   }
 
   return (
-    <Container className="bg-slate-50 dark:bg-slate-950">
+    <Container>
       <StackHeader title="Meetings" showBackButton={false} />
       <FlatList
         data={data}

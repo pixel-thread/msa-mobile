@@ -63,7 +63,7 @@ export const NotificationProvider = ({ children }: NotificationProviderProps) =>
   const sendTokenToBackend = useCallback(
     async (token: string) => {
       try {
-        // if (isRegistered) return;
+        if (isRegistered) return;
         const res = await http.post('/notifications/register', { token: token });
 
         if (res.success) {
@@ -120,7 +120,7 @@ export const NotificationProvider = ({ children }: NotificationProviderProps) =>
   const linkTokenToBackend = useCallback(
     async (token: string | undefined) => {
       try {
-        // if (isLinked) return;
+        if (isLinked) return;
         const res = await http.post('/notifications/link', { token: token });
         if (res.success) {
           setLinked(true);

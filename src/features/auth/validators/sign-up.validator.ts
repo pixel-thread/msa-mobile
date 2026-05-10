@@ -8,10 +8,15 @@ const passwordValidation = z
   .regex(/[0-9]/, 'Password must contain at least one number')
   .regex(/[^A-Za-z0-9]/, 'Password must contain at least one special character');
 
-export const signUpSchema = z.object({
+export const SignUpSchema = z.object({
   email: z.email('Invalid email address'),
   password: passwordValidation,
   name: z.string().min(1, 'Name is required'),
+  association_slug: z
+    .string()
+    .min(1, 'Association is required')
+    .default(process.env.EXPO_PUBLIC_ASSOCIATION_SLUG!)
+    .optional(),
 });
 
-export type SignUpFormData = z.infer<typeof signUpSchema>;
+export type SignUpFormData = z.infer<typeof SignUpSchema>;

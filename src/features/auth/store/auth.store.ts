@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import type { AuthUser } from '../types';
+import * as SecureStore from 'expo-secure-store';
 
 interface AuthState {
   user: AuthUser | null;

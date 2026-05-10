@@ -69,7 +69,7 @@ export const LoginForm = () => {
 
       <View className="flex-row justify-center gap-2">
         <Text className="text-gray-600">{`Don't have an account?`}</Text>
-        <Link href="/auth/signup">
+        <Link href="/(auth)/signup">
           <Text className="font-semibold text-indigo-500">Sign Up</Text>
         </Link>
       </View>

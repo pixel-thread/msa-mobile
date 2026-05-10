@@ -1,43 +1,58 @@
-import { useEffect, useState } from 'react';
-import { useSegments, useRouter } from 'expo-router';
-import { View, ActivityIndicator, Text } from 'react-native';
+import { useEffect } from 'react';
+import { ActivityIndicator, Text, View } from 'react-native';
+import { Route, useRouter, useSegments } from 'expo-router';
 
 import { useAuthStore } from '@features/auth/store';
 
 interface AuthGuardProps {
   children: React.ReactNode;
-  publicRoutes?: string[];
+  publicRoutes?: Route[];
 }
 
-export const AuthGuard = ({ children, publicRoutes = [] }: AuthGuardProps) => {
+const publicAuthRoutes: Route[] = ['/(auth)/login', '/(auth)/mfa-verify', '/(auth)/signup'];
+
+export const AuthGuard = ({ children, publicRoutes = publicAuthRoutes }: AuthGuardProps) => {
   const router = useRouter();
   const segments = useSegments();
-  const { user, isAuthenticated, isHydrated } = useAuthStore();
-  const [checked, setChecked] = useState(false);
-  const [loading, setLoading] = useState(true);
+
+  const { isAuthenticated, isHydrated } = useAuthStore();
+
+  const currentPath = '/' + segments.join('/');
+
+  const isPublicRoute = publicRoutes.includes(currentPath as Route);
 
   useEffect(() => {
     if (!isHydrated) return;
 
-    const currentPath = '/' + segments.join('/');
-    const isPublicRoute = publicRoutes.some((route) => currentPath.startsWith(route));
-
-    if (isPublicRoute && isAuthenticated && user) {
-      router.replace('/(protected)/(tabs)');
-    } else if (!isPublicRoute && !isAuthenticated && !user) {
+    // User NOT authenticated -> block protected routes
+    if (!isAuthenticated && !isPublicRoute) {
       router.replace('/(auth)/login');
-    } else {
-      setChecked(true);
+      return;
     }
-  }, [isHydrated, isAuthenticated, user, segments, publicRoutes, router]);
 
-  if (!checked || !isHydrated) {
+    // User authenticated -> block auth pages
+    if (isAuthenticated && isPublicRoute) {
+      router.replace('/');
+    }
+  }, [isHydrated, isAuthenticated, isPublicRoute, router]);
+
+  // Wait for persisted auth state
+  if (!isHydrated) {
     return (
       <View className="flex flex-1 items-center justify-center bg-white">
         <ActivityIndicator size="large" color="#6366f1" />
         <Text className="mt-4 text-gray-500">Loading...</Text>
       </View>
     );
+  }
+
+  // Prevent flash while redirecting
+  if (!isAuthenticated && !isPublicRoute) {
+    return null;
+  }
+
+  if (isAuthenticated && isPublicRoute) {
+    return null;
   }
 
   return <>{children}</>;

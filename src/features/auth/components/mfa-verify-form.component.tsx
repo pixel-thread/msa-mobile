@@ -4,9 +4,10 @@ import { Link } from 'expo-router';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { mfaVerifySchema, type MfaVerifyFormData } from '../validators';
-import { useMfaVerify, useResendMfaCode } from '../hooks';
-import { Button } from '@src/shared/components/Button';
-import { TextInput } from '@src/shared/components/ui/text-input';
+import { useMfaVerify } from '../hooks';
+import { Button } from '@components/Button';
+import { TextInput } from '@components/ui/text-input';
+import { useResendMfaCode } from '../hooks/use-resend-mfa-code.hook';
 
 export const MfaVerifyForm = () => {
   const {
@@ -66,7 +67,7 @@ export const MfaVerifyForm = () => {
         </Text>
       </View>
 
-      <Link href="/auth/login" className="text-center">
+      <Link href="/(auth)/login" className="text-center">
         <Text className="text-sm text-gray-400">Back to Sign In</Text>
       </Link>
     </View>

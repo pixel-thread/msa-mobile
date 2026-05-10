@@ -3,7 +3,7 @@ import { Text, View, ActivityIndicator } from 'react-native';
 import { Link } from 'expo-router';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { signUpSchema, type SignUpFormData } from '../validators';
+import { SignUpSchema, type SignUpFormData } from '../validators';
 import { useSignUp } from '../hooks';
 import { Button } from '@src/shared/components/Button';
 import { TextInput } from '@src/shared/components/ui/text-input';
@@ -14,12 +14,13 @@ export const SignUpForm = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<SignUpFormData>({
-    resolver: zodResolver(signUpSchema),
+    resolver: zodResolver(SignUpSchema),
   });
 
   const { mutate: signUp, isPending, error } = useSignUp();
 
   const onSubmit = (data: SignUpFormData) => {
+    console.log(data);
     signUp(data);
   };
 

@@ -3,7 +3,8 @@ import { Text, View, ActivityIndicator } from 'react-native';
 import { Link } from 'expo-router';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { SignInSchema, type SignInFormData } from '../validators';
+import type { SignInFormData } from '../validators';
+import { SignInSchema } from '../validators';
 import { useSignIn } from '../hooks';
 import { Button } from '@src/shared/components/Button';
 import { TextInput } from '@src/shared/components/ui/text-input';

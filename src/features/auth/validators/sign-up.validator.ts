@@ -1,22 +1,12 @@
 import { z } from 'zod';
-
-const passwordValidation = z
-  .string()
-  .min(8, 'Password must be at least 8 characters')
-  .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
-  .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
-  .regex(/[0-9]/, 'Password must contain at least one number')
-  .regex(/[^A-Za-z0-9]/, 'Password must contain at least one special character');
+import { REGEX, MESSAGES } from '@src/shared/constants';
+import { passwordValidation } from '@src/shared/validators/common';
 
 export const SignUpSchema = z.object({
-  email: z.email('Invalid email address'),
+  name: z.string().min(3, 'Name must be at least 2 characters').regex(REGEX.NAME, MESSAGES.NAME),
+  email: z.email(MESSAGES.EMAIL),
   password: passwordValidation,
-  name: z.string().min(1, 'Name is required'),
-  association_slug: z
-    .string()
-    .min(1, 'Association is required')
-    .default(process.env.EXPO_PUBLIC_ASSOCIATION_SLUG!)
-    .optional(),
+  association_slug: z.string().min(1, 'Association is required').optional(),
 });
 
 export type SignUpFormData = z.infer<typeof SignUpSchema>;

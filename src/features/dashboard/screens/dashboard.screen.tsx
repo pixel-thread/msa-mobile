@@ -19,7 +19,7 @@ export const DashboardScreen = () => {
 
   return (
     <Container className="bg-slate-50 dark:bg-slate-950">
-      <StackHeader title="Dashboard" showDrawerButton />
+      <StackHeader title="Dashboard" showDrawerButton={true} />
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         {/* Welcome Section */}
         <View className="px-4 pb-8 pt-6">
@@ -128,7 +128,7 @@ export const DashboardScreen = () => {
                   <Ionicons name="megaphone" size={24} color="#d97706" />
                 </View>
                 <View className="flex-1">
-                  <Text weight="bold" size="base" className="text-slate-900 dark:text-white">
+                  <Text weight="bold" size="sm" className="text-slate-900 dark:text-white">
                     System Maintenance
                   </Text>
                   <Text variant="subtext" size="xs" className="mt-1">
@@ -146,7 +146,7 @@ export const DashboardScreen = () => {
                   <Ionicons name="information-circle" size={24} color="#2563eb" />
                 </View>
                 <View className="flex-1">
-                  <Text weight="bold" size="base" className="text-slate-900 dark:text-white">
+                  <Text weight="bold" size="sm" className="text-slate-900 dark:text-white">
                     New Policy Guidelines
                   </Text>
                   <Text variant="subtext" size="xs" className="mt-1">

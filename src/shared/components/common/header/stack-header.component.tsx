@@ -1,7 +1,9 @@
 import React from 'react';
-import { Stack } from 'expo-router';
-import { Appearance } from 'react-native';
-import { DrawerToggleButton } from '@react-navigation/drawer';
+import { Stack, useNavigation } from 'expo-router';
+import { Appearance, TouchableOpacity, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { DrawerActions } from '@react-navigation/native';
+import { logger } from '@src/shared/utils/logger';
 
 export interface StackHeaderProps {
   title: string;
@@ -11,8 +13,31 @@ export interface StackHeaderProps {
 }
 
 /**
- * StackHeader: A wrapper for Expo Router's Stack.Screen options.
- * Matches the visual design of the standalone Header component.
+ * Custom Drawer toggle button that targets the parent navigator explicitly.
+ * This avoids the "Is your screen inside a Drawer navigator?" warning.
+ */
+const CustomDrawerToggleButton = ({ tintColor }: { tintColor?: string }) => {
+  const navigation = useNavigation();
+
+  const handlePress = () => {
+    navigation.dispatch(DrawerActions.toggleDrawer());
+  };
+
+  return (
+    <TouchableOpacity
+      onPress={handlePress}
+      className="ml-2 p-2"
+      accessibilityRole="button"
+      accessibilityLabel="Open drawer">
+      <Ionicons name="menu" size={24} color={tintColor || '#64748b'} />
+    </TouchableOpacity>
+  );
+};
+
+/**
+ * StackHeader: A wrapper for Expo Router's Screen options.
+ * Targets the immediate navigator (Stack, Tabs, or Drawer) to avoid context issues.
+ * Follows the proper pattern for defining headers in nested layouts.
  */
 export const StackHeader = ({
   title,
@@ -21,6 +46,24 @@ export const StackHeader = ({
   showDrawerButton = false,
 }: StackHeaderProps) => {
   const isDark = Appearance.getColorScheme() === 'dark';
+  const navigation = useNavigation();
+
+  // Check if we are nested within a Drawer navigator
+  const hasDrawer = React.useMemo(() => {
+    let current = navigation;
+    while (current) {
+      if (current.getState()?.type === 'drawer') return true;
+      try {
+        current = current.getParent();
+      } catch (e) {
+        logger.error('Could not get parent navigator', { error: e });
+        break;
+      }
+    }
+    return false;
+  }, [navigation]);
+
+  const headerTintColor = isDark ? '#f8fafc' : '#0f172a';
 
   return (
     <Stack.Screen
@@ -35,11 +78,13 @@ export const StackHeader = ({
         headerTitleStyle: {
           fontWeight: '700',
           fontSize: 17,
-          color: isDark ? '#f8fafc' : '#0f172a',
+          color: headerTintColor,
         },
-        headerTintColor: isDark ? '#f8fafc' : '#0f172a',
+        headerTintColor: headerTintColor,
         headerRight: rightAction ? () => rightAction : undefined,
-        headerLeft: showDrawerButton ? () => <DrawerToggleButton /> : undefined,
+        headerLeft: showDrawerButton
+          ? () => <CustomDrawerToggleButton tintColor={headerTintColor} />
+          : undefined,
       }}
     />
   );

@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useAuthStore, useSecureTokenStore } from '@features/auth/store';
 import http from '@src/shared/utils/http';
 import type { AuthUser } from '@features/auth/types';
+import { LoadingScreen } from '../../screens';
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
@@ -51,12 +52,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, [data, isError, isLoading, isReady, setUser, logout, clearAll, router]);
 
   if (!isReady || !isHydrated) {
-    return (
-      <View className="flex flex-1 items-center justify-center bg-white">
-        <ActivityIndicator size="large" color="#6366f1" />
-        <Text className="mt-4 text-gray-500">Loading...</Text>
-      </View>
-    );
+    return <LoadingScreen />;
   }
 
   return <>{children}</>;

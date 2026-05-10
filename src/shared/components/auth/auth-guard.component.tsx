@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useSegments, useRouter, Route } from 'expo-router';
-import { View, ActivityIndicator, Text } from 'react-native';
 
 import { useAuthStore } from '@features/auth/store';
+import { LoadingScreen } from '../screens';
 
 interface AuthGuardProps {
   children: React.ReactNode;
@@ -32,12 +32,7 @@ export const AuthGuard = ({ children, publicRoutes = authRoutes }: AuthGuardProp
   }, [isHydrated, isAuthenticated, user, segments, publicRoutes, router]);
 
   if (!checked || !isHydrated) {
-    return (
-      <View className="flex flex-1 items-center justify-center bg-white">
-        <ActivityIndicator size="large" color="#6366f1" />
-        <Text className="mt-4 text-gray-500">Loading...</Text>
-      </View>
-    );
+    return <LoadingScreen />;
   }
 
   return <>{children}</>;

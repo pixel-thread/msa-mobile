@@ -25,7 +25,7 @@ export const SignInScreen = () => {
     resolver: zodResolver(SignInSchema),
   });
 
-  const { mutate: signIn, isPending, error } = useSignIn();
+  const { mutate: signIn, isPending } = useSignIn();
 
   const onSubmit = (data: SignInFormData) => {
     signIn(data);
@@ -95,13 +95,6 @@ export const SignInScreen = () => {
               <Text className="text-sm font-medium text-indigo-500">Forgot password?</Text>
             </Link>
           </View>
-
-          {error && (
-            <View className="flex-row items-center gap-2 rounded-lg bg-red-50 p-3">
-              <Ionicons name="alert-circle" size={18} color="#ef4444" />
-              <Text className="flex-1 text-sm text-red-600">{error.message}</Text>
-            </View>
-          )}
 
           <Button
             title={isPending ? 'Signing in...' : 'Sign In'}

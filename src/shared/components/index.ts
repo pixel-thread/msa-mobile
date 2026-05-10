@@ -4,3 +4,4 @@ export { ScreenContent } from './ScreenContent';
 export { TabBarIcon } from './TabBarIcon';
 export { StackHeader } from './common/stack-header';
 export { LoadingScreen, ErrorScreen } from './screens';
+export { GlobalErrorBoundary, ErrorBoundary } from './common/error-boundary';

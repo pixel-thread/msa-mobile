@@ -1,10 +1,10 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { MfaVerifyScreen } from '@features/auth/screens';
+import { SignInScreen } from '@features/auth/screens';
 
-export default function MfaVerifyPage() {
+export default function SignInPage() {
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top']}>
-      <MfaVerifyScreen />
+      <SignInScreen />
     </SafeAreaView>
   );
 }

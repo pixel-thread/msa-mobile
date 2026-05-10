@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     } else if (isError || (!isLoading && data && !data.success)) {
       logout();
       clearAll();
-      router.replace('/auth/login');
+      router.replace('/(auth)/sign-in');
     }
   }, [data, isError, isLoading, isReady, setUser, logout, clearAll, router]);
 

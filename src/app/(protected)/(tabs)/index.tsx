@@ -21,7 +21,7 @@ export default function Home() {
         <TouchableOpacity onPress={onLogout}>
           <Text>Logout</Text>
         </TouchableOpacity>
-        <Link href={'/(auth)/login'}>Signin</Link>
+        <Link href={'/(auth)/sign-in'}>Signin</Link>
       </Container>
     </>
   );

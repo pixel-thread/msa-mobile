@@ -10,7 +10,7 @@ export const useSignUp = () => {
     mutationFn: (data: SignUpFormData) => http.post('/auth/sign-up', data),
     onSuccess: (response) => {
       if (response.success) {
-        router.push('/auth/login');
+        router.push('/(auth)/sign-in');
       }
     },
   });

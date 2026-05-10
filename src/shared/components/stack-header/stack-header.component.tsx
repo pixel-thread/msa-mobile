@@ -1,5 +1,4 @@
-import { Stack, Link } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
+import { Stack } from 'expo-router';
 
 interface StackHeaderProps {
   title: string;
@@ -8,13 +7,12 @@ interface StackHeaderProps {
   rightAction?: React.ReactNode;
 }
 
-export const StackHeader = ({ title, showBack = false, onBack, rightAction }: StackHeaderProps) => {
+export const StackHeader = ({ title, rightAction }: StackHeaderProps) => {
   return (
     <Stack.Screen
       options={{
         headerTitle: title,
         headerShown: true,
-        headerBackTitleVisible: false,
         headerShadowVisible: false,
         headerStyle: {
           backgroundColor: '#ffffff',
@@ -23,16 +21,6 @@ export const StackHeader = ({ title, showBack = false, onBack, rightAction }: St
           fontWeight: '600',
           fontSize: 18,
         },
-        headerLeft: showBack
-          ? () => (
-              <Link
-                href={onBack ? '#' : '/(protected)'}
-                onPress={onBack ? onBack : undefined}
-                className="ml-2">
-                <Ionicons name="arrow-back" size={24} color="#000" />
-              </Link>
-            )
-          : undefined,
         headerRight: rightAction ? () => rightAction : undefined,
       }}
     />

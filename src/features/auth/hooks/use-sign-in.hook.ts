@@ -1,8 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
-import { useSecureTokenStore } from '../store';
 import type { SignInFormData } from '../validators';
-import http from '@utils/http';
+import http from '@src/shared/utils/http';
 
 type SignInSuccessData = {
   mfaRequired?: boolean;
@@ -13,7 +12,6 @@ type SignInSuccessData = {
 
 export const useSignIn = () => {
   const router = useRouter();
-  const { setMfaTempToken, setAccessToken, setRefreshToken } = useSecureTokenStore();
 
   return useMutation({
     mutationFn: (data: SignInFormData) => http.post<SignInSuccessData>('/auth/sign-in', data),
@@ -21,18 +19,9 @@ export const useSignIn = () => {
       if (!response.success) return;
 
       if (response.data?.mfaRequired && response.data.tempToken) {
-        setMfaTempToken(response.data.tempToken);
-        router.push('/auth/mfa-verify');
+        router.push('/(auth)/mfa-verify');
       } else {
-        if (response.data) {
-          if (response.data.access_token) {
-            setAccessToken(response.data.access_token);
-          }
-          if (response.data.refresh_token) {
-            setRefreshToken(response.data.refresh_token);
-          }
-        }
-        router.replace('/(drawer)/(tabs)');
+        router.replace('/(protected)');
       }
     },
   });

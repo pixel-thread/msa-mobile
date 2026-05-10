@@ -1,27 +1,35 @@
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
-import { useAuthStore, useSecureTokenStore } from '../store';
+import { useSecureTokenStore } from '../store';
 import type { MfaVerifyFormData } from '../validators';
-import http from '@utils/http';
+import http from '@src/shared/utils/http';
 
+type MFAResponse = {
+  access_token: string;
+  refresh_token: string;
+};
 export const useMfaVerify = () => {
   const router = useRouter();
-  const { logout: clearAuth } = useAuthStore();
-  const { setMfaTempToken, clearAll } = useSecureTokenStore();
+  const { setRefreshToken, setAccessToken } = useSecureTokenStore();
 
   return useMutation({
-    mutationFn: (data: MfaVerifyFormData) => http.post('/auth/mfa/verify', data),
+    mutationFn: (data: MfaVerifyFormData) => http.post<MFAResponse>('/auth/mfa/verify', data),
     onSuccess: (response) => {
       if (response.success) {
-        setMfaTempToken(null);
-        clearAll();
-        router.replace('/(drawer)/(tabs)');
+        const refreshToken = response.data?.refresh_token;
+        const accessToken = response.data?.access_token;
+
+        if (refreshToken) {
+          setRefreshToken(refreshToken);
+        }
+
+        if (accessToken) {
+          setAccessToken(accessToken);
+        }
+        router.replace('/(protected)/(tabs)');
       }
       console.log(response);
     },
-    onError: () => {
-      clearAuth();
-      clearAll();
-    },
+    onError: () => {},
   });
 };

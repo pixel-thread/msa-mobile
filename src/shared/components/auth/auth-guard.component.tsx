@@ -1,58 +1,42 @@
-import { useEffect } from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
-import { Route, useRouter, useSegments } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { useSegments, useRouter } from 'expo-router';
+import { View, ActivityIndicator, Text } from 'react-native';
 
 import { useAuthStore } from '@features/auth/store';
 
 interface AuthGuardProps {
   children: React.ReactNode;
-  publicRoutes?: Route[];
+  publicRoutes?: string[];
 }
 
-const publicAuthRoutes: Route[] = ['/(auth)/login', '/(auth)/mfa-verify', '/(auth)/signup'];
-
-export const AuthGuard = ({ children, publicRoutes = publicAuthRoutes }: AuthGuardProps) => {
+export const AuthGuard = ({ children, publicRoutes = [] }: AuthGuardProps) => {
   const router = useRouter();
   const segments = useSegments();
-
-  const { isAuthenticated, isHydrated } = useAuthStore();
-
-  const currentPath = '/' + segments.join('/');
-
-  const isPublicRoute = publicRoutes.includes(currentPath as Route);
+  const { user, isAuthenticated, isHydrated } = useAuthStore();
+  const [checked, setChecked] = useState(false);
 
   useEffect(() => {
     if (!isHydrated) return;
 
-    // User NOT authenticated -> block protected routes
-    if (!isAuthenticated && !isPublicRoute) {
-      router.replace('/(auth)/login');
-      return;
-    }
+    const currentPath = '/' + segments.join('/');
+    const isPublicRoute = publicRoutes.some((route) => currentPath.startsWith(route));
 
-    // User authenticated -> block auth pages
-    if (isAuthenticated && isPublicRoute) {
-      router.replace('/');
+    if (isPublicRoute && isAuthenticated && user) {
+      router.replace('/(protected)');
+    } else if (!isPublicRoute && !isAuthenticated && !user) {
+      router.replace('/(auth)/sign-in');
+    } else {
+      setChecked(true);
     }
-  }, [isHydrated, isAuthenticated, isPublicRoute, router]);
+  }, [isHydrated, isAuthenticated, user, segments, publicRoutes, router]);
 
-  // Wait for persisted auth state
-  if (!isHydrated) {
+  if (!checked || !isHydrated) {
     return (
       <View className="flex flex-1 items-center justify-center bg-white">
         <ActivityIndicator size="large" color="#6366f1" />
         <Text className="mt-4 text-gray-500">Loading...</Text>
       </View>
     );
-  }
-
-  // Prevent flash while redirecting
-  if (!isAuthenticated && !isPublicRoute) {
-    return null;
-  }
-
-  if (isAuthenticated && isPublicRoute) {
-    return null;
   }
 
   return <>{children}</>;

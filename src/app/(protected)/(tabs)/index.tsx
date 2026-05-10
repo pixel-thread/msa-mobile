@@ -1,7 +1,8 @@
 import { Link, Stack } from 'expo-router';
 
 import { Container, ScreenContent } from '@src/shared/components';
-import { useAuthStore, useSecureTokenStore } from '@src/features/auth';
+import { useAuthStore } from '@src/shared/store';
+import { useSecureTokenStore } from '@src/features/auth';
 import { TouchableOpacity } from 'react-native';
 import { Text } from 'react-native-gesture-handler';
 

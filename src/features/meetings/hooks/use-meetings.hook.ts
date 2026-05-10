@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import http from '@src/shared/utils/http';
 import type { Meeting } from '../types';
-import { useAuthStore } from '@src/features/auth';
+import { useAuthStore } from '@src/shared/store';
 
 /**
  * Hook to fetch the list of meetings.

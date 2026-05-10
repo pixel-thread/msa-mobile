@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSegments, useRouter, Route } from 'expo-router';
 
-import { useAuthStore } from '@features/auth/store';
+import { useAuthStore } from '@src/shared/store';
 import { LoadingScreen } from '../screens';
 
 interface AuthGuardProps {

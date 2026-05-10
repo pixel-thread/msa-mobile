@@ -3,7 +3,8 @@ import { View, Text, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useQuery } from '@tanstack/react-query';
 
-import { useAuthStore, useSecureTokenStore } from '@features/auth/store';
+import { useAuthStore } from '@src/shared/store';
+import { useSecureTokenStore } from '@features/auth/store';
 import http from '@src/shared/utils/http';
 import type { AuthUser } from '@features/auth/types';
 import { LoadingScreen } from '../../screens';

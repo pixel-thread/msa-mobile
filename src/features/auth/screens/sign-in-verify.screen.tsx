@@ -33,7 +33,6 @@ export const SignInVerifyScreen = () => {
   const { mutate: resendCode, isPending: isResending } = useResendSignInVerifyCode();
 
   const onSubmit = (data: SignInVerifyFormData) => {
-    console.log();
     const payload = {
       code: data.code,
       mfa_temp_token: mfaTempToken,
@@ -41,7 +40,6 @@ export const SignInVerifyScreen = () => {
 
     verifySignIn(payload);
   };
-  console.log(errors);
   return (
     <KeyboardAvoidingView
       className="flex-1 bg-white"

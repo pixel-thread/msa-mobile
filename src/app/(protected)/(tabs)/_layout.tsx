@@ -23,6 +23,13 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <TabBarIcon name="calendar" color={color} />,
         }}
       />
+      <Tabs.Screen
+        name="profile/index"
+        options={{
+          title: 'Meetings',
+          tabBarIcon: ({ color }) => <TabBarIcon name="person-outline" color={color} />,
+        }}
+      />
     </Tabs>
   );
 }

@@ -11,6 +11,8 @@ export interface MeetingCreator {
 export interface Meeting {
   id: string;
   title: string;
+  description?: string;
+  agenda?: string[];
   type: MeetingType;
   status: MeetingStatus;
   scheduledAt: string | Date;

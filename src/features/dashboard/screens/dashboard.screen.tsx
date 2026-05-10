@@ -3,19 +3,27 @@ import { View, ScrollView, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '@src/shared/store';
 import { Container, StackHeader } from '@src/shared/components';
-import { Card, CardContent, Text } from '@src/shared/components/ui';
+import {
+  Card,
+  CardContent,
+  Text,
+} from '@src/shared/components/ui';
 import { cn } from '@lib/cn';
 import { useRouter } from 'expo-router';
+import { useMeetings } from '@src/features/meetings/hooks';
+import { formattedDate, formattedTime } from '@src/shared/utils/format';
 
 export const DashboardScreen = () => {
   const { user } = useAuthStore();
   const router = useRouter();
+  const { data: meetings } = useMeetings({ limit: 1 });
+  const nextMeeting = meetings?.[0];
 
   if (!user) return null;
 
   return (
     <Container className="bg-slate-50 dark:bg-slate-950">
-      <StackHeader title="Dashboard" />
+      <StackHeader title="Dashboard" showBackButton={false} />
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         {/* Welcome Section */}
         <View className="px-4 pb-8 pt-6">
@@ -28,9 +36,6 @@ export const DashboardScreen = () => {
           </Text>
           <Text variant="heading" size="3xl" className="mt-1 text-slate-900 dark:text-white">
             {user.name}
-          </Text>
-          <Text variant="subtext" size="sm" className="mt-2">
-            You have 3 upcoming meetings this week.
           </Text>
         </View>
 
@@ -56,6 +61,49 @@ export const DashboardScreen = () => {
           />
         </View>
 
+        {/* Next Meeting Highlight */}
+        {nextMeeting && (
+          <View className="mt-8 px-4">
+            <Text variant="heading" size="lg" className="mb-4 px-1 text-slate-900 dark:text-white">
+              Next Briefing
+            </Text>
+            <TouchableOpacity 
+              activeOpacity={0.9}
+              onPress={() => router.push(`/(protected)/meetings/${nextMeeting.id}`)}
+            >
+              <Card className="border-indigo-100 bg-indigo-50/30 shadow-sm dark:border-indigo-900/30 dark:bg-indigo-950/10">
+                <CardContent className="p-5">
+                  <View className="flex-row items-center justify-between mb-4">
+                    <View className="rounded-full bg-indigo-600 px-3 py-1">
+                      <Text weight="bold" size="xs" className="text-white uppercase tracking-tighter">
+                        Upcoming
+                      </Text>
+                    </View>
+                    <Ionicons name="arrow-forward" size={18} color="#4f46e5" />
+                  </View>
+                  <Text variant="heading" size="xl" className="text-slate-900 dark:text-white mb-2">
+                    {nextMeeting.title}
+                  </Text>
+                  <View className="flex-row items-center gap-x-4">
+                    <View className="flex-row items-center gap-x-1.5">
+                      <Ionicons name="calendar-outline" size={16} color="#6366f1" />
+                      <Text weight="semibold" size="sm" className="text-indigo-700 dark:text-indigo-400">
+                        {formattedDate(new Date(nextMeeting.scheduledAt))}
+                      </Text>
+                    </View>
+                    <View className="flex-row items-center gap-x-1.5">
+                      <Ionicons name="time-outline" size={16} color="#6366f1" />
+                      <Text weight="semibold" size="sm" className="text-indigo-700 dark:text-indigo-400">
+                        {formattedTime(new Date(nextMeeting.scheduledAt))}
+                      </Text>
+                    </View>
+                  </View>
+                </CardContent>
+              </Card>
+            </TouchableOpacity>
+          </View>
+        )}
+
         {/* Recent Activity / Announcements */}
         <View className="mt-8 px-4">
           <View className="mb-4 flex-row items-center justify-between px-1">
@@ -76,7 +124,7 @@ export const DashboardScreen = () => {
                   <Ionicons name="megaphone" size={24} color="#d97706" />
                 </View>
                 <View className="flex-1">
-                  <Text weight="bold" size="lg" className="text-slate-900 dark:text-white">
+                  <Text weight="bold" size="base" className="text-slate-900 dark:text-white">
                     System Maintenance
                   </Text>
                   <Text variant="subtext" size="xs" className="mt-1">
@@ -94,7 +142,7 @@ export const DashboardScreen = () => {
                   <Ionicons name="information-circle" size={24} color="#2563eb" />
                 </View>
                 <View className="flex-1">
-                  <Text weight="bold" size="lg" className="text-slate-900 dark:text-white">
+                  <Text weight="bold" size="base" className="text-slate-900 dark:text-white">
                     New Policy Guidelines
                   </Text>
                   <Text variant="subtext" size="xs" className="mt-1">

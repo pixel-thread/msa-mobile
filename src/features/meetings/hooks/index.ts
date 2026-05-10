@@ -1,1 +1,2 @@
-export { useMeetings } from './use-meetings.hook';
+export { useMeetings } from './use-meetings';
+export { useMeeting } from './use-meeting';

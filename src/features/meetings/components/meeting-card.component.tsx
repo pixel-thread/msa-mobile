@@ -5,19 +5,24 @@ import type { Meeting } from '../types';
 import { formattedDate, formattedTime } from '@src/shared/utils/format';
 import { Card, CardContent, CardFooter, Text, Button } from '@src/shared/components/ui';
 import { cn } from '@lib/cn';
+import { useRouter } from 'expo-router';
 
 interface MeetingCardProps {
   meeting: Meeting;
-  onPress?: (meeting: Meeting) => void;
 }
 
-export const MeetingCard = ({ meeting, onPress }: MeetingCardProps) => {
+export const MeetingCard = ({ meeting }: MeetingCardProps) => {
   const date = new Date(meeting.scheduledAt);
+  const router = useRouter();
+  console.log(JSON.stringify(meeting, null, 2));
+  const onPress = () => {
+    router.push(`/meetings/${meeting.id}`);
+  };
 
   return (
     <View className="mb-4">
       <Card className="overflow-hidden border-slate-100 shadow-sm dark:border-slate-800">
-        <TouchableOpacity activeOpacity={0.7} onPress={() => onPress?.(meeting)}>
+        <TouchableOpacity activeOpacity={0.7} onPress={() => onPress()}>
           <CardContent className="p-4">
             <View className="flex-row items-start justify-between">
               <View className="flex-1">

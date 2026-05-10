@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, FlatList, RefreshControl } from 'react-native';
+import { useRouter } from 'expo-router';
 import { useMeetings } from '../hooks';
 import { LoadingScreen, ErrorScreen } from '@src/shared/components/screens';
 import { Ionicons } from '@expo/vector-icons';
@@ -12,6 +13,7 @@ import { Text } from '@src/shared/components/ui';
  */
 export const MeetingListScreen = () => {
   const { data, isLoading, isError, refetch, isRefetching } = useMeetings();
+  const router = useRouter();
 
   if (isLoading) return <LoadingScreen message="Fetching meetings..." />;
 
@@ -27,7 +29,7 @@ export const MeetingListScreen = () => {
 
   return (
     <Container className="bg-slate-50 dark:bg-slate-950">
-      <StackHeader title="Meetings" />
+      <StackHeader title="Meetings" showBackButton={false} />
       <FlatList
         data={data}
         renderItem={({ item }) => <MeetingCard meeting={item} />}

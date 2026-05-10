@@ -1,9 +1,11 @@
 import React from 'react';
-import { View, FlatList, Text, RefreshControl } from 'react-native';
+import { View, FlatList, RefreshControl } from 'react-native';
 import { useMeetings } from '../hooks';
 import { LoadingScreen, ErrorScreen } from '@src/shared/components/screens';
 import { Ionicons } from '@expo/vector-icons';
 import { MeetingCard } from '../components';
+import { Container, StackHeader } from '@src/shared/components';
+import { Text } from '@src/shared/components/ui';
 
 /**
  * Main screen for displaying the list of meetings.
@@ -24,7 +26,8 @@ export const MeetingListScreen = () => {
   }
 
   return (
-    <View className="flex-1 bg-gray-50">
+    <Container className="bg-slate-50 dark:bg-slate-950">
+      <StackHeader title="Meetings" />
       <FlatList
         data={data}
         renderItem={({ item }) => <MeetingCard meeting={item} />}
@@ -35,12 +38,19 @@ export const MeetingListScreen = () => {
           <RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor="#6366f1" />
         }
         ListEmptyComponent={
-          <View className="items-center justify-center py-20">
-            <Ionicons name="calendar-clear-outline" size={64} color="#d1d5db" />
-            <Text className="mt-4 text-lg font-medium text-gray-400">No meetings found</Text>
+          <View className="items-center justify-center py-24">
+            <View className="mb-6 h-20 w-20 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-900">
+              <Ionicons name="calendar-clear-outline" size={32} color="#94a3b8" />
+            </View>
+            <Text variant="heading" size="lg" className="text-slate-900 dark:text-white">
+              No meetings found
+            </Text>
+            <Text variant="subtext" size="sm" className="mt-2 text-center">
+              Check back later for newly scheduled meetings.
+            </Text>
           </View>
         }
       />
-    </View>
+    </Container>
   );
 };

@@ -1,19 +1,34 @@
 import { Tabs } from 'expo-router';
 import { TabBarIcon } from '@src/shared/components';
+import { Appearance } from 'react-native';
 
 export default function TabLayout() {
+  const isDark = Appearance.getColorScheme() === 'dark';
+
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-
-        tabBarActiveTintColor: 'black',
+        tabBarActiveTintColor: '#4f46e5', // indigo-600
+        tabBarInactiveTintColor: isDark ? '#94a3b8' : '#64748b',
+        tabBarStyle: {
+          backgroundColor: isDark ? '#020617' : '#ffffff',
+          borderTopWidth: 1,
+          borderTopColor: isDark ? '#1e293b' : '#f1f5f9',
+          height: 80,
+          paddingBottom: 10,
+          paddingTop: 8,
+        },
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontWeight: '600',
+        },
       }}>
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Tab One',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: 'Home',
+          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
         }}
       />
       <Tabs.Screen
@@ -26,7 +41,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile/index"
         options={{
-          title: 'Meetings',
+          title: 'Profile',
           tabBarIcon: ({ color }) => <TabBarIcon name="person" color={color} />,
         }}
       />

@@ -1,1 +1,1 @@
-// exports
+export * from './screens/profile.screen';

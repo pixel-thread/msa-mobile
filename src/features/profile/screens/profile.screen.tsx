@@ -1,0 +1,209 @@
+import React from 'react';
+import { View, ScrollView, Alert, TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import { useAuthStore } from '@src/shared/store';
+import { useSecureTokenStore } from '@src/features/auth/store';
+import { Container, StackHeader } from '@src/shared/components';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Text,
+  Button,
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+  Image
+} from '@src/shared/components/ui';
+import { cn } from '@lib/cn';
+
+export const ProfileScreen = () => {
+  const router = useRouter();
+  const { user, logout } = useAuthStore();
+  const { clearAll } = useSecureTokenStore();
+
+  const handleLogout = () => {
+    Alert.alert(
+      'Confirm Logout',
+      'Are you sure you want to sign out of your account?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Sign Out',
+          style: 'destructive',
+          onPress: async () => {
+            await clearAll();
+            logout();
+            router.replace('/(auth)/sign-in');
+          },
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
+  if (!user) return null;
+
+  return (
+    <Container className="bg-slate-50 dark:bg-slate-950">
+      <StackHeader title="Profile" />
+      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+        {/* Profile Header */}
+        <View className="items-center px-4 pb-8 pt-10">
+          <View className="relative mb-4">
+            <View className="h-28 w-28 items-center justify-center rounded-full bg-indigo-600 shadow-xl shadow-indigo-200">
+              <Text weight="bold" className="text-4xl text-white">
+                {user.name.charAt(0).toUpperCase()}
+              </Text>
+            </View>
+            <TouchableOpacity 
+              activeOpacity={0.8}
+              className="absolute bottom-0 right-0 h-9 w-9 items-center justify-center rounded-full border-4 border-slate-50 bg-slate-100 dark:border-slate-950 dark:bg-slate-800"
+            >
+              <Ionicons name="camera" size={16} color="#475569" />
+            </TouchableOpacity>
+          </View>
+          <Text variant="heading" size="2xl" className="text-slate-900 dark:text-white">
+            {user.name}
+          </Text>
+          <Text variant="subtext" size="sm" className="mt-1">
+            {user.email}
+          </Text>
+        </View>
+
+        {/* Account Details */}
+        <View className="px-4">
+          <Card className="border-slate-100 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+            <CardHeader className="pb-2">
+              <CardTitle size="sm" className="text-slate-400 uppercase tracking-widest">
+                Account Information
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="gap-y-4">
+              <InfoItem icon="briefcase-outline" label="Role" value={user.role} />
+              <InfoItem 
+                icon="shield-checkmark-outline" 
+                label="MFA Status" 
+                value={user.mfaEnabled ? 'Enabled' : 'Disabled'} 
+                valueClassName={user.mfaEnabled ? 'text-emerald-600' : 'text-slate-400'}
+              />
+              <InfoItem icon="finger-print-outline" label="User ID" value={user.id} />
+            </CardContent>
+          </Card>
+        </View>
+
+        {/* Preferences & Settings */}
+        <View className="mt-6 px-4">
+          <Text variant="label" className="mb-3 ml-1 text-slate-400 uppercase tracking-widest" size="xs">
+            Preferences
+          </Text>
+          <Card className="border-slate-100 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+            <Accordion className="px-4">
+              <AccordionItem value="notifications">
+                <AccordionTrigger>
+                  <View className="flex-row items-center gap-x-3">
+                    <Ionicons name="notifications-outline" size={20} color="#6366f1" />
+                    <Text weight="medium">Notifications</Text>
+                  </View>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <Text variant="subtext" size="sm">
+                    Configure how you receive updates about meetings and institutional announcements.
+                  </Text>
+                  <Button variant="outline" size="sm" title="Manage Alerts" className="mt-3 h-10" />
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="security">
+                <AccordionTrigger>
+                  <View className="flex-row items-center gap-x-3">
+                    <Ionicons name="lock-closed-outline" size={20} color="#6366f1" />
+                    <Text weight="medium">Security</Text>
+                  </View>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <Text variant="subtext" size="sm">
+                    Update your password, manage MFA devices, and view active sessions.
+                  </Text>
+                  <Button variant="outline" size="sm" title="Security Settings" className="mt-3 h-10" />
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="help" className="border-b-0">
+                <AccordionTrigger>
+                  <View className="flex-row items-center gap-x-3">
+                    <Ionicons name="help-circle-outline" size={20} color="#6366f1" />
+                    <Text weight="medium">Support</Text>
+                  </View>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <Text variant="subtext" size="sm">
+                    Get assistance with your account or report issues with the application.
+                  </Text>
+                  <Button variant="outline" size="sm" title="Contact Support" className="mt-3 h-10" />
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </Card>
+        </View>
+
+        {/* Action Section */}
+        <View className="mt-10 px-4 pb-12">
+          <Button 
+            variant="destructive" 
+            onPress={handleLogout}
+            className="h-14 rounded-2xl shadow-lg shadow-red-100 dark:shadow-none"
+          >
+            <View className="flex-row items-center gap-x-2">
+              <Ionicons name="log-out-outline" size={20} color="white" />
+              <Text weight="bold" className="text-white">Logout from System</Text>
+            </View>
+          </Button>
+          
+          <View className="mt-8 items-center">
+            <View className="rounded-full bg-slate-100 px-3 py-1 dark:bg-slate-800">
+              <Text variant="subtext" size="xs" weight="medium">
+                Version 1.0.0 (Stable)
+              </Text>
+            </View>
+            <Text variant="subtext" size="xs" className="mt-2 opacity-50">
+              Authorized Government Personnel Only
+            </Text>
+          </View>
+        </View>
+      </ScrollView>
+    </Container>
+  );
+};
+
+const InfoItem = ({ 
+  icon, 
+  label, 
+  value, 
+  valueClassName 
+}: { 
+  icon: keyof typeof Ionicons.glyphMap, 
+  label: string, 
+  value: string,
+  valueClassName?: string 
+}) => (
+  <View className="flex-row items-center justify-between py-1">
+    <View className="flex-row items-center gap-x-3">
+      <View className="h-9 w-9 items-center justify-center rounded-xl bg-slate-50 dark:bg-slate-800">
+        <Ionicons name={icon} size={18} color="#64748b" />
+      </View>
+      <Text variant="label" className="text-slate-500">{label}</Text>
+    </View>
+    <Text 
+      weight="semibold" 
+      size="sm" 
+      className={cn('text-slate-900 dark:text-slate-100', valueClassName)}
+      numberOfLines={1}
+    >
+      {value}
+    </Text>
+  </View>
+);

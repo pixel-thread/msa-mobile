@@ -3,8 +3,8 @@ import {
   TextInput as RNTextInput,
   TextInputProps as RNTextInputProps,
   View,
-  Text,
 } from 'react-native';
+import { Text } from './text';
 
 interface TextInputProps extends RNTextInputProps {
   label?: string;
@@ -15,7 +15,11 @@ export const TextInput = forwardRef<RNTextInput, TextInputProps>(
   ({ label, error, value, onChangeText, className, ...props }, ref) => {
     return (
       <View className="flex gap-1">
-        {label && <Text className="text-sm font-medium text-gray-700">{label}</Text>}
+        {label && (
+          <Text variant="label" className="mb-1">
+            {label}
+          </Text>
+        )}
         <RNTextInput
           ref={ref}
           value={value}
@@ -26,7 +30,11 @@ export const TextInput = forwardRef<RNTextInput, TextInputProps>(
           placeholderTextColor="#9ca3af"
           {...props}
         />
-        {error && <Text className="text-xs text-red-500">{error}</Text>}
+        {error && (
+          <Text variant="error" size="xs" className="mt-1">
+            {error}
+          </Text>
+        )}
       </View>
     );
   }

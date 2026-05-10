@@ -70,7 +70,8 @@ module.exports = {
         'wf-micro': ['10px', { lineHeight: '1.30', letterSpacing: '1px', fontWeight: '500' }],
       },
       boxShadow: {
-        'wf-cascade': 'rgba(0,0,0,0) 0px 84px 24px, rgba(0,0,0,0.01) 0px 54px 22px, rgba(0,0,0,0.04) 0px 30px 18px, rgba(0,0,0,0.08) 0px 13px 13px, rgba(0,0,0,0.09) 0px 3px 7px',
+        'wf-cascade':
+          'rgba(0,0,0,0) 0px 84px 24px, rgba(0,0,0,0.01) 0px 54px 22px, rgba(0,0,0,0.04) 0px 30px 18px, rgba(0,0,0,0.08) 0px 13px 13px, rgba(0,0,0,0.09) 0px 3px 7px',
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -78,11 +79,11 @@ module.exports = {
         sm: 'calc(var(--radius) - 4px)',
       },
       spacing: {
-        '1': '4px',
-        '2': '8px',
-        '3': '12px',
-        '4': '16px',
-        '6': '24px',
+        1: '4px',
+        2: '8px',
+        3: '12px',
+        4: '16px',
+        6: '24px',
         'wf-1': '1px',
         'wf-2.4': '2.4px',
         'wf-3.2': '3.2px',

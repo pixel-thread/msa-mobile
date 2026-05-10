@@ -1,11 +1,11 @@
-import { useForm, Controller } from 'react-hook-form';
+import React from 'react';
+import { useForm, FormProvider } from 'react-hook-form';
 import {
-  Text,
   View,
-  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  TouchableOpacity,
 } from 'react-native';
 import { Link } from 'expo-router';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -13,20 +13,16 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { SignInVerifySchema, type SignInVerifyFormData } from '../validators';
 import { useSignInVerify } from '../hooks';
-import { Button } from '@src/shared/components/ui/Button';
-import { TextInput } from '@src/shared/components/ui/text-input';
+import { Button, Text, FieldInput, Card, CardContent, Alert, AlertTitle, AlertDescription } from '@src/shared/components/ui';
 import { useResendSignInVerifyCode } from '../hooks/use-resend-sign-in-verify-code.hook';
 import { useSearchParams } from 'expo-router/build/hooks';
 
 export const SignInVerifyScreen = () => {
   const searchParams = useSearchParams();
   const mfaTempToken = searchParams.get('tempToken') || '';
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<SignInVerifyFormData>({
+  const methods = useForm<SignInVerifyFormData>({
     resolver: zodResolver(SignInVerifySchema),
+    mode: 'onBlur',
   });
 
   const { mutate: verifySignIn, isPending, error } = useSignInVerify();
@@ -37,79 +33,83 @@ export const SignInVerifyScreen = () => {
       code: data.code,
       mfa_temp_token: mfaTempToken,
     };
-
     verifySignIn(payload);
   };
+
   return (
     <KeyboardAvoidingView
-      className="flex-1 bg-white"
+      className="flex-1 bg-slate-50 dark:bg-slate-950"
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <ScrollView
         contentContainerClassName="flex-grow justify-center px-6 py-12"
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}>
+        
         <View className="mb-10 items-center">
-          <View className="mb-4 h-16 w-16 items-center justify-center rounded-full bg-indigo-500">
-            <Ionicons name="shield-checkmark" size={32} color="#fff" />
+          <View className="mb-6 h-20 w-20 items-center justify-center rounded-full bg-indigo-600 shadow-xl shadow-indigo-200 dark:shadow-none">
+            <Ionicons name="mail-unread" size={36} color="#fff" />
           </View>
-          <Text className="mt-4 text-2xl font-bold text-gray-900">Verify Code</Text>
-          <Text className="mt-2 text-center text-sm text-gray-500">
-            Enter the 6-digit code sent to your email
+          <Text variant="heading" size="3xl" className="text-slate-900 dark:text-white">
+            Verify Identity
+          </Text>
+          <Text variant="subtext" size="sm" className="mt-2 text-center px-8">
+            Please enter the 6-digit authentication code sent to your registered email
           </Text>
         </View>
 
-        <View className="gap-5">
-          <Controller
-            control={control}
-            name="code"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <View>
-                <Text className="mb-1.5 text-sm font-medium text-gray-700">Verification Code</Text>
-                <TextInput
+        <Card className="border-slate-100 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+          <CardContent className="p-6">
+            <FormProvider {...methods}>
+              <View className="gap-y-4">
+                <FieldInput
+                  name="code"
+                  label="Verification Code"
                   placeholder="000000"
-                  value={value}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  error={errors.code?.message}
                   keyboardType="number-pad"
                   maxLength={6}
                   textAlign="center"
-                  className="rounded-xl border border-gray-200 bg-gray-50 px-4 py-4 text-center text-xl tracking-widest"
+                  className="text-2xl tracking-[12px] font-bold h-16"
                 />
+
+                {error && (
+                  <Alert variant="destructive">
+                    <AlertTitle>Verification Failed</AlertTitle>
+                    <AlertDescription>{error.message}</AlertDescription>
+                  </Alert>
+                )}
+
+                <Button
+                  title={isPending ? 'Validating...' : 'Verify & Continue'}
+                  onPress={methods.handleSubmit(onSubmit)}
+                  loading={isPending}
+                  className="h-14 rounded-2xl bg-indigo-600"
+                />
+
+                <View className="flex-row items-center justify-center gap-x-2 py-2">
+                  <Text variant="subtext" size="sm">
+                    No code received?
+                  </Text>
+                  <TouchableOpacity 
+                    onPress={() => !isResending && resendCode()}
+                    disabled={isResending}
+                  >
+                    <Text variant="link" size="sm" weight="bold">
+                      {isResending ? 'Sending...' : 'Resend Code'}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-            )}
-          />
+            </FormProvider>
+          </CardContent>
+        </Card>
 
-          {error && (
-            <View className="flex-row items-center gap-2 rounded-lg bg-red-50 p-3">
-              <Ionicons name="alert-circle" size={18} color="#ef4444" />
-              <Text className="flex-1 text-sm text-red-600">{error.message}</Text>
-            </View>
-          )}
-
-          <Button
-            title={isPending ? 'Verifying...' : 'Verify Code'}
-            onPress={handleSubmit(onSubmit)}
-            disabled={isPending}
-            className={`rounded-xl py-4 ${isPending ? 'bg-indigo-400' : 'bg-indigo-500'}`}>
-            {isPending && <ActivityIndicator color="#fff" size="small" />}
-          </Button>
-
-          <View className="flex-row items-center justify-center gap-2">
-            <Text className="text-sm text-gray-500">{`Didn't receive a code?`}</Text>
-            <Text
-              className={`text-sm font-semibold ${
-                isResending ? 'text-gray-400' : 'text-indigo-500'
-              }`}
-              onPress={() => !isResending && resendCode()}>
-              {isResending ? 'Sending...' : 'Resend'}
-            </Text>
-          </View>
-
-          <Link href="/(auth)/sign-in" className="items-center pt-2">
-            <View className="flex-row items-center gap-1">
-              <Ionicons name="arrow-back" size={14} color="#9ca3af" />
-              <Text className="text-sm text-gray-400">Back to Sign In</Text>
+        <View className="mt-8 items-center">
+          <Link href="/(auth)/sign-in">
+            <View className="flex-row items-center gap-x-2">
+              <Ionicons name="arrow-back" size={16} color="#64748b" />
+              <Text variant="subtext" size="sm" weight="medium">
+                Back to Authentication
+              </Text>
             </View>
           </Link>
         </View>

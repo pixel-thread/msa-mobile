@@ -1,4 +1,4 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+import { Component, ErrorInfo, ReactNode } from 'react';
 import { logger } from '@src/shared/utils/logger';
 
 interface BaseErrorBoundaryProps {
@@ -22,11 +22,11 @@ export class BaseErrorBoundary extends Component<BaseErrorBoundaryProps, BaseErr
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    logger.error('Error Boundary caught an error', { 
-      error, 
+    logger.error('Error Boundary caught an error', {
+      error,
       errorInfo: {
-        componentStack: errorInfo.componentStack
-      } 
+        componentStack: errorInfo.componentStack,
+      },
     });
   }
 
@@ -36,9 +36,9 @@ export class BaseErrorBoundary extends Component<BaseErrorBoundaryProps, BaseErr
 
   render() {
     if (this.state.hasError) {
-      return this.props.fallback({ 
-        error: this.state.error, 
-        resetError: this.resetError 
+      return this.props.fallback({
+        error: this.state.error,
+        resetError: this.resetError,
       });
     }
 

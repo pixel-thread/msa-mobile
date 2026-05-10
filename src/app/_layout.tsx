@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { AppProviders } from '@components/providers';
-import { GlobalErrorBoundary } from '@components';
+import { GlobalErrorBoundary } from '@components/common/error-boundary';
 import { Toaster } from 'sonner-native';
 import React from 'react';
 

@@ -10,10 +10,7 @@ interface ErrorBoundaryProps {
 export const ErrorBoundary = ({ children, errorMessage }: ErrorBoundaryProps) => {
   return (
     <BaseErrorBoundary
-      fallback={({ resetError }) => (
-        <CompactError message={errorMessage} onRetry={resetError} />
-      )}
-    >
+      fallback={({ resetError }) => <CompactError message={errorMessage} onRetry={resetError} />}>
       {children}
     </BaseErrorBoundary>
   );

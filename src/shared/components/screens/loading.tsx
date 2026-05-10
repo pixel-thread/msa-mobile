@@ -7,7 +7,7 @@ interface LoadingScreenProps {
 
 /**
  * A full-screen centered loading indicator component.
- * 
+ *
  * @param message - Optional message to display below the spinner.
  */
 export const LoadingScreen = ({ message = 'Loading...' }: LoadingScreenProps) => {

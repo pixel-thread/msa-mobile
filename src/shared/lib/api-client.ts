@@ -38,7 +38,7 @@ const failedQueue: QueueItem[] = [];
 
 /**
  * Processes the failed request queue after a refresh attempt.
- * 
+ *
  * @param error - If provided, all queued requests will be rejected with this error.
  * @param token - If provided, all queued requests will be resolved with this new token.
  */
@@ -55,7 +55,7 @@ const processQueue = (error: unknown, token: string | null = null) => {
 
 /**
  * Checks if a given URL is one of the authentication-related paths.
- * 
+ *
  * @param url - The URL to check.
  * @returns True if the URL is an auth path, false otherwise.
  */
@@ -78,7 +78,7 @@ export const apiClient = axios.create({
 /**
  * Performs a token refresh request using the stored refresh token.
  * Updates the SecureStore with new tokens upon success.
- * 
+ *
  * @throws Error if no refresh token is found or if the refresh request fails.
  * @returns The new access token.
  */

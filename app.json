@@ -21,7 +21,7 @@
     "orientation": "portrait",
     "icon": "./src/shared/assets/icon.png",
 
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
 
     "splash": {
       "image": "./src/shared/assets/splash.png",

@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useQuery } from '@tanstack/react-query';
 

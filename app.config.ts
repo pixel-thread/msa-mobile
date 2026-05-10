@@ -42,7 +42,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         backgroundColor: '#ffffff',
       },
       package: getIdentifier(),
-      googleServicesFile: process.env.EXPO_PUBLIC_GOOGLE_SERVICES,
+      googleServicesFile: process.env.EXPO_PUBLIC_GOOGLE_SERVICE,
     },
     web: {
       bundler: 'metro',

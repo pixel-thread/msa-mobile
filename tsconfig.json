@@ -4,7 +4,16 @@
     "strict": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["*"]
+      "@src/*": ["src/*"],
+      "@assets/*": ["src/shared/assets/*"],
+      "@Sharedtypes/*": ["src/shared/types/*"],
+      "@hooks/*": ["src/shared/hooks/*"],
+      "@components/*": ["src/shared/components/*"],
+      "@screens/*": ["src/shared/components/screens/*"],
+      "@utils/*": ["src/shared/utils/*"],
+      "@lib/*": ["src/shared/lib/*"],
+      "@validators/*": ["src/shared/validators/*"],
+      "@features/*": ["src/features/*"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts", "nativewind-env.d.ts"]

@@ -6,7 +6,7 @@ import { SECURE_STORE_KEYS } from '@src/shared/constants';
  * Base URL for the API.
  * Defaults to localhost if EXPO_PUBLIC_API_URL is not provided.
  */
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:3000/api';
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL ?? 'http://localhost:3000/api';
 
 /**
  * Paths that bypass the automatic token refresh logic.

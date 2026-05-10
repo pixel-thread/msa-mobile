@@ -10,7 +10,8 @@ export default ({ config }: ConfigContext): ExpoConfig => {
   };
 
   const getIdentifier = () => {
-    if (variant === 'development') return 'com.pixelthread.msa.dev';
+    // TODO: change the dev to .dev
+    if (variant === 'development') return 'com.pixelthread.msa';
     if (variant === 'preview') return 'com.pixelthread.msa.preview';
     return 'com.pixelthread.msa';
   };
@@ -41,6 +42,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         backgroundColor: '#ffffff',
       },
       package: getIdentifier(),
+      googleServicesFile: process.env.EXPO_PUBLIC_GOOGLE_SERVICES,
     },
     web: {
       bundler: 'metro',

@@ -19,7 +19,6 @@ export const useSignIn = () => {
   return useMutation({
     mutationFn: (data: SignInFormData) => http.post<SignInSuccessData>('/auth/sign-in', data),
     onSuccess: (response) => {
-      console.log('response', response);
       if (response.success) {
         toast.success(response.message);
         if (response.data?.mfaRequired && response.data.tempToken) {
@@ -34,7 +33,7 @@ export const useSignIn = () => {
           if (refreshToken) {
             setRefreshToken(refreshToken);
           }
-          router.replace('/(protected)/(tabs)');
+          router.replace('/(protected)/(drawer)/(tabs)');
         }
         return response;
       } else {

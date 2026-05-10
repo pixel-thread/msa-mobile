@@ -119,6 +119,3 @@ export const SignInVerifyScreen = () => {
     </KeyboardAvoidingView>
   );
 };
-w>
-  );
-};

@@ -91,7 +91,7 @@ export const SignInScreen = () => {
           />
 
           <View className="flex-row justify-end">
-            <Link href="/(auth)/forgot-password">
+            <Link href="/">
               <Text className="text-sm font-medium text-indigo-500">Forgot password?</Text>
             </Link>
           </View>

@@ -9,7 +9,7 @@ type MFAResponse = {
   refresh_token: string;
 };
 
-export const useSigninVerify = () => {
+export const useMfaVerify = () => {
   const router = useRouter();
   const { setRefreshToken, setAccessToken } = useSecureTokenStore();
 

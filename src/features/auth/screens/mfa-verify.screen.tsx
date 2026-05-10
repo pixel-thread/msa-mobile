@@ -11,14 +11,14 @@ import { Link } from 'expo-router';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Ionicons } from '@expo/vector-icons';
 
-import { MfaSigninVerifySchema, type MfaVerifyFormData } from '../validators';
+import { MfaVerifySchema, type MfaVerifyFormData } from '../validators';
 import { useMfaVerify } from '../hooks';
 import { Button } from '@src/shared/components/Button';
 import { TextInput } from '@src/shared/components/ui/text-input';
 import { useResendMfaCode } from '../hooks/use-resend-mfa-code.hook';
 import { useSearchParams } from 'expo-router/build/hooks';
 
-export const MfaSigninVerifyScreen = () => {
+export const MfaVerifyScreen = () => {
   const searchParams = useSearchParams();
   const mfaTempToken = searchParams.get('tempToken') || '';
   const {
@@ -26,7 +26,7 @@ export const MfaSigninVerifyScreen = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<MfaVerifyFormData>({
-    resolver: zodResolver(MfaSigninVerifySchema),
+    resolver: zodResolver(MfaVerifySchema),
   });
 
   const { mutate: verifyMfa, isPending, error } = useMfaVerify();

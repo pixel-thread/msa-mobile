@@ -2,9 +2,16 @@ import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import { SECURE_STORE_KEYS } from '@src/shared/constants';
 
+/**
+ * Base URL for the API.
+ * Defaults to localhost if EXPO_PUBLIC_API_URL is not provided.
+ */
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:3000/api';
 
-// 1. FIXED: Removed leading slashes so `.includes()` works accurately
+/**
+ * Paths that bypass the automatic token refresh logic.
+ * Errors on these paths are returned directly to the caller.
+ */
 const AUTH_PATHS = [
   'auth/sign-in',
   'auth/sign-in/verify',
@@ -14,14 +21,27 @@ const AUTH_PATHS = [
   'auth/reset-password',
 ] as const;
 
+/**
+ * Represents a pending request in the queue while a token refresh is in progress.
+ */
 interface QueueItem {
+  /** Function to resolve the promise with a new token */
   resolve: (token: string) => void;
+  /** Function to reject the promise with an error */
   reject: (error: unknown) => void;
 }
 
+/** Flag indicating if a token refresh request is currently in flight */
 let isRefreshing = false;
+/** List of requests waiting for the token refresh to complete */
 const failedQueue: QueueItem[] = [];
 
+/**
+ * Processes the failed request queue after a refresh attempt.
+ * 
+ * @param error - If provided, all queued requests will be rejected with this error.
+ * @param token - If provided, all queued requests will be resolved with this new token.
+ */
 const processQueue = (error: unknown, token: string | null = null) => {
   failedQueue.forEach((prom) => {
     if (error) {
@@ -33,10 +53,20 @@ const processQueue = (error: unknown, token: string | null = null) => {
   failedQueue.length = 0;
 };
 
+/**
+ * Checks if a given URL is one of the authentication-related paths.
+ * 
+ * @param url - The URL to check.
+ * @returns True if the URL is an auth path, false otherwise.
+ */
 const isAuthPath = (url: string): boolean => {
   return AUTH_PATHS.some((path) => url.includes(path));
 };
 
+/**
+ * Configured Axios instance for application-wide API requests.
+ * Includes base URL, credentials support, and default JSON headers.
+ */
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
   withCredentials: true,
@@ -45,6 +75,13 @@ export const apiClient = axios.create({
   },
 });
 
+/**
+ * Performs a token refresh request using the stored refresh token.
+ * Updates the SecureStore with new tokens upon success.
+ * 
+ * @throws Error if no refresh token is found or if the refresh request fails.
+ * @returns The new access token.
+ */
 const refreshToken = async (): Promise<string> => {
   const refreshToken = await SecureStore.getItemAsync(SECURE_STORE_KEYS.REFRESH_TOKEN);
 
@@ -71,6 +108,7 @@ const refreshToken = async (): Promise<string> => {
   return newAccessToken;
 };
 
+// Request interceptor to attach the access token to every outgoing request
 apiClient.interceptors.request.use(async (config) => {
   const token = await SecureStore.getItemAsync(SECURE_STORE_KEYS.ACCESS_TOKEN);
   if (token) {
@@ -79,6 +117,7 @@ apiClient.interceptors.request.use(async (config) => {
   return config;
 });
 
+// Response interceptor to handle token refresh on 401 errors
 apiClient.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
@@ -92,14 +131,16 @@ apiClient.interceptors.response.use(
 
     const requestPath = originalRequest.url ?? '';
 
-    // 2. FIXED: Resolve the error for auth paths so it bypasses the wrapper's catch block
+    // If the error occurred on an auth path, resolve the response so the UI can handle the error message
     if (isAuthPath(requestPath)) {
       if (error.response) return Promise.resolve(error.response);
       return Promise.reject(error);
     }
 
+    // Handle 401 Unauthorized errors by attempting to refresh the token
     if (error.response?.status === 401 && !originalRequest._retry) {
       if (isRefreshing) {
+        // If a refresh is already in progress, queue the request
         return new Promise((resolve, reject) => {
           failedQueue.push({
             resolve: (token: string) => {
@@ -123,15 +164,14 @@ apiClient.interceptors.response.use(
         }
         return apiClient(originalRequest);
       } catch (refreshError) {
-        // If refresh fails, reject the queued requests
+        // If refresh fails, clear tokens and reject all queued requests
         processQueue(refreshError, null);
 
-        // Clear local storage
         await SecureStore.deleteItemAsync(SECURE_STORE_KEYS.ACCESS_TOKEN);
         await SecureStore.deleteItemAsync(SECURE_STORE_KEYS.REFRESH_TOKEN);
         await SecureStore.deleteItemAsync(SECURE_STORE_KEYS.MFA_TEMP_TOKEN);
 
-        // 3. FIXED: Resolve the original 401 error so the wrapper handles it as a normal response
+        // Resolve the original 401 so the application-level handlers can manage the logout/redirect
         if (error.response) return Promise.resolve(error.response);
         return Promise.reject(error);
       } finally {
@@ -139,7 +179,7 @@ apiClient.interceptors.response.use(
       }
     }
 
-    // Keep rejecting other errors (like 400, 404, 500) so they go to handleAxiosError
+    // Reject other errors normally
     return Promise.reject(error);
   }
 );

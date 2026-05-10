@@ -8,12 +8,13 @@ type MFAResponse = {
   access_token: string;
   refresh_token: string;
 };
-export const useMfaVerify = () => {
+
+export const useSigninVerify = () => {
   const router = useRouter();
   const { setRefreshToken, setAccessToken } = useSecureTokenStore();
 
   return useMutation({
-    mutationFn: (data: MfaVerifyFormData) => http.post<MFAResponse>('/auth/mfa/verify', data),
+    mutationFn: (data: MfaVerifyFormData) => http.post<MFAResponse>('/auth/sign-in/verify', data),
     onSuccess: (response) => {
       if (response.success) {
         const refreshToken = response.data?.refresh_token;
@@ -28,8 +29,6 @@ export const useMfaVerify = () => {
         }
         router.replace('/(protected)/(tabs)');
       }
-      console.log(response);
     },
-    onError: () => {},
   });
 };

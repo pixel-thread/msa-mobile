@@ -19,9 +19,9 @@ export const useSignIn = () => {
       if (!response.success) return;
 
       if (response.data?.mfaRequired && response.data.tempToken) {
-        router.push('/(auth)/mfa-verify');
+        router.push(`/(auth)/mfa-verify?tempToken=${response.data.tempToken}`);
       } else {
-        router.replace('/(protected)');
+        router.replace('/(protected)/(tabs)');
       }
     },
   });

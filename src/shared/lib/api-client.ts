@@ -4,6 +4,15 @@ import { SECURE_STORE_KEYS } from '@src/shared/constants';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:3000/api';
 
+const AUTH_PATHS = [
+  '/auth/sign-in',
+  '/auth/sign-up',
+  '/auth/sign-up/verify',
+  '/auth/refresh',
+  '/auth/forgot-password',
+  '/auth/reset-password',
+] as const;
+
 interface QueueItem {
   resolve: (token: string) => void;
   reject: (error: unknown) => void;
@@ -23,6 +32,10 @@ const processQueue = (error: unknown, token: string | null = null) => {
   failedQueue.length = 0;
 };
 
+const isAuthPath = (url: string): boolean => {
+  return AUTH_PATHS.some((path) => url.includes(path));
+};
+
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
   withCredentials: true,
@@ -38,11 +51,9 @@ const refreshToken = async (): Promise<string> => {
     throw new Error('No refresh token available');
   }
 
-  const response = await axios.post<{ data?: { accessToken: string; refreshToken?: string } }>(
-    `${API_BASE_URL}/auth/refresh`,
-    { refreshToken },
-    { withCredentials: true }
-  );
+  const response = await axios.post<{
+    data?: { accessToken: string; refreshToken?: string };
+  }>(`${API_BASE_URL}/auth/refresh`, { refreshToken }, { withCredentials: true });
 
   const newAccessToken = response.data?.data?.accessToken;
   if (!newAccessToken) {
@@ -70,9 +81,17 @@ apiClient.interceptors.request.use(async (config) => {
 apiClient.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
-    const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+    const originalRequest = error.config as InternalAxiosRequestConfig & {
+      _retry?: boolean;
+    };
 
     if (!originalRequest) {
+      return Promise.reject(error);
+    }
+
+    const requestPath = originalRequest.url ?? '';
+
+    if (isAuthPath(requestPath)) {
       return Promise.reject(error);
     }
 

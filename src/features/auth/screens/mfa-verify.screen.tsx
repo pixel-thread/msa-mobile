@@ -11,30 +11,37 @@ import { Link } from 'expo-router';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Ionicons } from '@expo/vector-icons';
 
-import { mfaVerifySchema, type MfaVerifyFormData } from '../validators';
+import { MfaSigninVerifySchema, type MfaVerifyFormData } from '../validators';
 import { useMfaVerify } from '../hooks';
 import { Button } from '@src/shared/components/Button';
 import { TextInput } from '@src/shared/components/ui/text-input';
 import { useResendMfaCode } from '../hooks/use-resend-mfa-code.hook';
+import { useSearchParams } from 'expo-router/build/hooks';
 
-export const MfaVerifyScreen = () => {
+export const MfaSigninVerifyScreen = () => {
+  const searchParams = useSearchParams();
+  const mfaTempToken = searchParams.get('tempToken') || '';
   const {
     control,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm<MfaVerifyFormData>({
-    resolver: zodResolver(mfaVerifySchema),
+    resolver: zodResolver(MfaSigninVerifySchema),
   });
 
   const { mutate: verifyMfa, isPending, error } = useMfaVerify();
   const { mutate: resendCode, isPending: isResending } = useResendMfaCode();
 
   const onSubmit = (data: MfaVerifyFormData) => {
-    verifyMfa(data);
-    reset();
-  };
+    console.log();
+    const payload = {
+      code: data.code,
+      mfa_temp_token: mfaTempToken,
+    };
 
+    verifyMfa(payload);
+  };
+  console.log(errors);
   return (
     <KeyboardAvoidingView
       className="flex-1 bg-white"

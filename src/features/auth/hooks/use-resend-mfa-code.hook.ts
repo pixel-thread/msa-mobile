@@ -3,6 +3,6 @@ import http from '@src/shared/utils/http';
 
 export const useResendMfaCode = () => {
   return useMutation({
-    mutationFn: () => http.post('/auth/mfa/resend'),
+    mutationFn: () => http.post('/auth/sign-in/resend'),
   });
 };

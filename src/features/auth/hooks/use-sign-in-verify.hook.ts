@@ -14,7 +14,8 @@ export const useSignInVerify = () => {
   const { setRefreshToken, setAccessToken } = useSecureTokenStore();
 
   return useMutation({
-    mutationFn: (data: SignInVerifyFormData) => http.post<SignInVerifyResponse>('/auth/sign-in/verify', data),
+    mutationFn: (data: SignInVerifyFormData) =>
+      http.post<SignInVerifyResponse>('/auth/sign-in/verify', data),
     onSuccess: (response) => {
       if (response.success) {
         const refreshToken = response.data?.refresh_token;

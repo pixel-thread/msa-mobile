@@ -63,6 +63,8 @@ export const StackHeader = ({
     return false;
   }, [navigation]);
 
+  const ableToGoBack = navigation.canGoBack();
+
   const headerTintColor = isDark ? '#f8fafc' : '#0f172a';
 
   return (
@@ -71,7 +73,7 @@ export const StackHeader = ({
         headerTitle: title,
         headerShown: true,
         headerShadowVisible: false,
-        headerBackVisible: showDrawerButton ? false : showBackButton,
+        headerBackVisible: showDrawerButton ? false : showBackButton ? ableToGoBack : false,
         headerStyle: {
           backgroundColor: isDark ? '#020617' : '#f8fafc',
         },
@@ -82,9 +84,10 @@ export const StackHeader = ({
         },
         headerTintColor: headerTintColor,
         headerRight: rightAction ? () => rightAction : undefined,
-        headerLeft: showDrawerButton
-          ? () => <CustomDrawerToggleButton tintColor={headerTintColor} />
-          : undefined,
+        headerLeft:
+          showDrawerButton && hasDrawer
+            ? () => <CustomDrawerToggleButton tintColor={headerTintColor} />
+            : undefined,
       }}
     />
   );

@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react';
-import { useSegments, useRouter } from 'expo-router';
+import { useSegments, useRouter, Route } from 'expo-router';
 import { View, ActivityIndicator, Text } from 'react-native';
 
 import { useAuthStore } from '@features/auth/store';
 
 interface AuthGuardProps {
   children: React.ReactNode;
-  publicRoutes?: string[];
+  publicRoutes?: Route[];
 }
+const authRoutes: Route[] = ['/(auth)/sign-in', '/(auth)/sign-in-verify', '/(auth)/sign-up'];
 
-export const AuthGuard = ({ children, publicRoutes = [] }: AuthGuardProps) => {
+export const AuthGuard = ({ children, publicRoutes = authRoutes }: AuthGuardProps) => {
   const router = useRouter();
   const segments = useSegments();
   const { user, isAuthenticated, isHydrated } = useAuthStore();
@@ -22,7 +23,7 @@ export const AuthGuard = ({ children, publicRoutes = [] }: AuthGuardProps) => {
     const isPublicRoute = publicRoutes.some((route) => currentPath.startsWith(route));
 
     if (isPublicRoute && isAuthenticated && user) {
-      router.replace('/(protected)');
+      router.replace('/(protected)/(tabs)');
     } else if (!isPublicRoute && !isAuthenticated && !user) {
       router.replace('/(auth)/sign-in');
     } else {

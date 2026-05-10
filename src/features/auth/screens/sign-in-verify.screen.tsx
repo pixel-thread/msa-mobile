@@ -11,35 +11,35 @@ import { Link } from 'expo-router';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Ionicons } from '@expo/vector-icons';
 
-import { MfaVerifySchema, type MfaVerifyFormData } from '../validators';
-import { useMfaVerify } from '../hooks';
+import { SignInVerifySchema, type SignInVerifyFormData } from '../validators';
+import { useSignInVerify } from '../hooks';
 import { Button } from '@src/shared/components/Button';
 import { TextInput } from '@src/shared/components/ui/text-input';
-import { useResendMfaCode } from '../hooks/use-resend-mfa-code.hook';
+import { useResendSignInVerifyCode } from '../hooks/use-resend-sign-in-verify-code.hook';
 import { useSearchParams } from 'expo-router/build/hooks';
 
-export const MfaVerifyScreen = () => {
+export const SignInVerifyScreen = () => {
   const searchParams = useSearchParams();
   const mfaTempToken = searchParams.get('tempToken') || '';
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<MfaVerifyFormData>({
-    resolver: zodResolver(MfaVerifySchema),
+  } = useForm<SignInVerifyFormData>({
+    resolver: zodResolver(SignInVerifySchema),
   });
 
-  const { mutate: verifyMfa, isPending, error } = useMfaVerify();
-  const { mutate: resendCode, isPending: isResending } = useResendMfaCode();
+  const { mutate: verifySignIn, isPending, error } = useSignInVerify();
+  const { mutate: resendCode, isPending: isResending } = useResendSignInVerifyCode();
 
-  const onSubmit = (data: MfaVerifyFormData) => {
+  const onSubmit = (data: SignInVerifyFormData) => {
     console.log();
     const payload = {
       code: data.code,
       mfa_temp_token: mfaTempToken,
     };
 
-    verifyMfa(payload);
+    verifySignIn(payload);
   };
   console.log(errors);
   return (
@@ -117,5 +117,8 @@ export const MfaVerifyScreen = () => {
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
+  );
+};
+w>
   );
 };

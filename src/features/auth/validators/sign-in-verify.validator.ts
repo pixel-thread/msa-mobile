@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { REGEX } from '@src/shared/constants';
 
-export const MfaVerifySchema = z.object({
+export const SignInVerifySchema = z.object({
   code: z
     .string()
     .length(6, 'Code must be 6 digits')
@@ -9,4 +9,4 @@ export const MfaVerifySchema = z.object({
   mfa_temp_token: z.string().optional(),
 });
 
-export type MfaVerifyFormData = z.infer<typeof MfaVerifySchema>;
+export type SignInVerifyFormData = z.infer<typeof SignInVerifySchema>;

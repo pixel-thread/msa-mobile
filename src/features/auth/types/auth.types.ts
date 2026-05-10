@@ -32,7 +32,7 @@ export interface MfaSetupResponse {
   codeSent: true;
 }
 
-export interface MfaVerifyResponse {
+export interface SignInVerifyResponse {
   mfaEnabled: true;
 }
 

@@ -27,7 +27,7 @@ export default function TabLayout() {
         name="profile/index"
         options={{
           title: 'Meetings',
-          tabBarIcon: ({ color }) => <TabBarIcon name="person-outline" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="person" color={color} />,
         }}
       />
     </Tabs>

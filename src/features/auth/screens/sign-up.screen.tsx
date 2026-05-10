@@ -13,7 +13,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { SignUpSchema, type SignUpFormData } from '../validators';
 import { useSignUp } from '../hooks';
-import { Button } from '@src/shared/components/Button';
+import { Button } from '@src/shared/components/ui/Button';
 import { TextInput } from '@src/shared/components/ui/text-input';
 
 export const SignUpScreen = () => {

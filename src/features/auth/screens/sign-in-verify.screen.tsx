@@ -13,7 +13,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { SignInVerifySchema, type SignInVerifyFormData } from '../validators';
 import { useSignInVerify } from '../hooks';
-import { Button } from '@src/shared/components/Button';
+import { Button } from '@src/shared/components/ui/Button';
 import { TextInput } from '@src/shared/components/ui/text-input';
 import { useResendSignInVerifyCode } from '../hooks/use-resend-sign-in-verify-code.hook';
 import { useSearchParams } from 'expo-router/build/hooks';

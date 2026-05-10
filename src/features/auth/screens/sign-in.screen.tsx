@@ -13,7 +13,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { SignInSchema, type SignInFormData } from '../validators';
 import { useSignIn } from '../hooks';
-import { Button } from '@src/shared/components/Button';
+import { Button } from '@src/shared/components/ui/Button';
 import { TextInput } from '@src/shared/components/ui/text-input';
 
 export const SignInScreen = () => {

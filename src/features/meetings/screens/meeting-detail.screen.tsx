@@ -59,22 +59,21 @@ export const MeetingDetailScreen = () => {
 
   return (
     <Container className="bg-slate-50 dark:bg-slate-950">
-      <StackHeader
-        showBackButton
-        title="Meeting Details"
-        rightAction={
-          <TouchableOpacity onPress={handleShare} className="mr-2">
-            <Ionicons name="share-outline" size={22} color="#4f46e5" />
-          </TouchableOpacity>
-        }
-      />
-
       <ScrollView
         className="flex-1"
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor="#6366f1" />
         }>
+        <StackHeader
+          showBackButton
+          title="Meeting Details"
+          rightAction={
+            <TouchableOpacity onPress={handleShare} className="mr-2">
+              <Ionicons name="share-outline" size={22} color="#4f46e5" />
+            </TouchableOpacity>
+          }
+        />
         {/* Hero Section */}
         <View className="px-4 pb-8 pt-6">
           <View className="mb-3 flex-row items-center gap-x-2">

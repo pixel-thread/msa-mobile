@@ -60,6 +60,23 @@ export const NotificationProvider = ({ children }: NotificationProviderProps) =>
     [router]
   );
 
+  const sendTokenToBackend = useCallback(
+    async (token: string) => {
+      try {
+        // if (isRegistered) return;
+        const res = await http.post('/notifications/register', { token: token });
+
+        if (res.success) {
+          setRegistered(true);
+        }
+      } catch (error) {
+        // Silently fail or log to an error monitoring service
+        logger.error('Failed to send push token to backend:', { error });
+      }
+    },
+    [isRegistered, setRegistered]
+  );
+
   useEffect(() => {
     // Only register for notifications if authenticated
     if (!isAuthenticated || !user) {
@@ -100,27 +117,10 @@ export const NotificationProvider = ({ children }: NotificationProviderProps) =>
     };
   }, [isAuthenticated, user, handleNotificationResponse, sendTokenToBackend]);
 
-  const sendTokenToBackend = useCallback(
-    async (token: string) => {
-      try {
-        if (isRegistered) return;
-        const res = await http.post('/notifications/register', { token: token });
-
-        if (res.success) {
-          setRegistered(true);
-        }
-      } catch (error) {
-        // Silently fail or log to an error monitoring service
-        logger.error('Failed to send push token to backend:', { error });
-      }
-    },
-    [isRegistered, setRegistered]
-  );
-
   const linkTokenToBackend = useCallback(
     async (token: string | undefined) => {
       try {
-        if (isLinked) return;
+        // if (isLinked) return;
         const res = await http.post('/notifications/link', { token: token });
         if (res.success) {
           setLinked(true);

@@ -1,11 +1,6 @@
 import React from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
-import {
-  View,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-} from 'react-native';
+import { View, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { Link } from 'expo-router';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Ionicons } from '@expo/vector-icons';
@@ -34,7 +29,6 @@ export const SignInScreen = () => {
         contentContainerClassName="flex-grow justify-center px-6 py-12"
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}>
-        
         <View className="mb-12 items-center">
           <View className="mb-6 h-20 w-20 items-center justify-center rounded-3xl bg-indigo-600 shadow-xl shadow-indigo-200 dark:shadow-none">
             <Ionicons name="shield-checkmark" size={40} color="#fff" />
@@ -97,8 +91,8 @@ export const SignInScreen = () => {
         </View>
 
         <View className="mt-12 items-center">
-          <Text variant="subtext" size="xs" className="opacity-50 text-center">
-            Protected by end-to-end encryption.{"\n"}
+          <Text variant="subtext" size="xs" className="text-center opacity-50">
+            Protected by end-to-end encryption.{'\n'}
             Unauthorized access is strictly prohibited.
           </Text>
         </View>

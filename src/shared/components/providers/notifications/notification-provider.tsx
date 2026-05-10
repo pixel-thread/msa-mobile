@@ -75,13 +75,13 @@ export const NotificationProvider = ({ children }: NotificationProviderProps) =>
 
     return () => {
       if (notificationListener.current) {
-        Notifications.removeNotificationSubscription(notificationListener.current);
+        notificationListener.current.remove();
       }
       if (responseListener.current) {
-        Notifications.removeNotificationSubscription(responseListener.current);
+        responseListener.current.remove();
       }
     };
-  }, [isAuthenticated, user]);
+  }, [isAuthenticated, user, handleNotificationResponse]);
 
   const sendTokenToBackend = async (token: string) => {
     try {
@@ -92,15 +92,18 @@ export const NotificationProvider = ({ children }: NotificationProviderProps) =>
     }
   };
 
-  const handleNotificationResponse = (response: Notifications.NotificationResponse) => {
-    const data = response.notification.request.content.data;
+  const handleNotificationResponse = React.useCallback(
+    (response: Notifications.NotificationResponse) => {
+      const data = response.notification.request.content.data;
 
-    // Handle navigation based on notification data
-    // Expecting a 'url' field in the notification data payload
-    if (data?.url) {
-      router.push(data.url as any);
-    }
-  };
+      // Handle navigation based on notification data
+      // Expecting a 'url' field in the notification data payload
+      if (data?.url) {
+        router.push(data.url as any);
+      }
+    },
+    [router]
+  );
 
   return (
     <NotificationContext.Provider value={{ expoPushToken, notification }}>

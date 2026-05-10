@@ -1,18 +1,22 @@
 import React from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
-import {
-  View,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-} from 'react-native';
+import { View, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { Link } from 'expo-router';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Ionicons } from '@expo/vector-icons';
 
 import { SignUpSchema, type SignUpFormData } from '../validators';
 import { useSignUp } from '../hooks';
-import { Button, Text, FieldInput, Card, CardContent, Alert, AlertTitle, AlertDescription } from '@src/shared/components/ui';
+import {
+  Button,
+  Text,
+  FieldInput,
+  Card,
+  CardContent,
+  Alert,
+  AlertTitle,
+  AlertDescription,
+} from '@src/shared/components/ui';
 
 export const SignUpScreen = () => {
   const methods = useForm<SignUpFormData>({
@@ -43,7 +47,6 @@ export const SignUpScreen = () => {
         contentContainerClassName="flex-grow justify-center px-6 py-12"
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}>
-        
         <View className="mb-10 items-center">
           <View className="mb-6 h-20 w-20 items-center justify-center rounded-3xl bg-indigo-600 shadow-xl shadow-indigo-200 dark:shadow-none">
             <Ionicons name="person-add" size={36} color="#fff" />
@@ -82,8 +85,11 @@ export const SignUpScreen = () => {
                   secureTextEntry
                 />
 
-                <View className="mt-2 mb-4">
-                  <Text variant="label" size="xs" className="mb-3 text-slate-400 uppercase tracking-widest">
+                <View className="mb-4 mt-2">
+                  <Text
+                    variant="label"
+                    size="xs"
+                    className="mb-3 uppercase tracking-widest text-slate-400">
                     Security Requirements
                   </Text>
                   <View className="flex-row flex-wrap gap-2">
@@ -92,8 +98,10 @@ export const SignUpScreen = () => {
                       return (
                         <View
                           key={label}
-                          className={`flex-row items-center gap-1.5 rounded-full px-3 py-1.5 border ${
-                            met ? 'bg-emerald-50 border-emerald-100 dark:bg-emerald-950/20 dark:border-emerald-900/30' : 'bg-slate-50 border-slate-100 dark:bg-slate-800 dark:border-slate-700'
+                          className={`flex-row items-center gap-1.5 rounded-full border px-3 py-1.5 ${
+                            met
+                              ? 'border-emerald-100 bg-emerald-50 dark:border-emerald-900/30 dark:bg-emerald-950/20'
+                              : 'border-slate-100 bg-slate-50 dark:border-slate-700 dark:bg-slate-800'
                           }`}>
                           <Ionicons
                             name={met ? 'checkmark-circle' : 'ellipse-outline'}
@@ -103,7 +111,9 @@ export const SignUpScreen = () => {
                           <Text
                             size="xs"
                             weight="medium"
-                            className={met ? 'text-emerald-700 dark:text-emerald-400' : 'text-slate-500'}>
+                            className={
+                              met ? 'text-emerald-700 dark:text-emerald-400' : 'text-slate-500'
+                            }>
                             {label}
                           </Text>
                         </View>

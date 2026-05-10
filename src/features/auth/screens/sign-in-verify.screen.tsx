@@ -1,19 +1,22 @@
 import React from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
-import {
-  View,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  TouchableOpacity,
-} from 'react-native';
+import { View, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity } from 'react-native';
 import { Link } from 'expo-router';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Ionicons } from '@expo/vector-icons';
 
 import { SignInVerifySchema, type SignInVerifyFormData } from '../validators';
 import { useSignInVerify } from '../hooks';
-import { Button, Text, FieldInput, Card, CardContent, Alert, AlertTitle, AlertDescription } from '@src/shared/components/ui';
+import {
+  Button,
+  Text,
+  FieldInput,
+  Card,
+  CardContent,
+  Alert,
+  AlertTitle,
+  AlertDescription,
+} from '@src/shared/components/ui';
 import { useResendSignInVerifyCode } from '../hooks/use-resend-sign-in-verify-code.hook';
 import { useSearchParams } from 'expo-router/build/hooks';
 
@@ -44,7 +47,6 @@ export const SignInVerifyScreen = () => {
         contentContainerClassName="flex-grow justify-center px-6 py-12"
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}>
-        
         <View className="mb-10 items-center">
           <View className="mb-6 h-20 w-20 items-center justify-center rounded-full bg-indigo-600 shadow-xl shadow-indigo-200 dark:shadow-none">
             <Ionicons name="mail-unread" size={36} color="#fff" />
@@ -52,7 +54,7 @@ export const SignInVerifyScreen = () => {
           <Text variant="heading" size="3xl" className="text-slate-900 dark:text-white">
             Verify Identity
           </Text>
-          <Text variant="subtext" size="sm" className="mt-2 text-center px-8">
+          <Text variant="subtext" size="sm" className="mt-2 px-8 text-center">
             Please enter the 6-digit authentication code sent to your registered email
           </Text>
         </View>
@@ -68,7 +70,7 @@ export const SignInVerifyScreen = () => {
                   keyboardType="number-pad"
                   maxLength={6}
                   textAlign="center"
-                  className="text-2xl tracking-[12px] font-bold h-16"
+                  className="h-16 text-2xl font-bold tracking-[12px]"
                 />
 
                 {error && (
@@ -89,10 +91,9 @@ export const SignInVerifyScreen = () => {
                   <Text variant="subtext" size="sm">
                     No code received?
                   </Text>
-                  <TouchableOpacity 
+                  <TouchableOpacity
                     onPress={() => !isResending && resendCode()}
-                    disabled={isResending}
-                  >
+                    disabled={isResending}>
                     <Text variant="link" size="sm" weight="bold">
                       {isResending ? 'Sending...' : 'Resend Code'}
                     </Text>

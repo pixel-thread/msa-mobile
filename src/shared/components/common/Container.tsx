@@ -11,8 +11,7 @@ export const Container: React.FC<ContainerProps> = ({ children, className, ...pr
     <SafeAreaView
       edges={['left', 'right']}
       className={cn('flex-1 bg-slate-50 dark:bg-slate-950', className)}
-      {...props}
-    >
+      {...props}>
       {children}
     </SafeAreaView>
   );

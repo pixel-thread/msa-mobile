@@ -43,24 +43,24 @@ export const Header = ({
     <View
       className={cn(
         'flex-row items-center justify-between px-4 py-3',
-        !transparent && 'bg-slate-50 dark:bg-slate-950 border-b border-slate-100 dark:border-slate-900',
+        !transparent &&
+          'border-b border-slate-100 bg-slate-50 dark:border-slate-900 dark:bg-slate-950',
         className
       )}>
-      <View className="flex-row items-center flex-1">
+      <View className="flex-1 flex-row items-center">
         {showBackButton && (
           <TouchableOpacity
             onPress={handleBack}
             activeOpacity={0.7}
-            className="mr-3 h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
-            <Ionicons
-              name="chevron-back"
-              size={20}
-              color={isDark ? '#f8fafc' : '#0f172a'}
-            />
+            className="mr-3 h-10 w-10 items-center justify-center rounded-full border border-slate-100 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+            <Ionicons name="chevron-back" size={20} color={isDark ? '#f8fafc' : '#0f172a'} />
           </TouchableOpacity>
         )}
         <View className="flex-1">
-          <Text variant="heading" size="lg" className="text-slate-900 dark:text-white leading-tight">
+          <Text
+            variant="heading"
+            size="lg"
+            className="leading-tight text-slate-900 dark:text-white">
             {title}
           </Text>
           {subtitle && (
@@ -71,11 +71,7 @@ export const Header = ({
         </View>
       </View>
 
-      {rightAction && (
-        <View className="ml-3">
-          {rightAction}
-        </View>
-      )}
+      {rightAction && <View className="ml-3">{rightAction}</View>}
     </View>
   );
 };

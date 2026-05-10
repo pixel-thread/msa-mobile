@@ -1,9 +1,5 @@
 import { forwardRef } from 'react';
-import {
-  TextInput as RNTextInput,
-  TextInputProps as RNTextInputProps,
-  View,
-} from 'react-native';
+import { TextInput as RNTextInput, TextInputProps as RNTextInputProps, View } from 'react-native';
 import { Text } from './text';
 
 interface TextInputProps extends RNTextInputProps {

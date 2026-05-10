@@ -27,9 +27,10 @@ export const Accordion = ({
   className?: string;
 }) => {
   const [internalValue, setInternalValue] = React.useState('');
-  
+
   const value = controlledValue !== undefined ? controlledValue : internalValue;
-  const onValueChange = controlledOnValueChange !== undefined ? controlledOnValueChange : setInternalValue;
+  const onValueChange =
+    controlledOnValueChange !== undefined ? controlledOnValueChange : setInternalValue;
 
   return (
     <AccordionContext.Provider value={{ value, onValueChange }}>

@@ -6,7 +6,7 @@ import Animated, {
   withSpring,
   withTiming,
   interpolate,
-  Extrapolate
+  Extrapolate,
 } from 'react-native-reanimated';
 import { Text } from './text';
 import { cn } from '@lib/cn';
@@ -27,8 +27,7 @@ export const Dialog = ({ open, onOpenChange, children }: DialogProps) => {
       visible={open}
       animationType="none" // We handle EVERYTHING via Reanimated for smoothness
       statusBarTranslucent
-      onRequestClose={() => onOpenChange(false)}
-    >
+      onRequestClose={() => onOpenChange(false)}>
       {children}
     </Modal>
   );
@@ -48,7 +47,7 @@ export const DialogContent = ({ children, className, onClose, ...props }: Dialog
     progress.value = withSpring(1, {
       damping: 20,
       stiffness: 150,
-      mass: 0.8
+      mass: 0.8,
     });
 
     return () => {
@@ -62,9 +61,7 @@ export const DialogContent = ({ children, className, onClose, ...props }: Dialog
 
   const contentStyle = useAnimatedStyle(() => ({
     opacity: interpolate(progress.value, [0, 1], [0, 1]),
-    transform: [
-      { scale: interpolate(progress.value, [0, 1], [0.92, 1], Extrapolate.CLAMP) }
-    ],
+    transform: [{ scale: interpolate(progress.value, [0, 1], [0.92, 1], Extrapolate.CLAMP) }],
   }));
 
   const handleClose = () => {
@@ -83,18 +80,17 @@ export const DialogContent = ({ children, className, onClose, ...props }: Dialog
       </Animated.View>
 
       {/* Content Container */}
-      <View style={StyleSheet.absoluteFill} className="items-center justify-center pointer-events-box-none px-4">
+      <View
+        style={StyleSheet.absoluteFill}
+        className="pointer-events-box-none items-center justify-center px-4">
         <Animated.View
           style={[contentStyle]}
           className={cn(
             'w-full max-w-sm rounded-3xl bg-white p-6 shadow-2xl dark:bg-slate-900',
             className
           )}
-          {...props}
-        >
-          <Pressable onPress={(e) => e.stopPropagation()}>
-            {children}
-          </Pressable>
+          {...props}>
+          <Pressable onPress={(e) => e.stopPropagation()}>{children}</Pressable>
         </Animated.View>
       </View>
     </View>

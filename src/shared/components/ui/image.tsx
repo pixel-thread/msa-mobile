@@ -25,8 +25,7 @@ export const Image = ({
   return (
     <View
       className={cn('relative overflow-hidden bg-slate-100 dark:bg-slate-900', containerClassName)}
-      style={{ minHeight: 40, minWidth: 40 }}
-    >
+      style={{ minHeight: 40, minWidth: 40 }}>
       {/* Image Layer */}
       <RNImage
         {...props}
@@ -36,10 +35,7 @@ export const Image = ({
         }}
         onError={() => setStatus('error')}
         className={cn('h-full w-full', className)}
-        style={[
-          { opacity: status === 'success' ? 1 : 0 },
-          StyleSheet.absoluteFillObject
-        ]}
+        style={[{ opacity: status === 'success' ? 1 : 0 }, StyleSheet.absoluteFillObject]}
       />
 
       {/* Skeleton / Loading Layer */}
@@ -53,8 +49,7 @@ export const Image = ({
       {status === 'error' && (
         <View
           style={StyleSheet.absoluteFill}
-          className="items-center justify-center bg-slate-100 dark:bg-slate-800"
-        >
+          className="items-center justify-center bg-slate-100 dark:bg-slate-800">
           <Ionicons name={fallbackIcon} size={32} color="#94a3b8" />
         </View>
       )}

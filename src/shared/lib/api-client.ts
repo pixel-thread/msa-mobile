@@ -4,6 +4,7 @@ import { SECURE_STORE_KEYS } from '@src/shared/constants';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:3000/api';
 
+// 1. FIXED: Removed leading slashes so `.includes()` works accurately
 const AUTH_PATHS = [
   'auth/sign-in',
   'auth/sign-in/verify',
@@ -86,13 +87,15 @@ apiClient.interceptors.response.use(
     };
 
     if (!originalRequest) {
-      return error;
+      return Promise.reject(error);
     }
 
     const requestPath = originalRequest.url ?? '';
 
+    // 2. FIXED: Resolve the error for auth paths so it bypasses the wrapper's catch block
     if (isAuthPath(requestPath)) {
-      return error;
+      if (error.response) return Promise.resolve(error.response);
+      return Promise.reject(error);
     }
 
     if (error.response?.status === 401 && !originalRequest._retry) {
@@ -120,18 +123,23 @@ apiClient.interceptors.response.use(
         }
         return apiClient(originalRequest);
       } catch (refreshError) {
+        // If refresh fails, reject the queued requests
         processQueue(refreshError, null);
 
+        // Clear local storage
         await SecureStore.deleteItemAsync(SECURE_STORE_KEYS.ACCESS_TOKEN);
         await SecureStore.deleteItemAsync(SECURE_STORE_KEYS.REFRESH_TOKEN);
         await SecureStore.deleteItemAsync(SECURE_STORE_KEYS.MFA_TEMP_TOKEN);
 
-        return Promise.reject(refreshError);
+        // 3. FIXED: Resolve the original 401 error so the wrapper handles it as a normal response
+        if (error.response) return Promise.resolve(error.response);
+        return Promise.reject(error);
       } finally {
         isRefreshing = false;
       }
     }
 
-    return error;
+    // Keep rejecting other errors (like 400, 404, 500) so they go to handleAxiosError
+    return Promise.reject(error);
   }
 );

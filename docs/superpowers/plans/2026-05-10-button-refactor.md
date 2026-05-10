@@ -1,8 +1,27 @@
+# Button Refactor Implementation Plan
+
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+
+**Goal:** Refactor the existing `Button` component to a shadcn/ui style using `class-variance-authority` (CVA) while adhering to the Webflow-inspired design system.
+
+**Architecture:** Use CVA to define variants and sizes, combined with a `cn` utility for safe tailwind-merge concatenation. Internal `Text` styles are dynamically mapped to the container variant.
+
+**Tech Stack:** React Native, NativeWind (Tailwind), class-variance-authority, tailwind-merge.
+
+---
+
+### Task 1: Refactor Button Component
+
+**Files:**
+- Modify: `src/shared/components/ui/Button.tsx`
+
+- [ ] **Step 1: Implementation of CVA and component logic**
+
+```tsx
 import { cva, type VariantProps } from 'class-variance-authority';
 import { forwardRef } from 'react';
-import { Text, TouchableOpacity, type TouchableOpacityProps, type View } from 'react-native';
-
-import { cn } from '@lib/cn';
+import { Text, TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
+import { cn } from '@/shared/lib/cn';
 
 const buttonVariants = cva(
   'inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background',
@@ -39,7 +58,9 @@ const textVariants = {
   link: 'text-primary',
 };
 
-export interface ButtonProps extends TouchableOpacityProps, VariantProps<typeof buttonVariants> {
+export interface ButtonProps
+  extends TouchableOpacityProps,
+    VariantProps<typeof buttonVariants> {
   title?: string;
 }
 
@@ -49,15 +70,17 @@ export const Button = forwardRef<View, ButtonProps>(
       <TouchableOpacity
         ref={ref}
         accessibilityRole="button"
-        accessibilityState={{ disabled: props.disabled ?? undefined }}
+        accessibilityState={{ disabled: props.disabled }}
         className={cn(buttonVariants({ variant, size, className }))}
-        {...props}>
+        {...props}
+      >
         {title ? (
           <Text
             className={cn(
               'font-medium',
               textVariants[variant as keyof typeof textVariants] || textVariants.default
-            )}>
+            )}
+          >
             {title}
           </Text>
         ) : (
@@ -69,3 +92,16 @@ export const Button = forwardRef<View, ButtonProps>(
 );
 
 Button.displayName = 'Button';
+```
+
+- [ ] **Step 2: Verify Linting**
+
+Run: `npm run lint`
+Expected: PASS
+
+- [ ] **Step 3: Commit changes**
+
+```bash
+git add src/shared/components/ui/Button.tsx
+git commit -m "feat: refactor Button to use CVA shadcn-style"
+```

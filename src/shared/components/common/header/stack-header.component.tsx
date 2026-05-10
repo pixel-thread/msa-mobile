@@ -1,13 +1,22 @@
+import React from 'react';
 import { Stack } from 'expo-router';
 import { Appearance } from 'react-native';
 
-interface StackHeaderProps {
+export interface StackHeaderProps {
   title: string;
   showBackButton?: boolean;
   rightAction?: React.ReactNode;
 }
 
-export const StackHeader = ({ title, rightAction, showBackButton = true }: StackHeaderProps) => {
+/**
+ * StackHeader: A wrapper for Expo Router's Stack.Screen options.
+ * Matches the visual design of the standalone Header component.
+ */
+export const StackHeader = ({ 
+  title, 
+  rightAction, 
+  showBackButton = true 
+}: StackHeaderProps) => {
   const isDark = Appearance.getColorScheme() === 'dark';
 
   return (

@@ -19,6 +19,7 @@ export const useAuthStore = create<AuthState>()(
       isAuthenticated: false,
       isHydrated: false,
       setUser: (user) => set({ user, isAuthenticated: !!user }),
+      //TODO: make call to server for logout
       logout: () => set({ user: null, isAuthenticated: false }),
       setHydrated: (value) => set({ isHydrated: value }),
     }),

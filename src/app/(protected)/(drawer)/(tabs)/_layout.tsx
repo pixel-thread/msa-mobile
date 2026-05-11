@@ -45,6 +45,13 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <TabBarIcon name="person" color={color} />,
         }}
       />
+      <Tabs.Screen
+        name="subscription"
+        options={{
+          title: 'Subscription',
+          tabBarIcon: ({ color }) => <TabBarIcon name="card" color={color} />,
+        }}
+      />
     </Tabs>
   );
 }

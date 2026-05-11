@@ -24,4 +24,4 @@ android
 .metro-health-check*
 .env
 .worktrees/
-build-1778512446645.apk
+*.apk

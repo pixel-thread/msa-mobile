@@ -11,7 +11,7 @@ import { usePaymentOption } from '../hooks/use-payment-order';
 import { isRazorpayError } from '../types/razorpay';
 import { logger } from '@src/shared/utils/logger';
 import { useVerifyPayment } from '../hooks/use-verify-payment';
-import { UserProfileHeader, PaymentHistory } from '../components';
+import { PaymentHistory } from '../components';
 
 export const SubscriptionScreen = () => {
   const [activeTab, setActiveTab] = useState<'plan' | 'history'>('plan');
@@ -47,6 +47,7 @@ export const SubscriptionScreen = () => {
 
   const onClickPay = async () => {
     try {
+      // TODO
       const res = await mutateAsync(100);
       const data = res.data;
       if (data) {
@@ -74,24 +75,21 @@ export const SubscriptionScreen = () => {
     <ErrorBoundary isComponentError componentName="SubscriptionScreen">
       <Container>
         <StackHeader title="Subscription" />
-        <UserProfileHeader />
-        
+
         {/* Tab Bar */}
-        <View className="flex-row border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950">
+        <View className="flex-row border-b border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950">
           {(['plan', 'history'] as const).map((tab) => (
             <TouchableOpacity
               key={tab}
               onPress={() => setActiveTab(tab)}
-              className={`flex-1 py-4 items-center border-b-2 ${
+              className={`flex-1 items-center border-b-2 py-4 ${
                 activeTab === tab ? 'border-indigo-600' : 'border-transparent'
-              }`}
-            >
+              }`}>
               <Text
                 variant="subtext"
                 className={`font-semibold capitalize ${
                   activeTab === tab ? 'text-indigo-600' : 'text-slate-500'
-                }`}
-              >
+                }`}>
                 {tab}
               </Text>
             </TouchableOpacity>

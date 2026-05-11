@@ -79,13 +79,13 @@ const log = (level: LogLevel, message: string, context?: LogContext) => {
 
   switch (level) {
     case 'info':
-      console.info(formatted);
+      console.log(formatted);
       break;
     case 'warn':
-      console.warn(formatted);
+      console.log(formatted);
       break;
     case 'error':
-      console.error(formatted);
+      console.log(formatted);
       break;
     case 'debug':
       if (!isProduction) {

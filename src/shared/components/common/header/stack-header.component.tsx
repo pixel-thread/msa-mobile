@@ -78,10 +78,10 @@ export const StackHeader = ({
           backgroundColor: isDark ? '#020617' : '#f8fafc',
         },
         contentStyle: {
-          borderBlockColor: '#f8fafc',
+          borderBlockColor: '#000',
           borderBottomWidth: 2,
           shadowColor: '#000',
-          shadowOffset: { width: 0, height: 2 },
+          shadowOffset: { width: 1, height: 2 },
           shadowOpacity: 0.25,
           shadowRadius: 3.84,
           elevation: 5,

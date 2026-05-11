@@ -1,10 +1,10 @@
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { SignInScreen } from '@features/auth/screens';
+import { Container } from '@src/shared/components';
 
 export default function SignInPage() {
   return (
-    <SafeAreaView className="flex-1 bg-white" edges={['top']}>
+    <Container className="flex-1" edges={['top']}>
       <SignInScreen />
-    </SafeAreaView>
+    </Container>
   );
 }

@@ -23,7 +23,7 @@ export const SignInScreen = () => {
 
   return (
     <KeyboardAvoidingView
-      className="flex-1 bg-slate-50 dark:bg-slate-950"
+      className="flex-1"
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <ScrollView
         contentContainerClassName="flex-grow justify-center px-6 py-12"

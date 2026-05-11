@@ -19,36 +19,16 @@ import {
 } from '@src/shared/components/ui';
 import { cn } from '@lib/cn';
 import { truncateText } from '@src/shared/utils/text';
+import { LoadingScreen } from '@src/shared/components/screens';
+import { LogoutButton } from '../components/logout-button';
 
 export const ProfileScreen = () => {
-  const router = useRouter();
-  const { user, logout } = useAuthStore();
-  const { clearAll } = useSecureTokenStore();
+  const { user } = useAuthStore();
 
-  const handleLogout = () => {
-    Alert.alert(
-      'Confirm Logout',
-      'Are you sure you want to sign out of your account?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Sign Out',
-          style: 'destructive',
-          onPress: async () => {
-            await clearAll();
-            logout();
-            router.replace('/(auth)/sign-in');
-          },
-        },
-      ],
-      { cancelable: true }
-    );
-  };
-
-  if (!user) return null;
+  if (!user) return <LoadingScreen message="Fetching your details" />;
 
   return (
-    <Container className="bg-slate-50 dark:bg-slate-950">
+    <Container>
       <StackHeader title="Profile" />
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         {/* Profile Header */}
@@ -169,17 +149,7 @@ export const ProfileScreen = () => {
 
         {/* Action Section */}
         <View className="mt-10 px-4 pb-12">
-          <Button
-            variant="destructive"
-            onPress={handleLogout}
-            className="h-14 rounded-2xl shadow-lg shadow-red-100 dark:shadow-none">
-            <View className="flex-row items-center gap-x-2">
-              <Ionicons name="log-out-outline" size={20} color="white" />
-              <Text weight="bold" className="text-white">
-                Logout from System
-              </Text>
-            </View>
-          </Button>
+          <LogoutButton />
 
           <View className="mt-8 items-center">
             <View className="rounded-full bg-slate-100 px-3 py-1 dark:bg-slate-800">

@@ -1,9 +1,7 @@
 import React from 'react';
-import { View, ScrollView, Alert, TouchableOpacity } from 'react-native';
-import { useRouter } from 'expo-router';
+import { View, ScrollView, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '@src/shared/store';
-import { useSecureTokenStore } from '@src/features/auth/store';
 import { Container, StackHeader } from '@src/shared/components';
 import {
   Card,

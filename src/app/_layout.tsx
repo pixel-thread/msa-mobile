@@ -3,6 +3,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import * as SplashScreen from 'expo-splash-screen';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { StatusBar } from 'expo-status-bar';
 
 import { AppProviders } from '@components/providers';
 import { GlobalErrorBoundary } from '@components/common/error-boundary';
@@ -25,6 +26,7 @@ export default function RootLayout() {
     <GlobalErrorBoundary>
       <SafeAreaProvider>
         <GestureHandlerRootView style={{ flex: 1 }}>
+          <StatusBar style="auto" />
           <QueryClientProvider client={queryClient}>
             <AppProviders />
           </QueryClientProvider>

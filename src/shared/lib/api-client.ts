@@ -1,18 +1,12 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import { SECURE_STORE_KEYS } from '@src/shared/constants';
-import { Platform } from 'react-native';
 
 /**
  * Base URL for the API.
  * Defaults to localhost if EXPO_PUBLIC_API_URL is not provided.
  */
-const API_BASE_URL =
-  process.env.NODE_ENV === 'development'
-    ? Platform.OS === 'ios'
-      ? 'http://localhost:3000/api'
-      : 'http://10.0.2.2:3000/api'
-    : (process.env.EXPO_PUBLIC_API_BASE_URL ?? 'http://localhost:3000/api');
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL ?? 'http://localhost:3000/api';
 
 /**
  * Paths that bypass the automatic token refresh logic.

@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, FlatList, RefreshControl } from 'react-native';
-import { useRouter } from 'expo-router';
 import { useMeetings } from '../hooks';
 import { LoadingScreen, ErrorScreen } from '@src/shared/components/screens';
 import { Ionicons } from '@expo/vector-icons';

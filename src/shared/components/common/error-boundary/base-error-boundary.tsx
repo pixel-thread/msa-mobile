@@ -4,6 +4,8 @@ import { logger } from '@src/shared/utils/logger';
 interface BaseErrorBoundaryProps {
   children: ReactNode;
   fallback: (props: { error: Error | null; resetError: () => void }) => ReactNode;
+  isComponentError?: boolean;
+  name?: string;
 }
 
 interface BaseErrorBoundaryState {
@@ -22,10 +24,24 @@ export class BaseErrorBoundary extends Component<BaseErrorBoundaryProps, BaseErr
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    logger.error('Error Boundary caught an error', {
-      error,
+    const { isComponentError, name } = this.props;
+
+    // Try to identify the specific feature or component name
+    const context = name || 'UnknownSource';
+    const scope = isComponentError ? `Component:[${context}]` : 'GlobalBoundary';
+
+    logger.error(`[ErrorBoundary] ${scope} - ${error.message}`, {
+      error: {
+        name: error.name,
+        message: error.message,
+        stack: error.stack,
+      },
       errorInfo: {
         componentStack: errorInfo.componentStack,
+      },
+      tags: {
+        isComponentError,
+        source: context,
       },
     });
   }

@@ -2,18 +2,21 @@ import React from 'react';
 import { View, ScrollView, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '@src/shared/store';
-import { Container, StackHeader } from '@src/shared/components';
-import { Card, CardContent, Text } from '@src/shared/components/ui';
+import { Container, StackHeader } from '@components/common';
+import { Card, CardContent, Text } from '@components/ui';
 import { cn } from '@lib/cn';
 import { useRouter } from 'expo-router';
-import { useMeetings } from '@src/features/meetings/hooks';
-import { formattedDate, formattedTime } from '@src/shared/utils/format';
+import { useMeetings } from '@features/meetings/hooks';
+import { formattedDate, formattedTime } from '@utils/format';
+import { LoadingScreen } from '@components/screens';
 
 export const DashboardScreen = () => {
   const { user } = useAuthStore();
   const router = useRouter();
-  const { data: meetings } = useMeetings({ limit: 1 });
+  const { data: meetings, isFetching } = useMeetings({ limit: 1 });
   const nextMeeting = meetings?.[0];
+
+  if (isFetching) return <LoadingScreen message="Loading..." />;
 
   if (!user) return null;
 
@@ -30,7 +33,11 @@ export const DashboardScreen = () => {
             className="uppercase tracking-widest text-indigo-600 dark:text-indigo-400">
             Welcome back,
           </Text>
-          <Text variant="heading" size="3xl" className="mt-1 text-slate-900 dark:text-white">
+          <Text
+            variant="heading"
+            size="3xl"
+            weight={'bold'}
+            className="mt-1 capitalize tracking-widest text-slate-900 dark:text-white">
             {user.name}
           </Text>
         </View>
@@ -40,7 +47,7 @@ export const DashboardScreen = () => {
           <QuickAction
             icon="calendar"
             label="Meetings"
-            onPress={() => router.push('/(protected)/(tabs)/meetings')}
+            onPress={() => router.push('/(protected)/(drawer)/(tabs)/meetings')}
             className="bg-indigo-600"
           />
           <QuickAction

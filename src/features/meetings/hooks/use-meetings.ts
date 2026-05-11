@@ -3,6 +3,7 @@ import http from '@src/shared/utils/http';
 import type { Meeting } from '../types';
 import { useAuthStore } from '@src/shared/store';
 import { meetingEndpoints } from '../utils/constants';
+import { MeetingQueryKeys } from '../utils/constants/query-key';
 
 /**
  * Hook to fetch the list of meetings.
@@ -18,7 +19,7 @@ export const useMeetings = (params?: {
 }) => {
   const { isAuthenticated } = useAuthStore();
   return useQuery({
-    queryKey: ['meetings', params],
+    queryKey: MeetingQueryKeys.all(params?.page),
     select: (data) => data?.data,
     queryFn: async () => http.get<Meeting[]>(meetingEndpoints.list, { params }),
     enabled: isAuthenticated,

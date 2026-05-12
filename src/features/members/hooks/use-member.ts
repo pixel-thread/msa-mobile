@@ -3,12 +3,13 @@ import { apiClient } from '@src/shared/lib/api-client';
 import { memberEndpoints, MemberQueryKeys } from '../utils/constants';
 import type { Member } from '../types';
 
-export const useMembers = () => {
-  return useQuery<Member[]>({
-    queryKey: MemberQueryKeys.all(),
+export const useMember = (id: string) => {
+  return useQuery<Member>({
+    queryKey: MemberQueryKeys.detail(id),
     queryFn: async () => {
-      const response = await apiClient.get<Member[]>(memberEndpoints.list);
+      const response = await apiClient.get<Member>(memberEndpoints.detail(id));
       return response.data;
     },
+    enabled: !!id,
   });
 };

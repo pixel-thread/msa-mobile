@@ -58,8 +58,8 @@ export const DashboardScreen = () => {
           />
           <QuickAction
             icon="people"
-            label="Directory"
-            onPress={() => {}}
+            label="members"
+            onPress={() => router.push('/(protected)/members')}
             className="bg-emerald-600"
           />
         </View>

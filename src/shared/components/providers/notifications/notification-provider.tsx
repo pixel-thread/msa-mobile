@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import { useRouter } from 'expo-router';
@@ -7,21 +7,8 @@ import { useAuthStore, useNotificationStore } from '@src/shared/store';
 import http from '@src/shared/utils/http';
 import { logger } from '@src/shared/utils/logger';
 import { registerForPushNotificationsAsync } from '@src/shared/services/notification/register-push-notification';
-
-interface NotificationContextType {
-  expoPushToken: string | undefined;
-  notification: Notifications.Notification | undefined;
-}
-
-const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
-
-export const useNotifications = () => {
-  const context = useContext(NotificationContext);
-  if (!context) {
-    throw new Error('useNotifications must be used within a NotificationProvider');
-  }
-  return context;
-};
+import { NotificationContext } from '@src/shared/lib/context/notifications';
+import { isExpoGo } from '@src/shared/utils';
 
 // Configure how notifications are handled when the app is in the foreground
 Notifications.setNotificationHandler({
@@ -79,6 +66,10 @@ export const NotificationProvider = ({ children }: NotificationProviderProps) =>
 
   useEffect(() => {
     // Only register for notifications if authenticated
+    if (isExpoGo()) {
+      // Expo Go does not support notifications
+      return;
+    }
     if (!isAuthenticated || !user) {
       // If we had a token and now we are not authenticated, we might want to clear it on backend
       // However, usually logout happens via a dedicated action that should clear it.

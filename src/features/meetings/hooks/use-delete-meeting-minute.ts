@@ -10,7 +10,7 @@ export function useDeleteMeetingMinute({ meetingId }: Props) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (meetingMinuteId: string) =>
-      http.delete(`/meeting/${meetingId}/minuite/${meetingMinuteId}`),
+      http.delete(`/meetings/${meetingId}/minutes/${meetingMinuteId}`),
     onSuccess: (data) => {
       if (data.success) {
         toast.success(data.message || 'Minute deleted successfully');

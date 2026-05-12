@@ -30,10 +30,11 @@ import { CreateMeetingMinuteSchema, CreateMeetingMinuteInput } from '../validato
 
 interface MeetingMinute {
   id: string;
+  meetingId: string;
   agendaPoint: string;
   decision: string;
-  actionItems?: any[];
-  createdAt: string;
+  actionItems?: any[] | null;
+  recordedAt: string;
 }
 
 export const MeetingMinutesScreen = () => {
@@ -49,6 +50,7 @@ export const MeetingMinutesScreen = () => {
   } = useMeetingMinuite({ meetingId: id as string });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [editingMinute, setEditingMinute] = useState<MeetingMinute | null>(null);
 
   const deleteMutation = useDeleteMeetingMinute({ meetingId: id as string });
@@ -75,7 +77,7 @@ export const MeetingMinutesScreen = () => {
   };
 
   if (isLoading) return <LoadingScreen message="Loading meeting minutes..." />;
-  console.log('RSV', minutes);
+
   return (
     <Container>
       <StackHeader
@@ -112,7 +114,7 @@ export const MeetingMinutesScreen = () => {
             )}
           </View>
         ) : (
-          minutes?.map((minute: MeetingMinute) => (
+          minutes?.map((minute) => (
             <MinuteCard
               key={minute.id}
               minute={minute}

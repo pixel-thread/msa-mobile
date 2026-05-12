@@ -8,15 +8,16 @@ type Props = {
 interface MeetingMinute {
   id: string;
   agendaPoint: string;
+  meetingId: string;
   decision: string;
-  actionItems?: any[];
-  createdAt: string;
+  actionItems?: any[] | null;
+  recordedAt: string;
 }
 
-export function useMeetingMinuite({ meetingId }: Props) {
+export function useMeetingMinute({ meetingId }: Props) {
   return useQuery({
-    queryKey: ['meeting', 'minuites', meetingId],
-    queryFn: () => http.get<MeetingMinute[]>(`/meetings/${meetingId}/minuites`),
+    queryKey: ['meetings', 'minutes', meetingId],
+    queryFn: () => http.get<MeetingMinute[]>(`/meetings/${meetingId}/minutes`),
     select: (data) => data.data,
     enabled: !!meetingId,
   });

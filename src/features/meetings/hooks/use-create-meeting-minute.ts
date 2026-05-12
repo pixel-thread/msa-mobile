@@ -6,11 +6,11 @@ import { toast } from 'sonner-native';
 type Props = {
   meetingId: string;
 };
-export const useCreateMeetingMinuite = ({ meetingId }: Props) => {
+export const useCreateMeetingMinute = ({ meetingId }: Props) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (data: CreateMeetingMinuteInput) =>
-      http.post(`/meeting/${meetingId}/minuite`, data),
+      http.post(`/meeting/${meetingId}/minutes`, data),
     onSuccess: (data) => {
       if (data.success) {
         toast.success(data.message);

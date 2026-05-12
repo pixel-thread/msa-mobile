@@ -34,9 +34,9 @@ const buttonVariants = cva('flex items-center justify-center rounded-md disabled
 });
 
 const textVariants = {
-  default: 'text-sm font-medium text-primary-foreground',
-  secondary: 'text-sm font-medium text-secondary-foreground',
-  destructive: 'text-sm font-medium text-destructive-foreground',
+  default: 'text-sm font-medium text-primary',
+  secondary: 'text-sm font-medium text-secondary',
+  destructive: 'text-sm font-medium text-destructive',
   outline: 'text-sm font-medium text-foreground',
   ghost: 'text-sm font-medium text-foreground',
   link: 'text-sm font-medium text-primary underline',

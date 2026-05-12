@@ -19,23 +19,14 @@ import { cn } from '@lib/cn';
 import { truncateText } from '@src/shared/utils/text';
 import { LoadingScreen } from '@src/shared/components/screens';
 import { LogoutButton } from '../components/logout-button';
-import { useThemeStore } from '@src/shared/store/theme.store';
 
 export const ProfileScreen = () => {
   const { user } = useAuthStore();
-  const { setThemePreference, themePreference } = useThemeStore();
   if (!user) return <LoadingScreen message="Fetching your details" />;
-
-  const handleThemeChange = () => {
-    setThemePreference(themePreference === 'dark' ? 'light' : 'dark');
-  };
 
   return (
     <Container>
-      <StackHeader
-        title="Profile"
-        rightAction={<Button size={'sm'} onPress={handleThemeChange} title="theme" />}
-      />
+      <StackHeader title="Profile" />
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         {/* Profile Header */}
         <View className="items-center px-4 pb-8 pt-10">

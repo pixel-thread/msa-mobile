@@ -7,7 +7,6 @@ import {
   AlertDialogHeader,
   Button,
   AlertDialogTitle,
-  AlertDescription,
   Text,
   AlertDialogDescription,
 } from '@components/ui';

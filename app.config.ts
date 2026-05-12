@@ -24,7 +24,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     version: '1.0.0',
     orientation: 'portrait',
     icon: './src/shared/assets/icon.png',
-    userInterfaceStyle: 'automatic',
+    userInterfaceStyle: 'light',
     scheme: 'msa',
     platforms: ['ios', 'android'],
     splash: {

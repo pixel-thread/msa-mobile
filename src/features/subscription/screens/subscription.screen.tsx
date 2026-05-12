@@ -169,7 +169,7 @@ export const SubscriptionScreen = () => {
                           <Text className="text-5xl font-extrabold text-white">₹{plan.amount}</Text>
 
                           <Text className="mb-1 ml-2 text-base text-indigo-100">
-                            /{plan.billingCycle}
+                            /&nbsp;{plan.billingCycle}
                           </Text>
                         </View>
                       </View>

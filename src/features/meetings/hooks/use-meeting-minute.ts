@@ -1,5 +1,7 @@
 import http from '@src/shared/utils/http';
 import { useQuery } from '@tanstack/react-query';
+import { meetingEndpoints } from '../utils/constants';
+import { MeetingQueryKeys } from '../utils/constants/query-key';
 
 type Props = {
   meetingId: string;
@@ -16,8 +18,8 @@ interface MeetingMinute {
 
 export function useMeetingMinute({ meetingId }: Props) {
   return useQuery({
-    queryKey: ['meetings', 'minutes', meetingId],
-    queryFn: () => http.get<MeetingMinute[]>(`/meetings/${meetingId}/minutes`),
+    queryKey: MeetingQueryKeys.minutes(meetingId),
+    queryFn: () => http.get<MeetingMinute[]>(meetingEndpoints.minutes(meetingId)),
     select: (data) => data.data,
     enabled: !!meetingId,
   });

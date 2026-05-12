@@ -7,4 +7,5 @@ export type MeetingQueryKey =
   | ReturnType<typeof MeetingQueryKeys.agenda>
   | ReturnType<typeof MeetingQueryKeys.attendees>
   | ReturnType<typeof MeetingQueryKeys.rsvps>
-  | ReturnType<typeof MeetingQueryKeys.rsvp>;
+  | ReturnType<typeof MeetingQueryKeys.rsvp>
+  | ReturnType<typeof MeetingQueryKeys.minutes>;

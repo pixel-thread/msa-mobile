@@ -75,7 +75,7 @@ export const MeetingMinutesScreen = () => {
   };
 
   if (isLoading) return <LoadingScreen message="Loading meeting minutes..." />;
-
+  console.log('RSV', minutes);
   return (
     <Container>
       <StackHeader
@@ -96,7 +96,7 @@ export const MeetingMinutesScreen = () => {
         refreshControl={
           <RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor="#6366f1" />
         }>
-        {minutes.length === 0 ? (
+        {minutes && minutes.length === 0 ? (
           <View className="items-center justify-center py-20">
             <Ionicons name="document-text-outline" size={64} color="#cbd5e1" />
             <Text variant="subtext" className="mt-4">

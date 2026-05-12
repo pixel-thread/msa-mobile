@@ -4,11 +4,11 @@ import { useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { 
-  useMeetingMinuite, 
-  useCreateMeetingMinuite, 
-  useUpdateMeetingMinuite, 
-  useDeleteMeetingMinute 
+import {
+  useMeetingMinuite,
+  useCreateMeetingMinuite,
+  useUpdateMeetingMinuite,
+  useDeleteMeetingMinute,
 } from '../hooks';
 import { Container, StackHeader } from '@src/shared/components';
 import { LoadingScreen } from '@src/shared/components/screens';
@@ -27,7 +27,6 @@ import {
 import { useAuthStore } from '@src/features/auth';
 import { hasHighRoleAccess } from '../utils/permission';
 import { CreateMeetingMinuteSchema, CreateMeetingMinuteInput } from '../validators/minuites';
-import { cn } from '@lib/cn';
 
 interface MeetingMinute {
   id: string;
@@ -42,12 +41,16 @@ export const MeetingMinutesScreen = () => {
   const { user } = useAuthStore();
   const isAdmin = hasHighRoleAccess(user?.role);
 
-  const { data: minutes = [], isLoading, isError, refetch, isRefetching } = useMeetingMinuite({ meetingId: id as string });
-  
+  const {
+    data: minutes = [],
+    isLoading,
+    refetch,
+    isRefetching,
+  } = useMeetingMinuite({ meetingId: id as string });
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingMinute, setEditingMinute] = useState<MeetingMinute | null>(null);
 
-  const createMutation = useCreateMeetingMinuite({ meetingId: id as string });
   const deleteMutation = useDeleteMeetingMinute({ meetingId: id as string });
 
   const handleAdd = () => {
@@ -61,18 +64,14 @@ export const MeetingMinutesScreen = () => {
   };
 
   const handleDelete = (minuteId: string) => {
-    Alert.alert(
-      'Delete Minute',
-      'Are you sure you want to delete this meeting minute?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        { 
-          text: 'Delete', 
-          style: 'destructive', 
-          onPress: () => deleteMutation.mutate(minuteId) 
-        },
-      ]
-    );
+    Alert.alert('Delete Minute', 'Are you sure you want to delete this meeting minute?', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: () => deleteMutation.mutate(minuteId),
+      },
+    ]);
   };
 
   if (isLoading) return <LoadingScreen message="Loading meeting minutes..." />;
@@ -90,32 +89,33 @@ export const MeetingMinutesScreen = () => {
           ) : null
         }
       />
-      
+
       <ScrollView
         className="flex-1"
         contentContainerStyle={{ padding: 16 }}
         refreshControl={
           <RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor="#6366f1" />
-        }
-      >
+        }>
         {minutes.length === 0 ? (
           <View className="items-center justify-center py-20">
             <Ionicons name="document-text-outline" size={64} color="#cbd5e1" />
-            <Text variant="subtext" className="mt-4">No minutes recorded for this meeting.</Text>
+            <Text variant="subtext" className="mt-4">
+              No minutes recorded for this meeting.
+            </Text>
             {isAdmin && (
-              <Button 
-                title="Add First Minute" 
-                variant="outline" 
+              <Button
+                title="Add First Minute"
+                variant="outline"
                 className="mt-6"
                 onPress={handleAdd}
               />
             )}
           </View>
         ) : (
-          minutes.map((minute: MeetingMinute) => (
-            <MinuteCard 
-              key={minute.id} 
-              minute={minute} 
+          minutes?.map((minute: MeetingMinute) => (
+            <MinuteCard
+              key={minute.id}
+              minute={minute}
               isAdmin={isAdmin}
               onEdit={() => handleEdit(minute)}
               onDelete={() => handleDelete(minute.id)}
@@ -134,13 +134,13 @@ export const MeetingMinutesScreen = () => {
   );
 };
 
-const MinuteCard = ({ 
-  minute, 
-  isAdmin, 
-  onEdit, 
-  onDelete 
-}: { 
-  minute: MeetingMinute; 
+const MinuteCard = ({
+  minute,
+  isAdmin,
+  onEdit,
+  onDelete,
+}: {
+  minute: MeetingMinute;
   isAdmin: boolean;
   onEdit: () => void;
   onDelete: () => void;
@@ -158,7 +158,7 @@ const MinuteCard = ({
             </Text>
           </View>
         </View>
-        
+
         {isAdmin && (
           <View className="ml-4 flex-col gap-y-4">
             <TouchableOpacity onPress={onEdit}>
@@ -174,18 +174,18 @@ const MinuteCard = ({
   </Card>
 );
 
-const MinuteFormModal = ({ 
-  isOpen, 
-  onClose, 
-  meetingId, 
-  minute 
-}: { 
-  isOpen: boolean; 
-  onClose: () => void; 
+const MinuteFormModal = ({
+  isOpen,
+  onClose,
+  meetingId,
+  minute,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
   meetingId: string;
   minute: MeetingMinute | null;
 }) => {
-  const methods = useForm<CreateMeetingMinuteInput>({
+  const methods = useForm({
     resolver: zodResolver(CreateMeetingMinuteSchema),
     defaultValues: {
       agendaPoint: minute?.agendaPoint || '',
@@ -204,9 +204,9 @@ const MinuteFormModal = ({
   }, [isOpen, minute, methods]);
 
   const createMutation = useCreateMeetingMinuite({ meetingId });
-  const updateMutation = useUpdateMeetingMinuite({ 
-    meetingId, 
-    meetingMinuiteId: minute?.id || '' 
+  const updateMutation = useUpdateMeetingMinuite({
+    meetingId,
+    meetingMinuiteId: minute?.id || '',
   });
 
   const onSubmit = (data: CreateMeetingMinuteInput) => {
@@ -249,14 +249,9 @@ const MinuteFormModal = ({
         </FormProvider>
 
         <DialogFooter className="mt-8">
-          <Button 
-            title="Cancel" 
-            variant="ghost" 
-            onPress={onClose} 
-            disabled={isPending}
-          />
-          <Button 
-            title={minute ? 'Save Changes' : 'Add Minute'} 
+          <Button title="Cancel" variant="ghost" onPress={onClose} disabled={isPending} />
+          <Button
+            title={minute ? 'Save Changes' : 'Add Minute'}
             onPress={methods.handleSubmit(onSubmit)}
             loading={isPending}
           />

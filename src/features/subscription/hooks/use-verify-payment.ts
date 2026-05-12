@@ -14,7 +14,6 @@ export function useVerifyPayment() {
     mutationFn: (data: PaymentData) => http.post(SubscriptionEndpoints.verifyPayment(), data),
     onSuccess: (data) => {
       if (data.success) {
-        console.log('Success Verify payment', data);
         toast.success(data.message);
         queryClient.invalidateQueries({ queryKey: SubscriptionQueryKeys.paymentHistory() });
         return data;

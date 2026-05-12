@@ -16,7 +16,7 @@ import { ErrorBoundary } from '@components/common/error-boundary';
 import { isRazorpayError } from '../types/razorpay';
 import { logger } from '@src/shared/utils/logger';
 import { PaymentHistory } from '../components';
-import { isExpoGo } from '@src/shared/utils';
+import RazorpayCheckout from 'react-native-razorpay';
 
 export const SubscriptionScreen = () => {
   const [activeTab, setActiveTab] = useState<'plan' | 'history'>('plan');
@@ -27,18 +27,15 @@ export const SubscriptionScreen = () => {
 
   const { mutate, isPending: isVerifyPending } = useVerifyPayment();
 
-  const isExpo = isExpoGo();
-
   const plan = plans?.[0];
 
   const onClickPay = async () => {
     try {
       const res = await mutateAsync(100);
+
       const data = res.data;
 
-      if (data && !isExpo) {
-        const RazorpayCheckout = require('react-native-razorpay');
-
+      if (data) {
         const response = await RazorpayCheckout.open(data);
 
         mutate({

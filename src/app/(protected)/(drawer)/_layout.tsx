@@ -13,7 +13,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
   const logout = useAuthStore((state) => state.logout);
 
   // Active route detection
-  const currentRoute = segments[segments.length - 1];
+  const currentPath = segments.join('/');
 
   return (
     <SafeAreaView className="flex-1 bg-white dark:bg-slate-950">
@@ -34,19 +34,19 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
           <DrawerItem 
             label="Home" 
             icon="home" 
-            focused={currentRoute === '(tabs)' || currentRoute === undefined} 
+            focused={currentPath === '(protected)/(drawer)/(tabs)' || currentPath === '(protected)/(drawer)/(tabs)/index'} 
             onPress={() => router.push('/(protected)/(drawer)/(tabs)')} 
           />
           <DrawerItem 
             label="Meetings" 
             icon="calendar" 
-            focused={currentRoute === 'meetings'} 
+            focused={currentPath.includes('meetings')} 
             onPress={() => router.push('/(protected)/(drawer)/(tabs)/meetings')} 
           />
           <DrawerItem 
             label="Members" 
             icon="people" 
-            focused={currentRoute === 'members'} 
+            focused={currentPath.includes('members')} 
             onPress={() => router.push('/(protected)/members')} 
           />
         </View>
@@ -59,13 +59,13 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
           <DrawerItem 
             label="My Profile" 
             icon="person" 
-            focused={currentRoute === 'profile'} 
+            focused={currentPath.includes('profile')} 
             onPress={() => router.push('/(protected)/(drawer)/(tabs)/profile')} 
           />
           <DrawerItem 
             label="Subscription" 
             icon="card" 
-            focused={currentRoute === 'subscription'} 
+            focused={currentPath.includes('subscription')} 
             onPress={() => router.push('/(protected)/(drawer)/(tabs)/subscription')} 
           />
         </View>

@@ -19,10 +19,11 @@ export const DrawerItem = ({ label, icon, focused, onPress, variant = 'default' 
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.7}
+      accessibilityRole="button"
+      accessibilityLabel={label}
       className={cn(
-        'flex-row items-center px-6 py-3.5 mb-1 mx-2 rounded-xl transition-all',
-        focused && 'bg-indigo-50 dark:bg-slate-900 border-l-4 border-indigo-600',
-        !focused && 'hover:bg-slate-50 dark:hover:bg-slate-900'
+        'flex-row items-center px-6 py-3.5 mb-1 mx-2 rounded-xl',
+        focused && 'bg-indigo-50 dark:bg-slate-900 border-l-4 border-indigo-600'
       )}
     >
       <Ionicons 

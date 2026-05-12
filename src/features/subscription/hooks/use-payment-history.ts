@@ -1,5 +1,6 @@
 import http from '@src/shared/utils/http';
 import { useQuery } from '@tanstack/react-query';
+import { SubscriptionEndpoints, SubscriptionQueryKeys } from '../utils/constants';
 import { PaymentSummary, Transaction } from '../types/payment';
 
 type PaymentHistory = {
@@ -9,8 +10,8 @@ type PaymentHistory = {
 
 export function usePaymentHistory() {
   return useQuery({
-    queryKey: ['payment', 'history'],
-    queryFn: async () => http.get<PaymentHistory>('/payments/history'),
+    queryKey: SubscriptionQueryKeys.paymentHistory(),
+    queryFn: async () => http.get<PaymentHistory>(SubscriptionEndpoints.paymentHistory()),
     select: (data) => data.data,
   });
 }

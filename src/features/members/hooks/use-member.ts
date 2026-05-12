@@ -1,15 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
-import { apiClient } from '@src/shared/lib/api-client';
 import { memberEndpoints, MemberQueryKeys } from '../utils/constants';
 import type { Member } from '../types';
+import http from '@src/shared/utils/http';
 
 export const useMember = (id: string) => {
-  return useQuery<Member>({
+  return useQuery({
     queryKey: MemberQueryKeys.detail(id),
-    queryFn: async () => {
-      const response = await apiClient.get<Member>(memberEndpoints.detail(id));
-      return response.data;
-    },
+    queryFn: async () => http.get<Member>(memberEndpoints.detail(id)),
     enabled: !!id,
+    select: (data) => data.data,
   });
 };

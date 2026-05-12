@@ -27,7 +27,7 @@ export const MemberListScreen = () => {
 
   return (
     <Container>
-      <StackHeader title="Members" showBackButton={false} />
+      <StackHeader title="Members" showBackButton />
       <FlatList
         data={data}
         renderItem={({ item }) => <MemberCard member={item} />}

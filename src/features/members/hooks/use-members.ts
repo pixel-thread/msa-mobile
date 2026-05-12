@@ -1,14 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
-import { apiClient } from '@src/shared/lib/api-client';
 import { memberEndpoints, MemberQueryKeys } from '../utils/constants';
 import type { Member } from '../types';
+import http from '@src/shared/utils/http';
 
 export const useMembers = () => {
-  return useQuery<Member[]>({
+  return useQuery({
     queryKey: MemberQueryKeys.all(),
-    queryFn: async () => {
-      const response = await apiClient.get<Member[]>(memberEndpoints.list);
-      return response.data;
-    },
+    queryFn: async () => await http.get<Member[]>(memberEndpoints.list),
+    select: (data) => data.data,
   });
 };

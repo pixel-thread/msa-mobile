@@ -12,6 +12,7 @@ import { cn } from '@src/shared/lib/cn';
 
 export const MemberDetailScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
+
   const { data: member, isLoading, isError, refetch, isRefetching } = useMember(id as string);
 
   if (isLoading) return <LoadingScreen message="Loading member details..." />;

@@ -86,10 +86,11 @@ export const useSignInVerify = () => {
         if (accessToken) {
           setAccessToken(accessToken);
         }
-        router.replace('/(protected)/(tabs)');
+        router.replace('/(protected)/(drawer)/(tabs)');
       } else {
         toast.error(response.message);
       }
     },
   });
 };
+

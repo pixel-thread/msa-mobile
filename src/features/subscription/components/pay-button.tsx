@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { View, TouchableOpacity, Alert } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import RazorpayCheckout from 'react-native-razorpay';
 import { Ionicons } from '@expo/vector-icons';
 

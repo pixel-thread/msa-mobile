@@ -7,7 +7,6 @@ import Animated, {
   useDerivedValue,
 } from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
-import { Text } from './text';
 import { cn } from '@lib/cn';
 
 const AccordionContext = React.createContext<{

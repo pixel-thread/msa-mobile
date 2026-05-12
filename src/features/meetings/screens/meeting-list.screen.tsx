@@ -43,7 +43,7 @@ export const MeetingListScreen = () => {
         ListEmptyComponent={
           <View className="items-center justify-center py-24">
             <View className="mb-6 h-20 w-20 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-900">
-              <Ionicons name="calendar-clear-outline" size={32} color="#94a3b8" />
+              <Ionicons name="calendar-clear-outline" className="text-accent" size={32} />
             </View>
             <Text variant="heading" size="lg" className="text-slate-900 dark:text-white">
               No meetings found

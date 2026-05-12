@@ -12,7 +12,7 @@ interface LoadingScreenProps {
  */
 export const LoadingScreen = ({ message = 'Loading...' }: LoadingScreenProps) => {
   return (
-    <View className="flex-1 items-center justify-center bg-white">
+    <View className="flex-1 items-center justify-center">
       <View className="items-center gap-4">
         <ActivityIndicator size="large" color="#6366f1" />
         <Text className="text-sm font-medium text-gray-500">{message}</Text>

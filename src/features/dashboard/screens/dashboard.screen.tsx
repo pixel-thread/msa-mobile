@@ -21,7 +21,7 @@ export const DashboardScreen = () => {
   if (!user) return null;
 
   return (
-    <Container className="bg-slate-50 dark:bg-slate-950">
+    <Container>
       <StackHeader title="Dashboard" showDrawerButton={true} />
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         {/* Welcome Section */}

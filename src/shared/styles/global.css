@@ -4,62 +4,73 @@
 
 @layer base {
   :root {
-    --background: 255 255 255;
-    --foreground: 34 34 34;
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.14%; /* #080808 */
 
-    --card: 255 255 255;
-    --card-foreground: 34 34 34;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.14%;
 
-    --popover: 255 255 255;
-    --popover-foreground: 34 34 34;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.14%;
 
-    --primary: 99 102 241;
-    --primary-foreground: 255 255 255;
+    --primary: 216 92% 52%; /* #146ef5 - Webflow Blue */
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 244 244 245;
-    --secondary-foreground: 82 82 91;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 3.14%;
 
-    --muted: 248 250 252;
-    --muted-foreground: 100 116 139;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 35.3%; /* #5a5a5a Mid Gray approx */
 
-    --accent: 238 242 255;
-    --accent-foreground: 79 70 229;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 3.14%;
 
-    --destructive: 239 68 68;
+    --destructive: 353 87% 52%; /* #ee1d36 - Red */
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 226 232 240;
-    --input: 226 232 240;
-    --ring: 99 102 241;
+    --border: 0 0% 84.7%; /* #d8d8d8 */
+    --input: 0 0% 84.7%;
+    --ring: 216 92% 52%;
 
-    --radius: 24px;
+    --radius: 0.5rem; /* 8px */
+
+    /* Webflow Specific Palette */
+    --wf-blue: 216 92% 52%;
+    --wf-purple: 259 100% 62%; /* #7a3dff */
+    --wf-pink: 313 83% 62%; /* #ed52cb */
+    --wf-green: 130 100% 42%; /* #00d722 */
+    --wf-orange: 25 100% 50%; /* #ff6b00 */
+    --wf-yellow: 39 100% 54%; /* #ffae13 */
+    --wf-red: 353 87% 52%; /* #ee1d36 */
   }
 
   .dark {
-    --background: 10 10 10;
-    --foreground: 248 250 252;
+    --background: 0 0% 3.14%;
+    --foreground: 0 0% 100%;
 
-    --card: 17 24 39;
-    --card-foreground: 248 250 252;
+    --card: 0 0% 6%;
+    --card-foreground: 0 0% 100%;
 
-    --popover: 17 24 39;
-    --popover-foreground: 248 250 252;
+    --popover: 0 0% 3.14%;
+    --popover-foreground: 0 0% 100%;
 
-    --primary: 129 140 248;
-    --primary-foreground: 255 255 255;
+    --primary: 216 92% 52%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 30 41 59;
-    --secondary-foreground: 248 250 252;
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 15 23 42;
-    --muted-foreground: 148 163 184;
+    --muted: 0 0% 12%;
+    --muted-foreground: 0 0% 65%;
 
-    --accent: 49 46 129;
-    --accent-foreground: 224 231 255;
+    --accent: 0 0% 12%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 239 68 68;
+    --destructive: 353 87% 52%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 51 65 85;
-    --input: 51 65 85;
-    --ring: 129 140 248;
+    --border: 0 0% 15%;
+    --input: 0 0% 15%;
+    --ring: 216 92% 52%;
   }
 }

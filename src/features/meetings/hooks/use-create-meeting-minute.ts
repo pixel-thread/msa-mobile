@@ -8,6 +8,7 @@ import { toast } from 'sonner-native';
 type Props = {
   meetingId: string;
 };
+
 export const useCreateMeetingMinute = ({ meetingId }: Props) => {
   const queryClient = useQueryClient();
   return useMutation({

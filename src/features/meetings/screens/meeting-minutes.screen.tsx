@@ -27,20 +27,13 @@ import {
 import { useAuthStore } from '@src/features/auth';
 import { hasHighRoleAccess } from '../utils/permission';
 import { CreateMeetingMinuteSchema, CreateMeetingMinuteInput } from '../validators/minuites';
-
-interface MeetingMinute {
-  id: string;
-  meetingId: string;
-  agendaPoint: string;
-  decision: string;
-  actionItems?: any[] | null;
-  recordedAt: string;
-}
+import { MeetingMinute } from '../types/minute';
 
 export const MeetingMinutesScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { user } = useAuthStore();
-  const isAdmin = hasHighRoleAccess(user?.role);
+  const role = user?.role;
+  const isAdmin = hasHighRoleAccess(role);
 
   const {
     data: minutes = [],

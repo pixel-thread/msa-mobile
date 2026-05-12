@@ -4,8 +4,6 @@ import { View, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-nat
 import { Ionicons } from '@expo/vector-icons';
 
 import { useSubscriptionPlans } from '../hooks';
-import { usePaymentOption } from '../hooks/use-payment-order';
-import { useVerifyPayment } from '../hooks/use-verify-payment';
 
 import { Container, StackHeader } from '@src/shared/components';
 import { Card, CardContent, Text, Button } from '@src/shared/components/ui';
@@ -13,53 +11,15 @@ import { Card, CardContent, Text, Button } from '@src/shared/components/ui';
 import { ErrorScreen } from '@src/shared/components/screens';
 import { ErrorBoundary } from '@components/common/error-boundary';
 
-import { isRazorpayError } from '../types/razorpay';
-import { logger } from '@src/shared/utils/logger';
 import { PaymentHistory } from '../components';
-import { isExpoGo } from '@src/shared/utils';
+import { PayButton } from '../components/pay-button';
 
 export const SubscriptionScreen = () => {
   const [activeTab, setActiveTab] = useState<'plan' | 'history'>('plan');
 
-  const { data: plans = [], isLoading, isFetching, isError, refetch } = useSubscriptionPlans();
-
-  const { mutateAsync, isPending } = usePaymentOption();
-
-  const { mutate, isPending: isVerifyPending } = useVerifyPayment();
-
-  const isExpo = isExpoGo();
+  const { data: plans = [], isLoading, isError, refetch } = useSubscriptionPlans();
 
   const plan = plans?.[0];
-
-  const onClickPay = async () => {
-    try {
-      const res = await mutateAsync(100);
-      const data = res.data;
-
-      if (data && !isExpo) {
-        const RazorpayCheckout = require('react-native-razorpay');
-
-        const response = await RazorpayCheckout.open(data);
-
-        mutate({
-          razorpayOrderId: response.razorpay_order_id,
-          razorpayPaymentId: response.razorpay_payment_id,
-          razorpaySignature: response.razorpay_signature,
-        });
-      }
-    } catch (error) {
-      if (isRazorpayError(error)) {
-        logger.error('Razorpay Error', {
-          error: error.error,
-          message: error.description,
-          reason: error.error.reason,
-          code: error.error.code,
-        });
-      }
-
-      logger.error('Payment Error', { error });
-    }
-  };
 
   if (isLoading) {
     return (
@@ -205,26 +165,7 @@ export const SubscriptionScreen = () => {
             </ScrollView>
 
             {/* Bottom Fixed CTA */}
-            {plan && (
-              <View className="absolute bottom-0 left-0 right-0 gap-2 border-t border-slate-200 bg-white px-5 pb-7 pt-2 dark:border-slate-800 dark:bg-black">
-                <View className="m-0 rounded-3xl bg-gray-100 px-4 py-2 dark:bg-slate-900">
-                  <View className="flex-row items-center">
-                    <View className="flex-1">
-                      <Text className="mt-1 leading-6 text-slate-500">
-                        Your subscription is processed securely using Razorpay with encrypted
-                        payment protection.
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-                <Button
-                  title={isPending || isVerifyPending ? 'Processing...' : `Pay ₹${plan.amount}`}
-                  onPress={onClickPay}
-                  disabled={isPending || isVerifyPending || isFetching}
-                  className="h-16 rounded-2xl bg-indigo-600"
-                />
-              </View>
-            )}
+            {plan && <PayButton />}
           </>
         ) : (
           <ScrollView

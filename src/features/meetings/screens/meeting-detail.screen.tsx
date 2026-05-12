@@ -21,7 +21,10 @@ import { cn } from '@lib/cn';
 import { logger } from '@src/shared/utils/logger';
 import { useMeetingAttendees } from '../hooks/useMeetingAttendees';
 import { useMeetingAgenda } from '../hooks/useMeetingAgenda';
+import { useUpdateAttendeeRsvp } from '../hooks/use-update-attendee-rsvp';
 import { useAuthStore } from '@src/features/auth';
+import { useQueryClient } from '@tanstack/react-query';
+import { MeetingQueryKeys } from '../utils/constants/query-key';
 import { MeetingErrorScreen } from './meeting-error';
 import { ErrorBoundary } from '@src/shared/components/common';
 import { MeetingInfoCard } from '../components/meeting-info-card';
@@ -29,9 +32,30 @@ import { MeetingInfoCard } from '../components/meeting-info-card';
 export const MeetingDetailScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { user } = useAuthStore();
+  const queryClient = useQueryClient();
   const { data: meeting, isLoading, isError, refetch, isRefetching } = useMeeting(id as string);
   const { data: attendees = [] } = useMeetingAttendees(id as string);
   const { data: agenda = [] } = useMeetingAgenda(id as string);
+
+  const { mutate: updateRsvp, isPending: isUpdatingRsvp } = useUpdateAttendeeRsvp({
+    meetingId: id as string,
+  });
+
+  const userRsvp = attendees?.find((a) => a.user.id === user?.id);
+
+  const isAccepted = userRsvp?.rsvpStatus === 'ACCEPTED';
+  const isDeclined = userRsvp?.rsvpStatus === 'DECLINED';
+
+  const handleRsvp = (status: 'ACCEPTED' | 'DECLINED') => {
+    updateRsvp(
+      { rsvpStatus: status, userId: user?.id },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: MeetingQueryKeys.attendees(id as string) });
+        },
+      }
+    );
+  };
 
   if (isLoading) return <LoadingScreen message="Loading meeting details..." />;
 
@@ -244,15 +268,21 @@ export const MeetingDetailScreen = () => {
             <View className="flex-row gap-x-4">
               <Button
                 title={
-                  attendees?.some((a) => a.user.id === user?.id && a.rsvpStatus === 'PENDING')
-                    ? 'Update Attendance'
+                  attendees?.some((a) => a.user.id === user?.id && a.rsvpStatus !== 'PENDING')
+                    ? 'Update RSVP'
                     : 'Confirm Attendance'
                 }
+                loading={isUpdatingRsvp}
+                disabled={isUpdatingRsvp || isAccepted}
+                onPress={() => handleRsvp('ACCEPTED')}
                 className="h-14 flex-[2] rounded-2xl bg-indigo-600 shadow-lg shadow-indigo-100 dark:shadow-none"
               />
               <Button
                 title="Unable to Attend"
                 variant="outline"
+                loading={isUpdatingRsvp}
+                disabled={isUpdatingRsvp || isDeclined}
+                onPress={() => handleRsvp('DECLINED')}
                 className="h-14 flex-1 rounded-2xl"
               />
             </View>

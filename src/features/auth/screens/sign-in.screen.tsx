@@ -72,7 +72,7 @@ export const SignInScreen = () => {
                   title={isPending ? 'Verifying...' : 'Authenticate'}
                   onPress={methods.handleSubmit(onSubmit)}
                   loading={isPending}
-                  className="mt-4 h-14 rounded-2xl bg-indigo-600"
+                  className="mt-4 h-14 rounded-2xl"
                 />
               </View>
             </FormProvider>

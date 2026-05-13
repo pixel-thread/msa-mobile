@@ -1,4 +1,4 @@
-import { UserRole } from '@src/features/auth';
+import { UserRole } from '@src/shared/types/role';
 
 export const HIGH_ROLE_USERS: UserRole[] = ['SUPER_ADMIN', 'PRESIDENT', 'SECRETARY'];
 

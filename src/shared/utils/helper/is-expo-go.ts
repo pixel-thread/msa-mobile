@@ -1,5 +1,5 @@
 import * as Device from 'expo-device';
 
 export function isExpoGo(): boolean {
-  return Device.isDevice;
+  return Device.isDevice ? false : true;
 }

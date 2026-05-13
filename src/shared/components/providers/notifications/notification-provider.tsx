@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
-import { useRouter } from 'expo-router';
+import { Route, useRouter } from 'expo-router';
 
 import { useAuthStore } from '@src/shared/store';
 import http from '@src/shared/utils/http';
@@ -73,16 +73,15 @@ export const NotificationProvider = ({ children }: NotificationProviderProps) =>
 
       // Handle navigation based on notification data
       // Expecting a 'url' field in the notification data payload
-      if (data?.url) {
-        router.push(data.url as any);
+      if (data?.route) {
+        router.push(data.route as Route);
       }
 
       const notificationId = data.id;
 
-      logger.debug('Notification Response', { id: notificationId });
-
       if (notificationId) {
         const res = await http.patch(`/notifications/${notificationId}`, {
+          userId: user?.id,
           readAt: new Date(),
           isRead: true,
         });
@@ -101,7 +100,6 @@ export const NotificationProvider = ({ children }: NotificationProviderProps) =>
       setNotification(notification);
       const data = notification.request.content.data;
       const notificationId = data.id;
-      logger.debug('Notification Recived', { id: notificationId });
       if (notificationId) {
         const res = await http.patch(`/notifications/${notificationId}`, {
           isRecived: true,
@@ -147,7 +145,8 @@ export const NotificationProvider = ({ children }: NotificationProviderProps) =>
    */
   useEffect(() => {
     // Only register for notifications if authenticated
-    if (isExpoGo()) {
+    const isExpo = isExpoGo();
+    if (isExpo) {
       // Expo Go does not support notifications
       logger.debug('Expo Go does not support notifications');
       return;

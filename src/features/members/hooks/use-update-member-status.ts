@@ -14,14 +14,13 @@ export const useUpdateMemberStatus = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, status }: UpdateStatusPayload) =>
+    mutationFn: ({ id, status }: UpdateStatusPayload) =>
       http.patch<Member>(memberEndpoints.updateStatus(id), { status }),
     onSuccess: (data, variables) => {
-      // Invalidate both the detail view and the lists
       if (data.success) {
+        toast.success(data.message);
         queryClient.invalidateQueries({ queryKey: MemberQueryKeys.detail(variables.id) });
         queryClient.invalidateQueries({ queryKey: MemberQueryKeys.all() });
-        toast.success(data.message);
         return;
       }
       toast.error(data.message);

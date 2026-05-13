@@ -18,8 +18,8 @@ export const MemberDetailScreen = () => {
 
   const { data: member, isLoading, isError, refetch, isRefetching } = useMember(memberId);
   const { mutate: updateStatus, isPending: isUpdating } = useUpdateMemberStatus();
-
   const { user } = useAuthStore();
+
   const canUpdateStatus = hasHighRoleAccess(user?.role) && member?.status === 'INACTIVE';
 
   const handleAccept = () => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Stack, useNavigation } from 'expo-router';
-import { Appearance, TouchableOpacity, View } from 'react-native';
+import { Appearance, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { DrawerActions } from '@react-navigation/native';
 import { logger } from '@src/shared/utils/logger';

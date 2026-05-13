@@ -1,8 +1,17 @@
-import { useRouter } from 'expo-router';
-import { useSecureTokenStore } from '../store';
 import { useMutation } from '@tanstack/react-query';
-import { SignInFormData } from '../validators';
-import { authEndpoints } from '../utils';
+import { useRouter } from 'expo-router';
+import type { SignInFormData } from '../validators';
+import http from '@src/shared/utils/http';
+import { toast } from 'sonner-native';
+import { useSecureTokenStore } from '../store';
+import { authEndpoints } from '../utils/constants/endpoints';
+
+type SignInSuccessData = {
+  mfaRequired?: boolean;
+  tempToken?: string;
+  access_token?: string;
+  refresh_token?: string;
+};
 
 /**
  * Handles user sign-in authentication with optional MFA support.
@@ -87,4 +96,3 @@ export const useSignIn = () => {
     },
   });
 };
-

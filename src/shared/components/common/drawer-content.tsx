@@ -6,7 +6,13 @@ import { ScrollView, View } from 'react-native';
 import { Text } from '@components/ui';
 import { DrawerItem } from '../ui/drawer-item';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { cn } from '@src/shared/lib/cn';
+import * as Constants from 'expo-constants';
+
+type DrawerMenuItem = Omit<any, 'focused'>;
+type DrawerMenuGroup = {
+  title: string;
+  items: DrawerMenuItem[];
+};
 
 export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
   const router = useRouter();
@@ -14,67 +20,93 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
   const logout = useAuthStore((state) => state.logout);
   const inset = useSafeAreaInsets();
 
-  // Active route detection
   const currentPath = segments.join('/');
 
+  const menuGroups: DrawerMenuGroup[] = [
+    {
+      title: 'Main Menu',
+      items: [
+        {
+          label: 'Meetings',
+          icon: 'calendar',
+          onPress: () => router.push('/(protected)/(drawer)/(tabs)/meetings'),
+        },
+        {
+          label: 'Members',
+          icon: 'people',
+          onPress: () => router.push('/(protected)/members'),
+        },
+      ],
+    },
+    {
+      title: 'Account',
+      items: [
+        {
+          label: 'My Profile',
+          icon: 'person',
+          onPress: () => router.push('/(protected)/(drawer)/(tabs)/profile'),
+        },
+        {
+          label: 'Subscription',
+          icon: 'card',
+          onPress: () => router.push('/(protected)/(drawer)/(tabs)/subscription'),
+        },
+      ],
+    },
+  ];
+
+  const footerItems: DrawerMenuItem[] = [
+    { label: 'Terms & Conditions', icon: 'document-text', onPress: () => {} },
+    { label: 'Privacy Policy', icon: 'shield-checkmark', onPress: () => {} },
+    { label: 'Logout', icon: 'log-out', variant: 'destructive' as const, onPress: logout },
+  ];
+
   return (
-    <Container className={cn('flex-1', inset.top > 0 && 'pb-0')}>
-      {/* Header */}
+    <Container className="flex-1" style={{ paddingTop: inset.top }}>
       <View className="border-b border-slate-100 px-6 py-8 dark:border-slate-900">
-        <Text className="text-2xl font-black tracking-tighter text-indigo-600">MFSA</Text>
+        <Text className="text-center text-4xl font-black tracking-tighter text-indigo-600">
+          {Constants.default.expoConfig?.name}
+        </Text>
         <Text
           variant="subtext"
           size="xs"
-          className="font-bold uppercase tracking-widest opacity-60">
+          className="text-center font-bold uppercase tracking-widest opacity-60">
           Association App
         </Text>
       </View>
 
       <ScrollView className="flex-1 py-4">
-        {/* Main Menu Group */}
-        <View className="mb-6">
-          <Text className="mb-1 px-6 py-2 text-[10px] font-bold uppercase tracking-widest text-slate-400">
-            Main Menu
-          </Text>
-          <DrawerItem
-            label="Meetings"
-            icon="calendar"
-            focused={currentPath.includes('meetings')}
-            onPress={() => router.push('/(protected)/(drawer)/(tabs)/meetings')}
-          />
-          <DrawerItem
-            label="Members"
-            icon="people"
-            focused={currentPath.includes('members')}
-            onPress={() => router.push('/(protected)/members')}
-          />
-        </View>
-
-        {/* Account Group */}
-        <View className="mb-6">
-          <Text className="mb-1 px-6 py-2 text-[10px] font-bold uppercase tracking-widest text-slate-400">
-            Account
-          </Text>
-          <DrawerItem
-            label="My Profile"
-            icon="person"
-            focused={currentPath.includes('profile')}
-            onPress={() => router.push('/(protected)/(drawer)/(tabs)/profile')}
-          />
-          <DrawerItem
-            label="Subscription"
-            icon="card"
-            focused={currentPath.includes('subscription')}
-            onPress={() => router.push('/(protected)/(drawer)/(tabs)/subscription')}
-          />
-        </View>
+        {menuGroups.map((group, groupIndex) => (
+          <View key={group.title} className={groupIndex < menuGroups.length - 1 ? 'mb-6' : ''}>
+            <Text className="mb-1 px-6 py-2 text-[10px] font-bold uppercase tracking-widest text-slate-400">
+              {group.title}
+            </Text>
+            {group.items.map((item) => (
+              <DrawerItem
+                key={item.label}
+                label={item.label}
+                icon={item.icon}
+                focused={currentPath.includes(item.label.toLowerCase())}
+                onPress={item.onPress}
+                variant={item.variant}
+              />
+            ))}
+          </View>
+        ))}
       </ScrollView>
 
-      {/* Footer Group */}
-      <View className="border-t border-slate-100 pb-6 pt-4 dark:border-slate-900">
-        <DrawerItem label="Terms & Conditions" icon="document-text" onPress={() => {}} />
-        <DrawerItem label="Privacy Policy" icon="shield-checkmark" onPress={() => {}} />
-        <DrawerItem label="Logout" icon="log-out" variant="destructive" onPress={logout} />
+      <View
+        className="border-t border-slate-100 pt-4 dark:border-slate-900"
+        style={{ paddingBottom: inset.bottom }}>
+        {footerItems.map((item) => (
+          <DrawerItem
+            key={item.label}
+            label={item.label}
+            icon={item.icon}
+            onPress={item.onPress}
+            variant={item.variant}
+          />
+        ))}
         <View className="mt-4 px-6">
           <Text className="text-[10px] font-medium text-slate-400">v1.0.0</Text>
         </View>

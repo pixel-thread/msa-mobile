@@ -1,4 +1,4 @@
-import z from 'zod';
+import { z } from 'zod';
 
 export const CreateMeetingMinuteSchema = z.object({
   agendaPoint: z.string().min(1, 'Agenda point is required'),

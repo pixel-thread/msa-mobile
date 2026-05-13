@@ -17,7 +17,7 @@ import {
   AlertTitle,
   AlertDescription,
 } from '@src/shared/components/ui';
-import { useResendSignInVerifyCode } from '../hooks/use-resend-sign-in-verify-code.hook';
+import { useResendSignInVerifyCode } from '../hooks';
 import { useSearchParams } from 'expo-router/build/hooks';
 
 export const SignInVerifyScreen = () => {

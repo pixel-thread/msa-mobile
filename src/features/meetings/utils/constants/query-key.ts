@@ -6,4 +6,5 @@ export const MeetingQueryKeys = {
   attendees: (id: string) => ['meetings', id, 'attendees'] as const,
   rsvps: (id: string) => ['meetings', id, 'rsvps'] as const,
   rsvp: (id: string) => ['meetings', id, 'rsvp'] as const,
+  minutes: (meetingId: string) => ['meetings', meetingId, 'minutes'] as const,
 };

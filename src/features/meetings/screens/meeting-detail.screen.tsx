@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, ScrollView, RefreshControl, TouchableOpacity, Share } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useMeeting } from '../hooks';
 import { LoadingScreen } from '@src/shared/components/screens';
@@ -31,6 +31,7 @@ import { MeetingInfoCard } from '../components/meeting-info-card';
 
 export const MeetingDetailScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const router = useRouter();
   const { user } = useAuthStore();
   const queryClient = useQueryClient();
   const { data: meeting, isLoading, isError, refetch, isRefetching } = useMeeting(id as string);
@@ -80,9 +81,16 @@ export const MeetingDetailScreen = () => {
           showBackButton
           title="Meeting Details"
           rightAction={
-            <TouchableOpacity onPress={handleShare} className="mr-2">
-              <Ionicons name="share-outline" size={22} color="#4f46e5" />
-            </TouchableOpacity>
+            <View className="flex-row items-center">
+              <TouchableOpacity
+                onPress={() => router.push(`/meetings/${id}/minutes`)}
+                className="mr-4">
+                <Ionicons name="document-text-outline" size={22} color="#4f46e5" />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleShare} className="mr-2">
+                <Ionicons name="share-outline" size={22} color="#4f46e5" />
+              </TouchableOpacity>
+            </View>
           }
         />
         <ScrollView

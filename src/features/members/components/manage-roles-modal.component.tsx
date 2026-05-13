@@ -13,7 +13,7 @@ interface ManageRolesModalProps {
   onClose: () => void;
 }
 
-const ALL_ROLES: UserRole[] = ['SUPER_ADMIN', 'ADMIN', 'MEMBER', 'PRESIDENT', 'SECRETARY'];
+const ALL_ROLES: UserRole[] = ['SUPER_ADMIN', 'DPO', 'MEMBER', 'PRESIDENT', 'SECRETARY'];
 
 export const ManageRolesModal = ({
   memberId,

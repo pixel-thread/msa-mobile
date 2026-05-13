@@ -57,7 +57,7 @@ export const NotificationProvider = ({ children }: { children: React.ReactNode }
     async (response: Notifications.NotificationResponse) => {
       const data = response.notification.request.content.data;
 
-      if (data?.route) router.push(data.route as Route);
+      if (data?.route) router.replace(data.route as Route);
 
       if (data?.id) {
         await updateStatus(data.id as string, { isRead: true });
@@ -70,6 +70,7 @@ export const NotificationProvider = ({ children }: { children: React.ReactNode }
   useEffect(() => {
     const handleAppStateChange = (nextAppState: AppStateStatus) => {
       if (nextAppState === 'active' && isAuthenticated) {
+        logger.debug('Syncing notifications');
         // TODO: sync notifications
         // http.post('/notifications/sync-received').catch(() => {});
       }

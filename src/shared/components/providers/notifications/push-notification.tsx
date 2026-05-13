@@ -36,13 +36,10 @@ export const PushNotificationProvider = ({ children }: { children: React.ReactNo
   useEffect(() => {
     if (isExpoGo() || Platform.OS === 'web') return;
 
-    const init = async () => {
+    const linkNotificationToken = async () => {
       try {
-        const token = await registerForPushNotificationsAsync();
-        if (token && isAuthenticated && user?.id) {
-          setExpoPushToken(token);
-          await http.post('/notifications/link', { token, userId: user?.id });
-          setIsRegistered(true);
+        if (expoPushToken && isAuthenticated && user?.id) {
+          await http.post('/notifications/link', { token: expoPushToken, userId: user?.id });
           logger.debug('Push notification token registered');
         }
       } catch (error) {
@@ -50,8 +47,8 @@ export const PushNotificationProvider = ({ children }: { children: React.ReactNo
       }
     };
 
-    init();
-  }, [isAuthenticated, user]);
+    linkNotificationToken();
+  }, [isAuthenticated, user, expoPushToken]);
 
   return (
     <PushNotificationContext.Provider value={{ expoPushToken, isRegistered }}>

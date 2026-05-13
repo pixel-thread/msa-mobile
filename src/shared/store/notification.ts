@@ -17,7 +17,6 @@ export const useNotificationStore = create<NotificationState>()(
     (set) => ({
       isRegistered: false,
       setRegistered: (value) => set({ isRegistered: value }),
-
       isLinked: false,
       setLinked: (value) => set({ isLinked: value }),
     }),

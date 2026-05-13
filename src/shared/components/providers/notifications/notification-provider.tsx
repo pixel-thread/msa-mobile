@@ -60,7 +60,6 @@ export const NotificationProvider = ({ children }: NotificationProviderProps) =>
   const responseListener = useRef<Notifications.EventSubscription>(null);
   const { user, isAuthenticated } = useAuthStore();
   const router = useRouter();
-  const { setLinked, isLinked, setRegistered, isRegistered } = useNotificationStore();
 
   /**
    * Handles the user's response to a notification (when user taps on the notification).
@@ -69,7 +68,7 @@ export const NotificationProvider = ({ children }: NotificationProviderProps) =>
    * @param response - The notification response containing the notification data
    */
   const handleNotificationResponse = useCallback(
-    (response: Notifications.NotificationResponse) => {
+    async (response: Notifications.NotificationResponse) => {
       const data = response.notification.request.content.data;
 
       // Handle navigation based on notification data
@@ -77,8 +76,44 @@ export const NotificationProvider = ({ children }: NotificationProviderProps) =>
       if (data?.url) {
         router.push(data.url as any);
       }
+
+      const notificationId = data.id;
+
+      logger.debug('Notification Response', { id: notificationId });
+
+      if (notificationId) {
+        const res = await http.patch(`/notifications/${notificationId}`, {
+          readAt: new Date(),
+          isRead: true,
+        });
+
+        logger.debug('Notification response Updated', {
+          success: res.success,
+          timestamp: new Date(),
+        });
+      }
     },
     [router]
+  );
+
+  const handleNotificationRecived = useCallback(
+    async (notification: Notifications.Notification) => {
+      setNotification(notification);
+      const data = notification.request.content.data;
+      const notificationId = data.id;
+      logger.debug('Notification Recived', { id: notificationId });
+      if (notificationId) {
+        const res = await http.patch(`/notifications/${notificationId}`, {
+          isRecived: true,
+          recivedAt: new Date(),
+        });
+        logger.debug('Notification Recived Updated', {
+          success: res.success,
+          timestamp: new Date(),
+        });
+      }
+    },
+    []
   );
 
   /**
@@ -87,22 +122,17 @@ export const NotificationProvider = ({ children }: NotificationProviderProps) =>
    *
    * @param token - The Expo push token to send to the backend
    */
-  const sendTokenToBackend = useCallback(
-    async (token: string) => {
-      try {
-        if (isRegistered) return;
-        const res = await http.post('/notifications/register', { token: token });
-
-        if (res.success) {
-          setRegistered(true);
-        }
-      } catch (error) {
-        // Silently fail or log to an error monitoring service
-        logger.error('Failed to send push token to backend:', { error });
+  const sendTokenToBackend = useCallback(async (token: string) => {
+    try {
+      if (!token) {
+        return;
       }
-    },
-    [isRegistered, setRegistered]
-  );
+      await http.post('/notifications/register', { token: token });
+    } catch (error) {
+      // Silently fail or log to an error monitoring service
+      logger.error('Failed to send push token to backend:', { error });
+    }
+  }, []);
 
   /**
    * Effect to set up push notifications when the user is authenticated.
@@ -141,12 +171,23 @@ export const NotificationProvider = ({ children }: NotificationProviderProps) =>
 
     // Foreground notification listener
     notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
-      setNotification(notification);
+      // TODO: update notitification status to backend when it has reach user
+      handleNotificationRecived(notification);
     });
 
     // Notification click listener
     responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
+      //TODO: update backend user has read the notification
+      // /notification/{{id}}
       handleNotificationResponse(response);
+    });
+
+    responseListener.current = Notifications.addNotificationResponseClearedListener(() => {
+      logger.debug('Notification clear listener');
+    });
+
+    responseListener.current = Notifications.addNotificationsDroppedListener(() => {
+      logger.debug('Notification dropped listener');
     });
 
     return () => {
@@ -166,21 +207,17 @@ export const NotificationProvider = ({ children }: NotificationProviderProps) =>
    *
    * @param token - The Expo push token to link to the user account
    */
-  const linkTokenToBackend = useCallback(
-    async (token: string | undefined) => {
-      try {
-        if (isLinked) return;
-        const res = await http.post('/notifications/link', { token: token });
-        if (res.success) {
-          setLinked(true);
-        }
-      } catch (error) {
-        // Silently fail or log to an error monitoring service
-        logger.error('Failed to send push token to backend:', { error });
+  const linkTokenToBackend = useCallback(async (token: string | undefined) => {
+    try {
+      if (!token) {
+        return;
       }
-    },
-    [isLinked, setLinked]
-  );
+      await http.post('/notifications/link', { token: token });
+    } catch (error) {
+      // Silently fail or log to an error monitoring service
+      logger.error('Failed to send push token to backend:', { error });
+    }
+  }, []);
 
   /**
    * Effect to link the push token to the authenticated user's account.

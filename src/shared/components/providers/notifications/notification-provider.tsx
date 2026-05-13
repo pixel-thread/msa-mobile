@@ -3,7 +3,7 @@ import { Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import { useRouter } from 'expo-router';
 
-import { useAuthStore, useNotificationStore } from '@src/shared/store';
+import { useAuthStore } from '@src/shared/store';
 import http from '@src/shared/utils/http';
 import { logger } from '@src/shared/utils/logger';
 import { registerForPushNotificationsAsync } from '@src/shared/services/notification/register-push-notification';
@@ -149,6 +149,7 @@ export const NotificationProvider = ({ children }: NotificationProviderProps) =>
     // Only register for notifications if authenticated
     if (isExpoGo()) {
       // Expo Go does not support notifications
+      logger.debug('Expo Go does not support notifications');
       return;
     }
     if (!isAuthenticated || !user) {
@@ -210,6 +211,7 @@ export const NotificationProvider = ({ children }: NotificationProviderProps) =>
   const linkTokenToBackend = useCallback(async (token: string | undefined) => {
     try {
       if (!token) {
+        logger.debug('No token to link');
         return;
       }
       await http.post('/notifications/link', { token: token });

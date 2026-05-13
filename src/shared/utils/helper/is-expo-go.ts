@@ -1,5 +1,5 @@
-import Constants from 'expo-constants';
+import * as Device from 'expo-device';
 
 export function isExpoGo(): boolean {
-  return Constants.expoGoConfig !== null;
+  return Device.isDevice;
 }

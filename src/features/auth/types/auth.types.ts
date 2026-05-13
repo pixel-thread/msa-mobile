@@ -1,4 +1,4 @@
-export type UserRole = 'SUPER_ADMIN' | 'ADMIN' | 'MEMBER' | 'PRESIDENT' | 'SECRETARY';
+import { UserRole } from '@src/shared/types/role';
 
 export interface AuthUser {
   id: string;
@@ -12,7 +12,7 @@ export interface SignInResponse {
   id: string;
   email: string;
   name: string;
-  role: UserRole;
+  role: UserRole[];
   mfaEnabled: boolean;
 }
 
@@ -24,7 +24,7 @@ export interface SignUpResponse {
   id: string;
   email: string;
   name: string;
-  role: UserRole;
+  role: UserRole[];
 }
 
 export interface MfaSetupResponse {

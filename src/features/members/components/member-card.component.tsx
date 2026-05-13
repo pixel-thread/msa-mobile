@@ -27,17 +27,25 @@ export const MemberCard = ({ member }: MemberCardProps) => {
             <View className="flex-row items-start justify-between">
               <View className="flex-1">
                 <View className="mb-2 flex-row items-center gap-x-2">
-                  <View
-                    className={cn('rounded-md px-2 py-0.5', 'bg-indigo-50 dark:bg-indigo-900/20')}>
-                    <Text
-                      variant="label"
-                      size="xs"
-                      className={cn(
-                        'font-bold tracking-wider',
-                        'text-indigo-600 dark:text-indigo-400'
-                      )}>
-                      {member.role}
-                    </Text>
+                  <View className="flex-row flex-wrap gap-1">
+                    {member.role.map((role, i) => (
+                      <View
+                        key={role + i}
+                        className={cn(
+                          'rounded-md px-2 py-0.5',
+                          'bg-indigo-50 dark:bg-indigo-900/20'
+                        )}>
+                        <Text
+                          variant="label"
+                          size="xs"
+                          className="font-bold tracking-wider text-indigo-600 dark:text-indigo-400">
+                          {role
+                            .replace(/_/g, ' ')
+                            .toLowerCase()
+                            .replace(/\b\w/g, (l) => l.toUpperCase())}
+                        </Text>
+                      </View>
+                    ))}
                   </View>
                   <View
                     className={cn(

@@ -50,7 +50,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       output: 'static',
       favicon: './src/shared/assets/favicon.png',
     },
-    plugins: ['expo-router', 'expo-notifications'],
+    plugins: ['expo-router', 'expo-notifications', 'expo-font'],
     experiments: {
       typedRoutes: true,
       tsconfigPaths: true,

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, ScrollView, RefreshControl, Alert } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { useMember, useUpdateMemberStatus } from '../hooks';
@@ -7,7 +7,7 @@ import { Container, StackHeader } from '@src/shared/components';
 import { Text, Button } from '@src/shared/components/ui';
 import { ErrorBoundary } from '@src/shared/components/common';
 import { MemberErrorScreen } from './member-error';
-import { MemberInfoCard } from '../components';
+import { MemberInfoCard, ManageRolesModal } from '../components';
 import { cn } from '@src/shared/lib/cn';
 import { useAuthStore } from '@src/shared/store/auth.store';
 import { hasHighRoleAccess } from '@src/features/meetings/utils/permission';
@@ -21,6 +21,9 @@ export const MemberDetailScreen = () => {
   const { user } = useAuthStore();
 
   const canUpdateStatus = hasHighRoleAccess(user?.role) && member?.status === 'INACTIVE';
+  const canManageRoles = hasHighRoleAccess(user?.role);
+
+  const [isRolesModalVisible, setIsRolesModalVisible] = useState(false);
 
   const handleAccept = () => {
     Alert.alert('Approve Member', 'Are you sure you want to approve this member?', [
@@ -124,6 +127,17 @@ export const MemberDetailScreen = () => {
                 />
               </View>
             )}
+
+            {/* Manage Roles Button */}
+            {canManageRoles && (
+              <View className="mt-4">
+                <Button
+                  variant="outline"
+                  onPress={() => setIsRolesModalVisible(true)}
+                  title="Manage Roles"
+                />
+              </View>
+            )}
           </View>
 
           {/* Quick Info Grid */}
@@ -150,6 +164,14 @@ export const MemberDetailScreen = () => {
             />
           </View>
         </ScrollView>
+
+        {/* Roles Modal */}
+        <ManageRolesModal 
+          memberId={memberId}
+          currentRoles={member.role}
+          isVisible={isRolesModalVisible}
+          onClose={() => setIsRolesModalVisible(false)}
+        />
       </Container>
     </ErrorBoundary>
   );

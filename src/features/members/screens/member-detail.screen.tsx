@@ -18,35 +18,37 @@ export const MemberDetailScreen = () => {
 
   const { data: member, isLoading, isError, refetch, isRefetching } = useMember(memberId);
   const { mutate: updateStatus, isPending: isUpdating } = useUpdateMemberStatus();
-  
+
   const { user } = useAuthStore();
   const canUpdateStatus = hasHighRoleAccess(user?.role) && member?.status === 'INACTIVE';
 
   const handleAccept = () => {
     Alert.alert('Approve Member', 'Are you sure you want to approve this member?', [
       { text: 'Cancel', style: 'cancel' },
-      { 
-        text: 'Accept', 
+      {
+        text: 'Accept',
         style: 'default',
-        onPress: () => updateStatus(
-          { id: memberId, status: 'ACTIVE' },
-          { onError: () => Alert.alert('Error', 'Failed to update member status.') }
-        )
-      }
+        onPress: () =>
+          updateStatus(
+            { id: memberId, status: 'ACTIVE' },
+            { onError: () => Alert.alert('Error', 'Failed to update member status.') }
+          ),
+      },
     ]);
   };
 
   const handleReject = () => {
     Alert.alert('Reject Member', 'Are you sure you want to reject and suspend this member?', [
       { text: 'Cancel', style: 'cancel' },
-      { 
-        text: 'Reject', 
+      {
+        text: 'Reject',
         style: 'destructive',
-        onPress: () => updateStatus(
-          { id: memberId, status: 'SUSPENDED' },
-          { onError: () => Alert.alert('Error', 'Failed to update member status.') }
-        )
-      }
+        onPress: () =>
+          updateStatus(
+            { id: memberId, status: 'SUSPENDED' },
+            { onError: () => Alert.alert('Error', 'Failed to update member status.') }
+          ),
+      },
     ]);
   };
 
@@ -100,28 +102,26 @@ export const MemberDetailScreen = () => {
             <Text variant="subtext" size="sm" className="mt-3 leading-relaxed">
               {member.email}
             </Text>
-            
+
             {/* Accept/Reject Buttons */}
             {canUpdateStatus && (
               <View className="mt-6 flex-row gap-x-4">
-                <Button 
-                  className="flex-1" 
-                  variant="default" 
-                  onPress={handleAccept} 
+                <Button
+                  className="flex-1"
+                  variant="default"
+                  onPress={handleAccept}
                   disabled={isUpdating}
                   loading={isUpdating}
-                >
-                  Accept Member
-                </Button>
-                <Button 
-                  className="flex-1" 
-                  variant="destructive" 
-                  onPress={handleReject} 
+                  title="Accept"
+                />
+                <Button
+                  className="flex-1"
+                  variant="destructive"
+                  onPress={handleReject}
                   disabled={isUpdating}
                   loading={isUpdating}
-                >
-                  Reject Member
-                </Button>
+                  title="Reject Member"
+                />
               </View>
             )}
           </View>

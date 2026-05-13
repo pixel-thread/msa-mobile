@@ -1,1 +1,2 @@
-export * from './notification-provider';
+export { NotificationProvider } from './notification';
+export { PushNotificationProvider } from './push-notification';

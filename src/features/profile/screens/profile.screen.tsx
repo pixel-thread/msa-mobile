@@ -19,6 +19,7 @@ import { cn } from '@lib/cn';
 import { truncateText } from '@src/shared/utils/text';
 import { LoadingScreen } from '@src/shared/components/screens';
 import { LogoutButton } from '../components/logout-button';
+import { useRouter } from 'expo-router';
 
 export const ProfileScreen = () => {
   const { user, setUser } = useAuthStore();
@@ -67,7 +68,7 @@ export const ProfileScreen = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="gap-y-4">
-              <InfoItem icon="briefcase-outline" label="Role" value={user.role} />
+              <InfoItem icon="briefcase-outline" label="Role" value={user.role[0]} />
               <InfoItem
                 icon="shield-checkmark-outline"
                 label="MFA Status"
@@ -125,13 +126,13 @@ export const ProfileScreen = () => {
                       variant="outline"
                       size="sm"
                       title="Security Settings"
-                      className="flex-1 h-10"
+                      className="h-10 flex-1"
                     />
                     <Button
-                      variant={user.mfaEnabled ? "outline" : "default"}
+                      variant={user.mfaEnabled ? 'outline' : 'default'}
                       size="sm"
-                      title={user.mfaEnabled ? "Disable MFA" : "Enable MFA"}
-                      className="flex-1 h-10"
+                      title={user.mfaEnabled ? 'Disable MFA' : 'Enable MFA'}
+                      className="h-10 flex-1"
                       onPress={() => {
                         setUser({ ...user, mfaEnabled: !user.mfaEnabled });
                         alert(`MFA ${user.mfaEnabled ? 'Disabled' : 'Enabled'}`);
@@ -213,4 +214,3 @@ const InfoItem = ({
     </Text>
   </View>
 );
-;

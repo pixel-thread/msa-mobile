@@ -15,6 +15,8 @@ import {
   AccordionTrigger,
   AccordionContent,
   Alert,
+  AlertTitle,
+  AlertDescription,
 } from '@src/shared/components/ui';
 import { formattedDate, formattedTime } from '@src/shared/utils/format';
 import { cn } from '@lib/cn';
@@ -28,6 +30,7 @@ import { MeetingQueryKeys } from '../utils/constants/query-key';
 import { MeetingErrorScreen } from './meeting-error';
 import { ErrorBoundary } from '@src/shared/components/common';
 import { MeetingInfoCard } from '../components/meeting-info-card';
+import { hasHighRoleAccess } from '../utils/permission';
 
 export const MeetingDetailScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -41,6 +44,8 @@ export const MeetingDetailScreen = () => {
   const { mutate: updateRsvp, isPending: isUpdatingRsvp } = useUpdateAttendeeRsvp({
     meetingId: id as string,
   });
+  const isAttendee =
+    attendees?.find((a) => a.userId === user?.id) || attendees?.find((a) => a.user.id === user?.id);
 
   const userRsvp = attendees?.find((a) => a.user.id === user?.id);
 
@@ -161,6 +166,43 @@ export const MeetingDetailScreen = () => {
             />
           </View>
 
+          {isAttendee && (
+            <View className="mt-10 gap-2 px-4 pb-2">
+              <Alert variant={'destructive'}>
+                <AlertTitle>
+                  Attendance is mandatory for all committee members. Please RSVP by 24h prior.
+                </AlertTitle>
+              </Alert>
+
+              <View className="flex-row gap-x-4">
+                <Button
+                  title={
+                    attendees?.some((a) => a.user.id === user?.id && a.rsvpStatus !== 'PENDING')
+                      ? 'Update RSVP'
+                      : 'Confirm Attendance'
+                  }
+                  loading={isUpdatingRsvp}
+                  disabled={isUpdatingRsvp || isAccepted}
+                  onPress={() => handleRsvp('ACCEPTED')}
+                  className="h-14 flex-[2] rounded-2xl bg-indigo-600 shadow-lg shadow-indigo-100 dark:shadow-none"
+                />
+                <Button
+                  title="Unable to Attend"
+                  variant="outline"
+                  loading={isUpdatingRsvp}
+                  disabled={isUpdatingRsvp || isDeclined}
+                  onPress={() => handleRsvp('DECLINED')}
+                  className="h-14 flex-1 rounded-2xl"
+                />
+              </View>
+              <View className="mt-8 items-center">
+                <Text variant="subtext" size="xs" className="opacity-50">
+                  Reference ID: {meeting.id.toUpperCase()}
+                </Text>
+              </View>
+            </View>
+          )}
+
           {/* Agenda Section */}
           {agenda && agenda.length > 0 && (
             <View className="mt-8 px-4">
@@ -263,43 +305,6 @@ export const MeetingDetailScreen = () => {
           </View>
 
           {/* Action Bar */}
-          <View className="mt-10 px-4 pb-12">
-            <Alert className="mb-6 border-amber-100 bg-amber-50 dark:border-amber-900/30 dark:bg-amber-950/10">
-              <Ionicons name="warning-outline" size={18} color="#d97706" />
-              <View className="ml-2 flex-1">
-                <Text size="xs" weight="medium" className="text-amber-800 dark:text-amber-400">
-                  Attendance is mandatory for all committee members. Please RSVP by 24h prior.
-                </Text>
-              </View>
-            </Alert>
-
-            <View className="flex-row gap-x-4">
-              <Button
-                title={
-                  attendees?.some((a) => a.user.id === user?.id && a.rsvpStatus !== 'PENDING')
-                    ? 'Update RSVP'
-                    : 'Confirm Attendance'
-                }
-                loading={isUpdatingRsvp}
-                disabled={isUpdatingRsvp || isAccepted}
-                onPress={() => handleRsvp('ACCEPTED')}
-                className="h-14 flex-[2] rounded-2xl bg-indigo-600 shadow-lg shadow-indigo-100 dark:shadow-none"
-              />
-              <Button
-                title="Unable to Attend"
-                variant="outline"
-                loading={isUpdatingRsvp}
-                disabled={isUpdatingRsvp || isDeclined}
-                onPress={() => handleRsvp('DECLINED')}
-                className="h-14 flex-1 rounded-2xl"
-              />
-            </View>
-            <View className="mt-8 items-center">
-              <Text variant="subtext" size="xs" className="opacity-50">
-                Reference ID: {meeting.id.toUpperCase()}
-              </Text>
-            </View>
-          </View>
         </ScrollView>
       </Container>
     </ErrorBoundary>

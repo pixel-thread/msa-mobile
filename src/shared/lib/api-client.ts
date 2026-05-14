@@ -105,7 +105,6 @@ const refreshToken = async (): Promise<string> => {
   if (newRefreshToken) {
     await SecureStore.setItemAsync(SECURE_STORE_KEYS.REFRESH_TOKEN, newRefreshToken);
   }
-
   return newAccessToken;
 };
 
@@ -139,6 +138,7 @@ apiClient.interceptors.response.use(
     }
 
     // Handle 401 Unauthorized errors by attempting to refresh the token
+
     if (error.response?.status === 401 && !originalRequest._retry) {
       if (isRefreshing) {
         // If a refresh is already in progress, queue the request

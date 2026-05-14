@@ -10,3 +10,19 @@ export const formattedTime = (date: Date) =>
     hour: '2-digit',
     minute: '2-digit',
   });
+
+export const formatDate = (dateString: string | Date) => {
+  const date = typeof dateString === 'string' ? new Date(dateString) : dateString;
+  return date.toLocaleDateString(undefined, {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+};
+
+export const formatCurrency = (amount: number, currency: string = 'INR') => {
+  return new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: currency,
+  }).format(amount);
+};

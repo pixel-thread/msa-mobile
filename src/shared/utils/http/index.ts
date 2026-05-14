@@ -12,6 +12,7 @@ export interface ApiResponse<T> {
 
 export const handleAxiosError = <T>(error: unknown): ApiResponse<T> => {
   let errorMessage = 'Something went wrong. Please try again.';
+
   let errorDetails: string | Record<string, unknown> = '';
 
   if (error instanceof AxiosError) {
@@ -54,9 +55,6 @@ const http = {
       const response = await apiClient.get<ApiResponse<T>>(url, config);
       return handleResponse<T>(response);
     } catch (error) {
-      if (error instanceof AxiosError && error.response?.status === 401) {
-        throw error;
-      }
       return handleAxiosError<T>(error);
     }
   },
@@ -71,9 +69,6 @@ const http = {
       const response = await apiClient.post<ApiResponse<T>>(url, data, config);
       return handleResponse<T>(response);
     } catch (error) {
-      if (error instanceof AxiosError && error.response?.status === 401) {
-        throw error;
-      }
       return handleAxiosError<T>(error);
     }
   },
@@ -88,9 +83,6 @@ const http = {
       const response = await apiClient.put<ApiResponse<T>>(url, data, config);
       return handleResponse<T>(response);
     } catch (error) {
-      if (error instanceof AxiosError && error.response?.status === 401) {
-        throw error;
-      }
       return handleAxiosError<T>(error);
     }
   },
@@ -105,9 +97,6 @@ const http = {
       const response = await apiClient.patch<ApiResponse<T>>(url, data, config);
       return handleResponse<T>(response);
     } catch (error) {
-      if (error instanceof AxiosError && error.response?.status === 401) {
-        throw error;
-      }
       return handleAxiosError<T>(error);
     }
   },
@@ -118,9 +107,6 @@ const http = {
       const response = await apiClient.delete<ApiResponse<T>>(url, config);
       return handleResponse<T>(response);
     } catch (error) {
-      if (error instanceof AxiosError && error.response?.status === 401) {
-        throw error;
-      }
       return handleAxiosError<T>(error);
     }
   },

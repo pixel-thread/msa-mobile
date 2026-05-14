@@ -24,6 +24,7 @@ import { useRouter } from 'expo-router';
 export const ProfileScreen = () => {
   const { user, setUser } = useAuthStore();
   const router = useRouter();
+
   if (!user) return <LoadingScreen message="Fetching your details" />;
 
   return (
@@ -55,7 +56,7 @@ export const ProfileScreen = () => {
             size="sm"
             title="Edit Profile"
             className="mt-4 h-10 w-32"
-            onPress={() => router.push('/profile/edit')}
+            onPress={() => router.push('/(protected)/profile/edit')}
           />
         </View>
 

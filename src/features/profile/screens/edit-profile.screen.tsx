@@ -1,56 +1,14 @@
 import React from 'react';
-import { View, ScrollView, TouchableOpacity, Alert, TextInput } from 'react-native';
+import { View, ScrollView, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '@src/shared/store';
 import { Container, StackHeader } from '@src/shared/components';
-import { Button, Text } from '@src/shared/components/ui';
-import { useForm, Controller } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { useRouter } from 'expo-router';
-
-const editProfileSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  email: z.string().email('Invalid email format'),
-});
-
-type EditProfileForm = z.infer<typeof editProfileSchema>;
+import { Text } from '@src/shared/components/ui';
+import { EditProfileForm } from '../components/edit-profile-form';
+import { useUser } from '@src/shared/hooks/useUser';
 
 export const EditProfileScreen = () => {
-  const { user, setUser } = useAuthStore();
-  const router = useRouter();
-
-  const {
-    control,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<EditProfileForm>({
-    resolver: zodResolver(editProfileSchema),
-    defaultValues: {
-      name: user?.name || '',
-      email: user?.email || '',
-    },
-  });
-
-  const onSubmit = async (data: EditProfileForm) => {
-    if (!user) return;
-    try {
-      // Simulate API call
-      await new Promise((res) => setTimeout(res, 800));
-
-      setUser({
-        ...user,
-        name: data.name,
-        email: data.email,
-      });
-
-      Alert.alert('Success', 'Profile updated successfully');
-      router.back();
-    } catch {
-      Alert.alert('Error', 'Failed to update profile');
-    }
-  };
-
+  const { data: user } = useUser();
   if (!user) return null;
 
   return (
@@ -70,52 +28,7 @@ export const EditProfileScreen = () => {
           </View>
           <Text className="mt-2 text-slate-500">Tap to change avatar</Text>
         </View>
-
-        <View className="mb-4">
-          <Text className="mb-2 font-medium text-slate-700">Name</Text>
-          <Controller
-            control={control}
-            name="name"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                className={`h-12 rounded-lg border bg-white px-4 ${errors.name ? 'border-red-500' : 'border-slate-200'}`}
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                placeholder="Enter your name"
-              />
-            )}
-          />
-          {errors.name && <Text className="mt-1 text-xs text-red-500">{errors.name.message}</Text>}
-        </View>
-
-        <View className="mb-6">
-          <Text className="mb-2 font-medium text-slate-700">Email</Text>
-          <Controller
-            control={control}
-            name="email"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                className={`h-12 rounded-lg border bg-white px-4 ${errors.email ? 'border-red-500' : 'border-slate-200'}`}
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                placeholder="Enter your email"
-                keyboardType="email-address"
-                autoCapitalize="none"
-              />
-            )}
-          />
-          {errors.email && (
-            <Text className="mt-1 text-xs text-red-500">{errors.email.message}</Text>
-          )}
-        </View>
-
-        <Button
-          title={isSubmitting ? 'Saving...' : 'Save Changes'}
-          onPress={handleSubmit(onSubmit)}
-          disabled={isSubmitting}
-        />
+        <EditProfileForm />
       </ScrollView>
     </Container>
   );

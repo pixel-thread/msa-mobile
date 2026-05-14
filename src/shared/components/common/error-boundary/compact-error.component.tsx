@@ -10,7 +10,7 @@ interface CompactErrorProps {
 export const CompactError = ({ message = 'Something went wrong', onRetry }: CompactErrorProps) => {
   return (
     <View className="my-2 rounded-lg border border-red-100 bg-red-50 p-4">
-      <View className="flex-row items-center space-x-3">
+      <View className="flex-row items-center gap-x-3">
         <Ionicons name="alert-circle" size={20} color="#ef4444" />
         <View className="ml-2 flex-1">
           <Text className="text-sm font-medium text-red-800">{message}</Text>

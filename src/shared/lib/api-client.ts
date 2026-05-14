@@ -67,7 +67,7 @@ const isAuthPath = (url: string): boolean => {
  * Configured Axios instance for application-wide API requests.
  * Includes base URL, credentials support, and default JSON headers.
  */
-export const apiClient = axios.create({
+const apiClient = axios.create({
   baseURL: API_BASE_URL,
   withCredentials: true,
   headers: {
@@ -94,6 +94,7 @@ const refreshToken = async (): Promise<string> => {
   }>(`${API_BASE_URL}/auth/refresh`, { refreshToken }, { withCredentials: true });
 
   const newAccessToken = response.data?.data?.accessToken;
+
   if (!newAccessToken) {
     throw new Error('No access token in refresh response');
   }
@@ -183,3 +184,4 @@ apiClient.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+export default apiClient;

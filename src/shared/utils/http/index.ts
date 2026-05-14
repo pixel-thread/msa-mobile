@@ -1,4 +1,4 @@
-import { apiClient } from '@src/shared/lib/api-client';
+import apiClient from '@src/shared/lib/api-client';
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { logger } from '../logger';
 
@@ -41,10 +41,9 @@ export const handleAxiosError = <T>(error: unknown): ApiResponse<T> => {
 const handleResponse = <T>(response: AxiosResponse<ApiResponse<T>>): ApiResponse<T> => {
   return {
     success: response.data.success,
-    message: response.data.message || 'Request successful',
+    message: response.data.message || 'Request successfully',
     data: response.data.data ?? null,
     meta: response?.data?.meta,
-    token: response.data.token,
   };
 };
 

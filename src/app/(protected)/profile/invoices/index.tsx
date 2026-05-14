@@ -8,7 +8,6 @@ import { InvoiceListItem } from '@src/features/invoice/components/invoice-list-i
 
 export default function InvoicesScreen() {
   const { data: invoices, isLoading, isError } = useInvoices();
-
   return (
     <Container>
       <StackHeader title="Invoices" />

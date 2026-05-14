@@ -58,54 +58,59 @@ export const MemberSubmitDSARScreen = () => {
   return (
     <Container>
       <StackHeader title="New Privacy Request" showBackButton={true} />
-      <ScrollView 
-        className="flex-1 px-4 py-6" 
+      <ScrollView
+        className="flex-1 px-4 py-6"
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 40 }}
-      >
-        <Text variant="h3" weight="bold" className="mb-2">Submit DSAR</Text>
+        contentContainerStyle={{ paddingBottom: 40 }}>
+        <Text variant="heading" size={'2xl'} weight="bold" className="mb-2">
+          Submit DSAR
+        </Text>
         <Text className="mb-6 text-slate-500">
           Request access to your data, corrections, or deletion of your information.
         </Text>
 
         {/* Request Type */}
         <View className="mb-6">
-          <Text weight="medium" className="mb-3 text-slate-700">Request Type</Text>
+          <Text weight="medium" className="mb-3 text-slate-700">
+            Request Type
+          </Text>
           <View className="flex-row flex-wrap">
             {REQUEST_TYPES.map((type) => (
               <Pressable
                 key={type.value}
                 onPress={() => setValue('requestType', type.value)}
                 className={cn(
-                  "mr-2 mb-2 flex-row items-center rounded-full border px-4 py-2",
-                  selectedRequestType === type.value 
-                    ? "border-indigo-600 bg-indigo-50" 
-                    : "border-slate-200 bg-white"
-                )}
-              >
+                  'mb-2 mr-2 flex-row items-center rounded-full border px-4 py-2',
+                  selectedRequestType === type.value
+                    ? 'border-indigo-600 bg-indigo-50'
+                    : 'border-slate-200 bg-white'
+                )}>
                 {selectedRequestType === type.value && (
                   <Ionicons name="checkmark-circle" size={16} color="#4F46E5" className="mr-1" />
                 )}
-                <Text 
+                <Text
                   size="sm"
                   className={cn(
-                    selectedRequestType === type.value ? "text-indigo-600" : "text-slate-600"
-                  )}
-                >
+                    selectedRequestType === type.value ? 'text-indigo-600' : 'text-slate-600'
+                  )}>
                   {type.label}
                 </Text>
               </Pressable>
             ))}
           </View>
           {errors.requestType && (
-            <Text variant="error" size="xs" className="mt-1">{errors.requestType.message}</Text>
+            <Text variant="error" size="xs" className="mt-1">
+              {errors.requestType.message}
+            </Text>
           )}
         </View>
 
         {/* Data Categories */}
         <View className="mb-6">
-          <Text weight="medium" className="mb-3 text-slate-700">Information Requested</Text>
-          <View className="space-y-2">
+          <Text weight="medium" className="mb-3 text-slate-700">
+            Information Requested
+          </Text>
+          <View className="gap-y-2">
             {DATA_CATEGORIES.map((category) => {
               const isSelected = selectedDataCategories.includes(category.value);
               return (
@@ -113,30 +118,33 @@ export const MemberSubmitDSARScreen = () => {
                   key={category.value}
                   onPress={() => toggleDataCategory(category.value)}
                   className={cn(
-                    "flex-row items-center justify-between rounded-xl border p-4",
-                    isSelected ? "border-indigo-600 bg-indigo-50" : "border-slate-200 bg-white"
-                  )}
-                >
-                  <Text className={isSelected ? "text-indigo-900" : "text-slate-700"}>
+                    'flex-row items-center justify-between rounded-xl border p-4',
+                    isSelected ? 'border-indigo-600 bg-indigo-50' : 'border-slate-200 bg-white'
+                  )}>
+                  <Text className={isSelected ? 'text-indigo-900' : 'text-slate-700'}>
                     {category.label}
                   </Text>
-                  <Ionicons 
-                    name={isSelected ? "checkbox" : "square-outline"} 
-                    size={22} 
-                    color={isSelected ? "#4F46E5" : "#94A3B8"} 
+                  <Ionicons
+                    name={isSelected ? 'checkbox' : 'square-outline'}
+                    size={22}
+                    color={isSelected ? '#4F46E5' : '#94A3B8'}
                   />
                 </Pressable>
               );
             })}
           </View>
           {errors.requestedData && (
-            <Text variant="error" size="xs" className="mt-1">{errors.requestedData.message}</Text>
+            <Text variant="error" size="xs" className="mt-1">
+              {errors.requestedData.message}
+            </Text>
           )}
         </View>
 
         {/* Description */}
         <View className="mb-8">
-          <Text weight="medium" className="mb-2 text-slate-700">Additional Details (Optional)</Text>
+          <Text weight="medium" className="mb-2 text-slate-700">
+            Additional Details (Optional)
+          </Text>
           <Controller
             control={control}
             name="description"
@@ -154,12 +162,14 @@ export const MemberSubmitDSARScreen = () => {
             )}
           />
           {errors.description && (
-            <Text variant="error" size="xs" className="mt-1">{errors.description.message}</Text>
+            <Text variant="error" size="xs" className="mt-1">
+              {errors.description.message}
+            </Text>
           )}
         </View>
 
         <Button
-          title={isPending ? "Submitting..." : "Submit Request"}
+          title={isPending ? 'Submitting...' : 'Submit Request'}
           onPress={handleSubmit(onSubmit)}
           disabled={isPending}
           className="mt-2"

@@ -15,11 +15,11 @@ export const AdminDSARDashboardScreen = () => {
   const { data: slaReport, isLoading: isSlaLoading } = useSlaReport();
 
   const renderSLACard = (label: string, count: number, colorClass: string, subtext: string) => (
-    <Card className="flex-1 mx-1 border-none shadow-sm">
-      <CardContent className="p-4 items-center">
+    <Card className="mx-1 flex-1 border-none shadow-sm">
+      <CardContent className="items-center p-4">
         <Text className={cn('text-2xl font-bold', colorClass)}>{count}</Text>
-        <Text className="text-[10px] font-bold uppercase text-slate-500 mt-1">{label}</Text>
-        <Text className="text-[9px] text-slate-400 mt-0.5">{subtext}</Text>
+        <Text className="mt-1 text-[10px] font-bold uppercase text-slate-500">{label}</Text>
+        <Text className="mt-0.5 text-[9px] text-slate-400">{subtext}</Text>
       </CardContent>
     </Card>
   );
@@ -28,22 +28,25 @@ export const AdminDSARDashboardScreen = () => {
     <TouchableOpacity
       activeOpacity={0.7}
       onPress={() => router.push(`/(protected)/admin/dsar/${item.id}`)}
-      className="mb-3 mx-4"
-    >
+      className="mx-4 mb-3">
       <Card>
         <CardContent className="p-4">
-          <View className="flex-row justify-between items-start mb-2">
+          <View className="mb-2 flex-row items-start justify-between">
             <View>
               <Text className="font-bold text-slate-900">{item.ticketNumber}</Text>
-              <Text className="text-xs text-slate-500 mt-0.5">{item.requestType}</Text>
+              <Text className="mt-0.5 text-xs text-slate-500">{item.requestType}</Text>
             </View>
             <DSARStatusBadge status={item.status} />
           </View>
-          
-          <View className="flex-row justify-between items-end mt-2">
+
+          <View className="mt-2 flex-row items-end justify-between">
             <View>
-              <Text className="text-xs text-slate-400">Created: {new Date(item.createdAt).toLocaleDateString()}</Text>
-              <Text className="text-xs text-slate-400">User ID: {item.userId.substring(0, 8)}...</Text>
+              <Text className="text-xs text-slate-400">
+                Created: {new Date(item.createdAt).toLocaleDateString()}
+              </Text>
+              <Text className="text-xs text-slate-400">
+                User ID: {item.userId.substring(0, 8)}...
+              </Text>
             </View>
             <SLAIndicator createdAt={item.createdAt} />
           </View>
@@ -55,28 +58,33 @@ export const AdminDSARDashboardScreen = () => {
   return (
     <Container className="bg-slate-50">
       <StackHeader title="DSAR Management" showDrawerButton />
-      
+
       <ScrollView className="flex-1" stickyHeaderIndices={[1]}>
-        <View className="p-4 flex-row justify-between">
+        <View className="flex-row justify-between p-4">
           {isSlaLoading ? (
             <ActivityIndicator size="small" color="#64748b" className="flex-1" />
           ) : (
             <>
-              {renderSLACard('Breached', slaReport?.breached || 0, 'text-red-600', 'Immediate Action')}
+              {renderSLACard(
+                'Breached',
+                slaReport?.breached || 0,
+                'text-red-600',
+                'Immediate Action'
+              )}
               {renderSLACard('At Risk', slaReport?.atRisk || 0, 'text-orange-500', 'Due Soon')}
               {renderSLACard('On Track', slaReport?.onTrack || 0, 'text-green-600', 'Within SLA')}
             </>
           )}
         </View>
 
-        <View className="px-4 py-2 bg-slate-50 border-b border-slate-200">
-          <Text className="text-sm font-bold text-slate-500 uppercase tracking-wider">
+        <View className="border-b border-slate-200 bg-slate-50 px-4 py-2">
+          <Text className="text-sm font-bold uppercase tracking-wider text-slate-500">
             All Requests {requests ? `(${requests.length})` : ''}
           </Text>
         </View>
 
         {isRequestsLoading ? (
-          <View className="p-8 items-center">
+          <View className="items-center p-8">
             <ActivityIndicator size="large" color="#0f172a" />
           </View>
         ) : (
@@ -86,7 +94,7 @@ export const AdminDSARDashboardScreen = () => {
             keyExtractor={(item) => item.id}
             scrollEnabled={false}
             ListEmptyComponent={
-              <View className="p-8 items-center">
+              <View className="items-center p-8">
                 <Text className="text-slate-400">No requests found</Text>
               </View>
             }
@@ -99,4 +107,4 @@ export const AdminDSARDashboardScreen = () => {
 };
 
 import { TouchableOpacity } from 'react-native';
-import { useRouter } from 'expo-router';
+import { router, useRouter } from 'expo-router';

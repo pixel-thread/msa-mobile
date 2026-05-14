@@ -1,9 +1,9 @@
 import apiClient from '@src/shared/lib/api-client';
-import { 
-  DSARRequest, 
-  DSARSubmitPayload, 
-  DSARResponsePayload, 
-  SLAReport 
+import {
+  DSARRequest,
+  DSARSubmitPayload,
+  DSARResponsePayload,
+  SLAReport,
 } from '../types/dsar.types';
 
 export const dsarService = {
@@ -27,13 +27,21 @@ export const dsarService = {
     return response.data.data;
   },
 
-  respondToRequest: async (ticketId: string, payload: DSARResponsePayload): Promise<DSARRequest> => {
-    const response = await apiClient.post<{ data: DSARRequest }>(`/dsar/${ticketId}/respond`, payload);
+  respondToRequest: async (
+    ticketId: string,
+    payload: DSARResponsePayload
+  ): Promise<DSARRequest> => {
+    const response = await apiClient.post<{ data: DSARRequest }>(
+      `/dsar/${ticketId}/respond`,
+      payload
+    );
     return response.data.data;
   },
 
   assignTicket: async (ticketId: string, assignedToId: string): Promise<DSARRequest> => {
-    const response = await apiClient.patch<{ data: DSARRequest }>(`/dsar/${ticketId}/assign`, { assignedToId });
+    const response = await apiClient.patch<{ data: DSARRequest }>(`/dsar/${ticketId}/assign`, {
+      assignedToId,
+    });
     return response.data.data;
   },
 

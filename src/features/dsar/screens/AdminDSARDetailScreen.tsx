@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, ScrollView, ActivityIndicator } from 'react-native';
+import { View, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -10,7 +10,6 @@ import { SLAIndicator } from '../components/SLAIndicator';
 import { useDSARDetail } from '../hooks/use-dsar';
 import { useRespondToDSAR } from '../hooks/use-dsar-mutations';
 import { dsarResponseSchema, DSARResponseFormData } from '../validators/dsar.validator';
-import { DSARStatus } from '../types/dsar.types';
 import { cn } from '@src/shared/lib/cn';
 
 export const AdminDSARDetailScreen = () => {
@@ -40,7 +39,7 @@ export const AdminDSARDetailScreen = () => {
   useEffect(() => {
     if (request) {
       reset({
-        status: request.status === 'PENDING' ? 'IN_PROGRESS' : request.status as any,
+        status: request.status === 'PENDING' ? 'IN_PROGRESS' : (request.status as any),
         notes: request.notes || '',
         storageKey: request.storageKey || '',
         rejectedReason: request.rejectedReason || '',
@@ -49,14 +48,17 @@ export const AdminDSARDetailScreen = () => {
   }, [request, reset]);
 
   const onSubmit = (data: DSARResponseFormData) => {
-    respond({
-      ticketId: id,
-      payload: data as any,
-    }, {
-      onSuccess: () => {
-        router.back();
+    respond(
+      {
+        ticketId: id,
+        payload: data as any,
+      },
+      {
+        onSuccess: () => {
+          router.back();
+        },
       }
-    });
+    );
   };
 
   if (isLoading) {
@@ -93,12 +95,18 @@ export const AdminDSARDetailScreen = () => {
           </View>
 
           <View className="mb-4">
-            <Text className="text-xs font-bold uppercase tracking-wider text-slate-400">Request Type</Text>
-            <Text weight="semibold" className="text-lg text-slate-800">{request.requestType}</Text>
+            <Text className="text-xs font-bold uppercase tracking-wider text-slate-400">
+              Request Type
+            </Text>
+            <Text weight="semibold" className="text-lg text-slate-800">
+              {request.requestType}
+            </Text>
           </View>
 
           <View className="mb-4">
-            <Text className="text-xs font-bold uppercase tracking-wider text-slate-400">Requested Data</Text>
+            <Text className="text-xs font-bold uppercase tracking-wider text-slate-400">
+              Requested Data
+            </Text>
             <View className="mt-1 flex-row flex-wrap gap-2">
               {request.requestedData.map((item) => (
                 <View key={item} className="rounded-md bg-slate-100 px-2 py-1">
@@ -109,19 +117,27 @@ export const AdminDSARDetailScreen = () => {
           </View>
 
           <View className="mb-4">
-            <Text className="text-xs font-bold uppercase tracking-wider text-slate-400">Description</Text>
-            <Text className="mt-1 text-slate-600">{request.description || 'No description provided'}</Text>
+            <Text className="text-xs font-bold uppercase tracking-wider text-slate-400">
+              Description
+            </Text>
+            <Text className="mt-1 text-slate-600">
+              {request.description || 'No description provided'}
+            </Text>
           </View>
 
           <View>
-            <Text className="text-xs font-bold uppercase tracking-wider text-slate-400">User ID</Text>
+            <Text className="text-xs font-bold uppercase tracking-wider text-slate-400">
+              User ID
+            </Text>
             <Text className="mt-1 text-slate-600">{request.userId}</Text>
           </View>
         </View>
 
         {/* Response Form */}
         <View className="mb-8">
-          <Text weight="bold" className="mb-4 text-xl text-slate-900">Process Request</Text>
+          <Text weight="bold" className="mb-4 text-xl text-slate-900">
+            Process Request
+          </Text>
 
           {/* Status Selection */}
           <View className="mb-4">
@@ -133,18 +149,16 @@ export const AdminDSARDetailScreen = () => {
                   onPress={() => reset({ ...watch(), status })}
                   className={cn(
                     'flex-1 items-center justify-center rounded-lg border py-3',
-                    selectedStatus === status 
-                      ? 'border-indigo-600 bg-indigo-50' 
+                    selectedStatus === status
+                      ? 'border-indigo-600 bg-indigo-50'
                       : 'border-slate-200 bg-white'
-                  )}
-                >
-                  <Text 
+                  )}>
+                  <Text
                     weight={selectedStatus === status ? 'semibold' : 'medium'}
                     className={cn(
                       'text-xs',
                       selectedStatus === status ? 'text-indigo-700' : 'text-slate-600'
-                    )}
-                  >
+                    )}>
                     {status.replace('_', ' ')}
                   </Text>
                 </TouchableOpacity>
@@ -174,7 +188,9 @@ export const AdminDSARDetailScreen = () => {
                 />
               )}
             />
-            {errors.notes && <Text className="mt-1 text-xs text-red-500">{errors.notes.message}</Text>}
+            {errors.notes && (
+              <Text className="mt-1 text-xs text-red-500">{errors.notes.message}</Text>
+            )}
           </View>
 
           {/* Conditional: Storage Key for COMPLETED */}
@@ -197,7 +213,9 @@ export const AdminDSARDetailScreen = () => {
                   />
                 )}
               />
-              {errors.storageKey && <Text className="mt-1 text-xs text-red-500">{errors.storageKey.message}</Text>}
+              {errors.storageKey && (
+                <Text className="mt-1 text-xs text-red-500">{errors.storageKey.message}</Text>
+              )}
             </View>
           )}
 
@@ -224,7 +242,9 @@ export const AdminDSARDetailScreen = () => {
                   />
                 )}
               />
-              {errors.rejectedReason && <Text className="mt-1 text-xs text-red-500">{errors.rejectedReason.message}</Text>}
+              {errors.rejectedReason && (
+                <Text className="mt-1 text-xs text-red-500">{errors.rejectedReason.message}</Text>
+              )}
             </View>
           )}
 
@@ -239,6 +259,3 @@ export const AdminDSARDetailScreen = () => {
     </Container>
   );
 };
-
-// Internal TouchableOpacity replacement if UI Button doesn't support custom styling well
-import { TouchableOpacity } from 'react-native-gesture-handler';

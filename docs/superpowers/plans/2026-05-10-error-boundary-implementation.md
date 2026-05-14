@@ -13,9 +13,11 @@
 ### Task 1: BaseErrorBoundary Implementation
 
 **Files:**
+
 - Create: `src/shared/components/common/error-boundary/base-error-boundary.tsx`
 
 - [ ] **Step 1: Write the BaseErrorBoundary implementation**
+
 ```tsx
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { logger } from '@src/shared/utils/logger';
@@ -41,11 +43,11 @@ export class BaseErrorBoundary extends Component<BaseErrorBoundaryProps, BaseErr
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    logger.error('Error Boundary caught an error', { 
-      error, 
+    logger.error('Error Boundary caught an error', {
+      error,
       errorInfo: {
-        componentStack: errorInfo.componentStack
-      } 
+        componentStack: errorInfo.componentStack,
+      },
     });
   }
 
@@ -55,9 +57,9 @@ export class BaseErrorBoundary extends Component<BaseErrorBoundaryProps, BaseErr
 
   render() {
     if (this.state.hasError) {
-      return this.props.fallback({ 
-        error: this.state.error, 
-        resetError: this.resetError 
+      return this.props.fallback({
+        error: this.state.error,
+        resetError: this.resetError,
       });
     }
 
@@ -67,6 +69,7 @@ export class BaseErrorBoundary extends Component<BaseErrorBoundaryProps, BaseErr
 ```
 
 - [ ] **Step 2: Commit**
+
 ```bash
 git add src/shared/components/common/error-boundary/base-error-boundary.tsx
 git commit -m "feat(shared): add BaseErrorBoundary class component"
@@ -77,9 +80,11 @@ git commit -m "feat(shared): add BaseErrorBoundary class component"
 ### Task 2: CompactError UI Component
 
 **Files:**
+
 - Create: `src/shared/components/common/error-boundary/compact-error.component.tsx`
 
 - [ ] **Step 1: Implement the CompactError UI**
+
 ```tsx
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
@@ -93,9 +98,9 @@ interface CompactErrorProps {
 export const CompactError = ({ message = 'Something went wrong', onRetry }: CompactErrorProps) => {
   return (
     <View className="my-2 rounded-lg border border-red-100 bg-red-50 p-4">
-      <div className="flex-row items-center space-x-3">
+      <div className="flex-row items-center gap-x-3">
         <Ionicons name="alert-circle" size={20} color="#ef4444" />
-        <View className="flex-1 ml-2">
+        <View className="ml-2 flex-1">
           <Text className="text-sm font-medium text-red-800">{message}</Text>
           <TouchableOpacity onPress={onRetry} className="mt-1">
             <Text className="text-xs font-bold text-red-600 underline">Try again</Text>
@@ -108,6 +113,7 @@ export const CompactError = ({ message = 'Something went wrong', onRetry }: Comp
 ```
 
 - [ ] **Step 2: Commit**
+
 ```bash
 git add src/shared/components/common/error-boundary/compact-error.component.tsx
 git commit -m "feat(shared): add CompactError UI component"
@@ -118,11 +124,13 @@ git commit -m "feat(shared): add CompactError UI component"
 ### Task 3: Specialized Wrappers Implementation
 
 **Files:**
+
 - Create: `src/shared/components/common/error-boundary/global-error-boundary.tsx`
 - Create: `src/shared/components/common/error-boundary/component-error-boundary.tsx`
 - Create: `src/shared/components/common/error-boundary/index.ts`
 
 - [ ] **Step 1: Implement GlobalErrorBoundary**
+
 ```tsx
 import React, { ReactNode } from 'react';
 import { BaseErrorBoundary } from './base-error-boundary';
@@ -136,14 +144,13 @@ export const GlobalErrorBoundary = ({ children }: GlobalErrorBoundaryProps) => {
   return (
     <BaseErrorBoundary
       fallback={({ resetError }) => (
-        <ErrorScreen 
+        <ErrorScreen
           title="Critical Error"
           message="The application encountered an unexpected problem and needs to restart."
           onRetry={resetError}
           retryText="Restart App"
         />
-      )}
-    >
+      )}>
       {children}
     </BaseErrorBoundary>
   );
@@ -151,6 +158,7 @@ export const GlobalErrorBoundary = ({ children }: GlobalErrorBoundaryProps) => {
 ```
 
 - [ ] **Step 2: Implement Component-level ErrorBoundary**
+
 ```tsx
 import React, { ReactNode } from 'react';
 import { BaseErrorBoundary } from './base-error-boundary';
@@ -164,10 +172,7 @@ interface ErrorBoundaryProps {
 export const ErrorBoundary = ({ children, errorMessage }: ErrorBoundaryProps) => {
   return (
     <BaseErrorBoundary
-      fallback={({ resetError }) => (
-        <CompactError message={errorMessage} onRetry={resetError} />
-      )}
-    >
+      fallback={({ resetError }) => <CompactError message={errorMessage} onRetry={resetError} />}>
       {children}
     </BaseErrorBoundary>
   );
@@ -175,12 +180,14 @@ export const ErrorBoundary = ({ children, errorMessage }: ErrorBoundaryProps) =>
 ```
 
 - [ ] **Step 3: Create index export file**
+
 ```tsx
 export * from './global-error-boundary';
 export * from './component-error-boundary';
 ```
 
 - [ ] **Step 4: Commit**
+
 ```bash
 git add src/shared/components/common/error-boundary/global-error-boundary.tsx \
         src/shared/components/common/error-boundary/component-error-boundary.tsx \
@@ -193,15 +200,18 @@ git commit -m "feat(shared): add Global and Component-level ErrorBoundary wrappe
 ### Task 4: Export to Main Component Index
 
 **Files:**
+
 - Modify: `src/shared/components/index.ts`
 
 - [ ] **Step 1: Export ErrorBoundary components from main index**
+
 ```tsx
 // ... existing exports
 export { GlobalErrorBoundary, ErrorBoundary } from './common/error-boundary';
 ```
 
 - [ ] **Step 2: Commit**
+
 ```bash
 git add src/shared/components/index.ts
 git commit -m "feat(shared): export ErrorBoundary components from main index"
@@ -212,9 +222,11 @@ git commit -m "feat(shared): export ErrorBoundary components from main index"
 ### Task 5: Root Layout Integration
 
 **Files:**
+
 - Modify: `src/app/_layout.tsx`
 
 - [ ] **Step 1: Wrap root layout with GlobalErrorBoundary**
+
 ```tsx
 import { GlobalErrorBoundary } from '@components/index';
 // ... rest of imports
@@ -222,15 +234,14 @@ import { GlobalErrorBoundary } from '@components/index';
 export default function RootLayout() {
   return (
     <GlobalErrorBoundary>
-      <SafeAreaProvider>
-        {/* ... rest of the layout */}
-      </SafeAreaProvider>
+      <SafeAreaProvider>{/* ... rest of the layout */}</SafeAreaProvider>
     </GlobalErrorBoundary>
   );
 }
 ```
 
 - [ ] **Step 2: Commit**
+
 ```bash
 git add src/app/_layout.tsx
 git commit -m "feat(app): integrate GlobalErrorBoundary into root layout"
@@ -241,9 +252,11 @@ git commit -m "feat(app): integrate GlobalErrorBoundary into root layout"
 ### Task 6: Verification
 
 **Files:**
+
 - Modify: `src/app/(protected)/(tabs)/index.tsx` (temporarily)
 
 - [ ] **Step 1: Create a CrashTrigger component for testing**
+
 ```tsx
 const CrashTrigger = () => {
   throw new Error('Test crash!');
@@ -252,13 +265,14 @@ const CrashTrigger = () => {
 ```
 
 - [ ] **Step 2: Test Component-level Boundary**
-Wrap `CrashTrigger` with `ErrorBoundary` in a screen and verify `CompactError` shows.
+      Wrap `CrashTrigger` with `ErrorBoundary` in a screen and verify `CompactError` shows.
 
 - [ ] **Step 3: Test Global Boundary**
-Place `CrashTrigger` directly in `RootLayout` or outside any local boundary and verify `ErrorScreen` shows.
+      Place `CrashTrigger` directly in `RootLayout` or outside any local boundary and verify `ErrorScreen` shows.
 
 - [ ] **Step 4: Cleanup and Final Commit**
-Remove `CrashTrigger` and verify app works normally.
+      Remove `CrashTrigger` and verify app works normally.
+
 ```bash
 git commit -m "test: verify ErrorBoundary implementation"
 ```

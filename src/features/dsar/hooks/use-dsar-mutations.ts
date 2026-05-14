@@ -2,11 +2,12 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { dsarService } from '../services/dsar.service';
 import { toast } from 'sonner-native';
 import { DSARResponsePayload } from '../types/dsar.types';
+import { DSARSubmitFormData } from '../validators/dsar.validator';
 
 export const useSubmitDSAR = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: dsarService.submitRequest,
+    mutationFn: (data: DSARSubmitFormData) => dsarService.submitRequest(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['dsar', 'my'] });
       toast.success('Request submitted successfully');
@@ -20,7 +21,7 @@ export const useSubmitDSAR = () => {
 export const useRespondToDSAR = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ ticketId, payload }: { ticketId: string; payload: DSARResponsePayload }) => 
+    mutationFn: ({ ticketId, payload }: { ticketId: string; payload: DSARResponsePayload }) =>
       dsarService.respondToRequest(ticketId, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['dsar'] });

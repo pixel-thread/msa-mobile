@@ -39,7 +39,7 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
         {
           label: 'Members',
           icon: 'people',
-          onPress: () => router.push('/(protected)/members'),
+          onPress: () => router.push('/(protected)/admin/members'),
         },
       ],
     },

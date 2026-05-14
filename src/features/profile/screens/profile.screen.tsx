@@ -21,7 +21,8 @@ import { LoadingScreen } from '@src/shared/components/screens';
 import { LogoutButton } from '../components/logout-button';
 
 export const ProfileScreen = () => {
-  const { user } = useAuthStore();
+  const { user, setUser } = useAuthStore();
+  const router = useRouter();
   if (!user) return <LoadingScreen message="Fetching your details" />;
 
   return (
@@ -112,12 +113,24 @@ export const ProfileScreen = () => {
                   <Text variant="subtext" size="sm">
                     Update your password, manage MFA devices, and view active sessions.
                   </Text>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    title="Security Settings"
-                    className="mt-3 h-10"
-                  />
+                  <View className="mt-3 flex-row gap-x-3">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      title="Security Settings"
+                      className="flex-1 h-10"
+                    />
+                    <Button
+                      variant={user.mfaEnabled ? "outline" : "default"}
+                      size="sm"
+                      title={user.mfaEnabled ? "Disable MFA" : "Enable MFA"}
+                      className="flex-1 h-10"
+                      onPress={() => {
+                        setUser({ ...user, mfaEnabled: !user.mfaEnabled });
+                        alert(`MFA ${user.mfaEnabled ? 'Disabled' : 'Enabled'}`);
+                      }}
+                    />
+                  </View>
                 </AccordionContent>
               </AccordionItem>
 
@@ -193,3 +206,4 @@ const InfoItem = ({
     </Text>
   </View>
 );
+;

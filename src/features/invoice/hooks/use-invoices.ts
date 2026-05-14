@@ -1,9 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
-import { invoiceService } from '../services/invoice.service';
+import http from '@src/shared/utils/http';
+import { Invoice } from '../types/invoice.types';
 
 export const useInvoices = () => {
   return useQuery({
-    queryKey: ['invoices'],
-    queryFn: () => invoiceService.getInvoices(),
+    queryKey: ['invoices', 1],
+    queryFn: () => http.get<Invoice[]>('/user/invoices'),
+    select: (data) => data.data,
   });
 };

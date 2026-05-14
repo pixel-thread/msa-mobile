@@ -1,6 +1,7 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import { SECURE_STORE_KEYS } from '@src/shared/constants';
+import { logger } from '../utils';
 
 /**
  * Base URL for the API.
@@ -89,9 +90,11 @@ const refreshToken = async (): Promise<string> => {
     throw new Error('No refresh token available');
   }
 
+  logger.debug('Refreshing token Started');
   const response = await axios.post<{
     data?: { accessToken: string; refreshToken?: string };
   }>(`${API_BASE_URL}/auth/refresh`, { refreshToken }, { withCredentials: true });
+  logger.debug('Refreshing token Completed');
 
   const newAccessToken = response.data?.data?.accessToken;
 
@@ -105,6 +108,7 @@ const refreshToken = async (): Promise<string> => {
   if (newRefreshToken) {
     await SecureStore.setItemAsync(SECURE_STORE_KEYS.REFRESH_TOKEN, newRefreshToken);
   }
+  logger.debug('Token Refreshed');
   return newAccessToken;
 };
 

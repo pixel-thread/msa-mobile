@@ -16,7 +16,7 @@
 - Create: `src/features/invoice/types/invoice.types.ts`
 - Create: `src/features/invoice/services/invoice.service.ts`
 
-- [ ] **Step 1: Define Invoice Types**
+- [x] **Step 1: Define Invoice Types**
 
 Create the types file extending the existing payment types.
 
@@ -34,7 +34,7 @@ export type Invoice = Transaction & {
 };
 ```
 
-- [ ] **Step 2: Create API Service**
+- [x] **Step 2: Create API Service**
 
 Create the service to fetch invoice data. Note: The backend endpoints are assumed to be `/api/invoices` or similar. Since we are using an existing API client, we will use `apiClient`. If the endpoint structure is slightly different, adjust accordingly. We assume `/user/invoices` based on the prompt.
 
@@ -56,7 +56,7 @@ export const invoiceService = {
 };
 ```
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/features/invoice/types/invoice.types.ts src/features/invoice/services/invoice.service.ts
@@ -69,7 +69,7 @@ git commit -m "feat(invoice): add invoice types and api service"
 - Create: `src/features/invoice/hooks/use-invoices.ts`
 - Create: `src/features/invoice/hooks/use-invoice.ts`
 
-- [ ] **Step 1: Create hook for fetching the list**
+- [x] **Step 1: Create hook for fetching the list**
 
 ```typescript
 // src/features/invoice/hooks/use-invoices.ts
@@ -84,7 +84,7 @@ export const useInvoices = () => {
 };
 ```
 
-- [ ] **Step 2: Create hook for fetching single invoice**
+- [x] **Step 2: Create hook for fetching single invoice**
 
 ```typescript
 // src/features/invoice/hooks/use-invoice.ts
@@ -100,7 +100,7 @@ export const useInvoice = (id: string) => {
 };
 ```
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/features/invoice/hooks/use-invoices.ts src/features/invoice/hooks/use-invoice.ts
@@ -112,7 +112,7 @@ git commit -m "feat(invoice): add data fetching hooks for invoices"
 **Files:**
 - Create: `src/features/invoice/utils/pdf.ts`
 
-- [ ] **Step 1: Write PDF generation utility**
+- [x] **Step 1: Write PDF generation utility**
 
 We need `expo-print` and `expo-sharing`. Wait, we should make sure they are installed first.
 
@@ -120,7 +120,7 @@ We need `expo-print` and `expo-sharing`. Wait, we should make sure they are inst
 npx expo install expo-print expo-sharing
 ```
 
-- [ ] **Step 2: Write PDF utility code**
+- [x] **Step 2: Write PDF utility code**
 
 ```typescript
 // src/features/invoice/utils/pdf.ts
@@ -194,7 +194,7 @@ export const generateAndShareInvoicePdf = async (invoice: Invoice) => {
 };
 ```
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add package.json package-lock.json src/features/invoice/utils/pdf.ts
@@ -207,7 +207,7 @@ git commit -m "feat(invoice): add utility to generate and share invoice pdf"
 - Create: `src/features/invoice/components/invoice-list-item.tsx`
 - Create: `src/features/invoice/components/invoice-detail-view.tsx`
 
-- [ ] **Step 1: Create InvoiceListItem**
+- [x] **Step 1: Create InvoiceListItem**
 
 ```typescript
 // src/features/invoice/components/invoice-list-item.tsx
@@ -243,7 +243,7 @@ export const InvoiceListItem = ({ invoice }: { invoice: Invoice }) => {
 };
 ```
 
-- [ ] **Step 2: Create InvoiceDetailView**
+- [x] **Step 2: Create InvoiceDetailView**
 
 ```typescript
 // src/features/invoice/components/invoice-detail-view.tsx
@@ -305,7 +305,7 @@ export const InvoiceDetailView = ({ invoice }: { invoice: Invoice }) => {
 };
 ```
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/features/invoice/components/invoice-list-item.tsx src/features/invoice/components/invoice-detail-view.tsx
@@ -318,7 +318,7 @@ git commit -m "feat(invoice): add invoice list item and detail view components"
 - Create: `src/app/(protected)/profile/invoices/index.tsx`
 - Create: `src/app/(protected)/profile/invoices/[id].tsx`
 
-- [ ] **Step 1: Create Invoice List Screen**
+- [x] **Step 1: Create Invoice List Screen**
 
 ```typescript
 // src/app/(protected)/profile/invoices/index.tsx
@@ -356,7 +356,7 @@ export default function InvoicesScreen() {
 }
 ```
 
-- [ ] **Step 2: Create Invoice Detail Screen**
+- [x] **Step 2: Create Invoice Detail Screen**
 
 ```typescript
 // src/app/(protected)/profile/invoices/[id].tsx
@@ -391,7 +391,7 @@ export default function InvoiceDetailScreen() {
 }
 ```
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/app/\(protected\)/profile/invoices/index.tsx src/app/\(protected\)/profile/invoices/\[id\].tsx
@@ -403,7 +403,7 @@ git commit -m "feat(invoice): add invoice list and detail screens"
 **Files:**
 - Modify: `src/features/profile/screens/profile.screen.tsx`
 
-- [ ] **Step 1: Add Invoices Accordion Item**
+- [x] **Step 1: Add Invoices Accordion Item**
 
 Modify the file `src/features/profile/screens/profile.screen.tsx` to add an Invoices accordion item under the Preferences section.
 
@@ -435,7 +435,7 @@ Locate the `Accordion` component inside the Preferences & Settings section, and 
 </AccordionItem>
 ```
 
-- [ ] **Step 2: Commit**
+- [x] **Step 2: Commit**
 
 ```bash
 git add src/features/profile/screens/profile.screen.tsx

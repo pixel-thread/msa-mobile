@@ -143,6 +143,27 @@ export const ProfileScreen = () => {
                 </AccordionContent>
               </AccordionItem>
 
+              <AccordionItem value="invoices">
+                <AccordionTrigger>
+                  <View className="flex-row items-center gap-x-3">
+                    <Ionicons name="document-text-outline" size={20} color="#6366f1" />
+                    <Text weight="medium">Invoices</Text>
+                  </View>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <Text variant="subtext" size="sm">
+                    View your payment history and download invoices as PDFs.
+                  </Text>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    title="View Invoices"
+                    className="mt-3 h-10"
+                    onPress={() => router.push('/(protected)/profile/invoices')}
+                  />
+                </AccordionContent>
+              </AccordionItem>
+
               <AccordionItem value="help" className="border-b-0">
                 <AccordionTrigger>
                   <View className="flex-row items-center gap-x-3">

@@ -199,6 +199,7 @@ const MinuteFormModal = ({
   }, [isOpen, minute, methods]);
 
   const createMutation = useCreateMeetingMinuite({ meetingId });
+
   const updateMutation = useUpdateMeetingMinuite({
     meetingId,
     meetingMinuiteId: minute?.id || '',

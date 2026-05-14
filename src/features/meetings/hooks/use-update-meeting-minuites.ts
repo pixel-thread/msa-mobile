@@ -1,8 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { UpdateMeetingMinuteInput } from '../validators/minuites';
 import http from '@src/shared/utils/http';
-import { meetingEndpoints } from '../utils/constants';
-import { MeetingQueryKeys } from '../utils/constants/query-key';
 import { toast } from 'sonner-native';
 
 type Props = {

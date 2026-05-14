@@ -16,7 +16,7 @@ export const MemberCard = ({ member }: MemberCardProps) => {
   const router = useRouter();
 
   const onPress = () => {
-    router.push(`/members/${member.id}`);
+    router.push(`/(protected)/admin/members/${member.id}`);
   };
 
   return (

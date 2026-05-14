@@ -1,14 +1,9 @@
 import { useState, useCallback } from 'react';
-import { Alert } from 'react-native';
 import { checkRateLimit } from '../utils/rate-limiting';
+import { toast } from 'sonner-native';
+import { IRateLimitOptions } from '../types/rate-limiting';
 
-interface RateLimitOptions {
-  limit: number;
-  windowMs: number;
-  message?: string;
-}
-
-export const useRateLimit = (key: string, options: RateLimitOptions) => {
+export const useRateLimit = (key: string, options: IRateLimitOptions) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [retryAfter, setRetryAfter] = useState<number | null>(null);
 
@@ -24,11 +19,10 @@ export const useRateLimit = (key: string, options: RateLimitOptions) => {
 
         if (status.limited) {
           setRetryAfter(status.retryAfter ?? 0);
-
-          Alert.alert(
-            'Rate Limit Reached',
-            options.message || `Please wait ${status.retryAfter}s before trying again.`
-          );
+          toast.warning('Rate limit reached', {
+            description: `Please wait ${status.retryAfter}s before trying again.`,
+            dismissible: false,
+          });
           return;
         }
 

@@ -49,6 +49,13 @@ export const ProfileScreen = () => {
           <Text variant="subtext" size="sm" className="mt-1">
             {user.email}
           </Text>
+          <Button
+            variant="outline"
+            size="sm"
+            title="Edit Profile"
+            className="mt-4 h-10 w-32"
+            onPress={() => router.push('/profile/edit')}
+          />
         </View>
 
         {/* Account Details */}

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import React from 'react';
+import { View, ScrollView, TouchableOpacity, Alert, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '@src/shared/store';
 import { Container, StackHeader } from '@src/shared/components';
@@ -8,10 +8,6 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useRouter } from 'expo-router';
-
-// A simple local text input since we don't know the exact UI library text input
-// Alternatively, use a raw TextInput wrapped in styling.
-import { TextInput } from 'react-native';
 
 const editProfileSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -50,7 +46,7 @@ export const EditProfileScreen = () => {
       
       Alert.alert('Success', 'Profile updated successfully');
       router.back();
-    } catch (error) {
+    } catch {
       Alert.alert('Error', 'Failed to update profile');
     }
   };

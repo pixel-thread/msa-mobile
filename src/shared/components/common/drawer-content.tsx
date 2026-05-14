@@ -17,10 +17,15 @@ type DrawerMenuGroup = {
 export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
   const router = useRouter();
   const segments = useSegments();
-  const logout = useAuthStore((state) => state.logout);
+  const { logout, user } = useAuthStore((state) => ({
+    logout: state.logout,
+    user: state.user,
+  }));
   const inset = useSafeAreaInsets();
 
   const currentPath = segments.join('/');
+
+  const isAdmin = user?.role.some((r) => ['ADMIN', 'SUPER_ADMIN', 'DPO', 'SECRETARY', 'PRESIDENT'].includes(r));
 
   const menuGroups: DrawerMenuGroup[] = [
     {
@@ -54,6 +59,19 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
       ],
     },
   ];
+
+  if (isAdmin) {
+    menuGroups.push({
+      title: 'Administrative',
+      items: [
+        {
+          label: 'DSAR Management',
+          icon: 'shield-checkmark',
+          onPress: () => router.push('/(protected)/admin/dsar'),
+        },
+      ],
+    });
+  }
 
   const footerItems: DrawerMenuItem[] = [
     { label: 'Terms & Conditions', icon: 'document-text', onPress: () => {} },

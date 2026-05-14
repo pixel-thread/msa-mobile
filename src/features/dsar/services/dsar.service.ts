@@ -22,6 +22,11 @@ export const dsarService = {
     return response.data.data;
   },
 
+  getRequestDetail: async (ticketId: string): Promise<DSARRequest> => {
+    const response = await apiClient.get<{ data: DSARRequest }>(`/dsar/${ticketId}`);
+    return response.data.data;
+  },
+
   respondToRequest: async (ticketId: string, payload: DSARResponsePayload): Promise<DSARRequest> => {
     const response = await apiClient.post<{ data: DSARRequest }>(`/dsar/${ticketId}/respond`, payload);
     return response.data.data;

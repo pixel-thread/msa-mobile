@@ -164,6 +164,27 @@ export const ProfileScreen = () => {
                 </AccordionContent>
               </AccordionItem>
 
+              <AccordionItem value="privacy">
+                <AccordionTrigger>
+                  <View className="flex-row items-center gap-x-3">
+                    <Ionicons name="shield-outline" size={20} color="#6366f1" />
+                    <Text weight="medium">Privacy & Data</Text>
+                  </View>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <Text variant="subtext" size="sm">
+                    Submit Data Subject Access Requests (DSAR) or manage your data preferences.
+                  </Text>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    title="Privacy Requests"
+                    className="mt-3 h-10"
+                    onPress={() => router.push('/(protected)/profile/privacy/requests')}
+                  />
+                </AccordionContent>
+              </AccordionItem>
+
               <AccordionItem value="help" className="border-b-0">
                 <AccordionTrigger>
                   <View className="flex-row items-center gap-x-3">

@@ -15,6 +15,14 @@ export const useAllDSARRequests = (params?: Record<string, any>) => {
   });
 };
 
+export const useDSARDetail = (ticketId: string) => {
+  return useQuery({
+    queryKey: ['dsar', 'detail', ticketId],
+    queryFn: () => dsarService.getRequestDetail(ticketId),
+    enabled: !!ticketId,
+  });
+};
+
 export const useSlaReport = () => {
   return useQuery({
     queryKey: ['dsar', 'sla-report'],

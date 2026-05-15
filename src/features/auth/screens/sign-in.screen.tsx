@@ -65,7 +65,7 @@ export const SignInScreen = () => {
                 />
 
                 <View className="flex-row justify-end py-1">
-                  <Link href="/">
+                  <Link href="/(auth)/forgot-password">
                     <Text variant="link" size="sm" weight="medium">
                       Recovery Options
                     </Text>

@@ -8,6 +8,7 @@
     "dev": "expo start -c",
     "prebuild": "expo prebuild",
     "dev:local": "eas build --profile development --platform android",
+    "preview:local": "eas build --profile preview --platform android --local",
     "lint": "eslint \"**/*.{js,jsx,ts,tsx}\" && prettier -c \"**/*.{js,jsx,ts,tsx,json}\"",
     "format": "eslint \"**/*.{js,jsx,ts,tsx}\" --fix && prettier \"**/*.{js,jsx,ts,tsx,json}\" --write",
     "web": "expo start --web"

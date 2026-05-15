@@ -8,7 +8,10 @@ import { ResetPasswordInput } from '../validators/reset-password';
 export function useResetPassword() {
   const router = useRouter();
   return useMutation({
-    mutationFn: async (data: ResetPasswordInput) => http.post(authEndpoints.resetPassword, data),
+    mutationFn: async (data: ResetPasswordInput) => {
+      const { token, password } = data;
+      return http.post(authEndpoints.resetPassword, { token, password });
+    },
     onSuccess: (data) => {
       if (data.success) {
         toast.success(data.message);

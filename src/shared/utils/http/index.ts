@@ -23,7 +23,7 @@ export const handleAxiosError = <T>(error: unknown): ApiResponse<T> => {
         error.response.data ||
         '';
     } else if (error.request) {
-      errorMessage = 'No response from server. Please check your connection.';
+      errorMessage = 'Please check your connection.';
     } else {
       errorMessage = error.message;
     }

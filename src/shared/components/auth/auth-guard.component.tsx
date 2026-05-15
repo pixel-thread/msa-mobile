@@ -13,6 +13,7 @@ const authRoutes: Route[] = [
   '/(auth)/sign-in-verify',
   '/(auth)/sign-up',
   '/(auth)/forgot-password',
+  '/(auth)/reset-password',
 ];
 
 export const AuthGuard = ({ children, publicRoutes = authRoutes }: AuthGuardProps) => {

@@ -2,6 +2,7 @@ import React from 'react';
 import { View, FlatList, ActivityIndicator, Text } from 'react-native';
 import { useConsentHistory } from '@src/features/consent/hooks';
 import { ConsentHistoryItem } from '@src/features/consent/components';
+import { Container, StackHeader } from '@src/shared/components';
 
 export default function ConsentHistoryScreen() {
   const { data: history, isLoading } = useConsentHistory();
@@ -15,7 +16,8 @@ export default function ConsentHistoryScreen() {
   }
 
   return (
-    <View className="flex-1 bg-white p-4">
+    <Container>
+      <StackHeader title="Consent History" showBackButton />
       {history?.length === 0 ? (
         <Text className="mt-10 text-center text-slate-500">No consent history found.</Text>
       ) : (
@@ -26,6 +28,6 @@ export default function ConsentHistoryScreen() {
           contentContainerStyle={{ paddingBottom: 20 }}
         />
       )}
-    </View>
+    </Container>
   );
 }

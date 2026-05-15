@@ -7,8 +7,16 @@ import { Text } from '@components/ui';
 import { DrawerItem } from '../ui/drawer-item';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Constants from 'expo-constants';
+import { hasHighRoleAccess } from '@src/features/meetings';
+import { Ionicons } from '@expo/vector-icons';
 
-type DrawerMenuItem = Omit<any, 'focused'>;
+type DrawerMenuItem = {
+  label: string;
+  icon: keyof typeof Ionicons.glyphMap;
+  onPress: () => void;
+  variant?: 'default' | 'destructive';
+};
+
 type DrawerMenuGroup = {
   title: string;
   items: DrawerMenuItem[];
@@ -25,9 +33,7 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
 
   const currentPath = segments.join('/');
 
-  const isAdmin = user?.role.some((r) =>
-    ['ADMIN', 'SUPER_ADMIN', 'DPO', 'SECRETARY', 'PRESIDENT'].includes(r)
-  );
+  const isAdmin = hasHighRoleAccess(user?.role);
 
   const menuGroups: DrawerMenuGroup[] = [
     {
@@ -35,13 +41,13 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
       items: [
         {
           label: 'Meetings',
-          icon: 'calendar',
+          icon: 'calendar-outline',
           onPress: () => router.push('/(protected)/(drawer)/(tabs)/meetings'),
         },
         {
           label: 'Consent',
-          icon: 'calendar',
-          onPress: () => router.push('/(protected)/(drawer)/(tabs)/meetings'),
+          icon: 'document-lock-outline',
+          onPress: () => router.push('/(protected)/consent'),
         },
       ],
     },
@@ -50,12 +56,12 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
       items: [
         {
           label: 'My Profile',
-          icon: 'person',
+          icon: 'person-outline',
           onPress: () => router.push('/(protected)/(drawer)/(tabs)/profile'),
         },
         {
           label: 'Subscription',
-          icon: 'card',
+          icon: 'card-outline',
           onPress: () => router.push('/(protected)/(drawer)/(tabs)/subscription'),
         },
       ],
@@ -68,17 +74,17 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
       items: [
         {
           label: 'DSAR Management',
-          icon: 'shield-checkmark',
+          icon: 'shield-checkmark-outline',
           onPress: () => router.push('/(protected)/admin/dsar'),
         },
         {
           label: 'Members',
-          icon: 'people',
+          icon: 'people-outline',
           onPress: () => router.push('/(protected)/admin/members'),
         },
         {
-          label: 'Consent',
-          icon: 'shield-checkmark',
+          label: 'Consents',
+          icon: 'document-lock-outline',
           onPress: () => router.push('/(protected)/admin/consent'),
         },
       ],
@@ -86,9 +92,9 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
   }
 
   const footerItems: DrawerMenuItem[] = [
-    { label: 'Terms & Conditions', icon: 'document-text', onPress: () => {} },
-    { label: 'Privacy Policy', icon: 'shield-checkmark', onPress: () => {} },
-    { label: 'Logout', icon: 'log-out', variant: 'destructive' as const, onPress: logout },
+    { label: 'Terms & Conditions', icon: 'document-text-outline', onPress: () => {} },
+    { label: 'Privacy Policy', icon: 'shield-checkmark-outline', onPress: () => {} },
+    { label: 'Logout', icon: 'log-out-outline', variant: 'destructive' as const, onPress: logout },
   ];
 
   return (
@@ -137,9 +143,6 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
             variant={item.variant}
           />
         ))}
-        <View className="mt-4 px-6">
-          <Text className="text-[10px] font-medium text-slate-400">v1.0.0</Text>
-        </View>
       </View>
     </Container>
   );

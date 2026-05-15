@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Ionicons } from '@expo/vector-icons';
 
 import { SignInVerifySchema, type SignInVerifyFormData } from '../validators';
-import { useSignInVerify } from '../hooks';
+import { useSignInVerify, useResendSignInVerifyCode } from '../hooks';
 import {
   Button,
   Text,
@@ -17,8 +17,8 @@ import {
   AlertTitle,
   AlertDescription,
 } from '@src/shared/components/ui';
-import { useResendSignInVerifyCode } from '../hooks';
 import { useSearchParams } from 'expo-router/build/hooks';
+import { useRateLimit } from '@src/shared/hooks/use-rate-limiting';
 
 export const SignInVerifyScreen = () => {
   const searchParams = useSearchParams();
@@ -30,13 +30,14 @@ export const SignInVerifyScreen = () => {
 
   const { mutate: verifySignIn, isPending, error } = useSignInVerify();
   const { mutate: resendCode, isPending: isResending } = useResendSignInVerifyCode();
+  const { executeWithLimit, isProcessing } = useRateLimit('SIGN_IN_VERIFY');
 
   const onSubmit = (data: SignInVerifyFormData) => {
     const payload = {
       code: data.code,
       mfa_temp_token: mfaTempToken,
     };
-    verifySignIn(payload);
+    executeWithLimit(() => verifySignIn(payload));
   };
 
   return (
@@ -93,7 +94,7 @@ export const SignInVerifyScreen = () => {
                   </Text>
                   <TouchableOpacity
                     onPress={() => !isResending && resendCode()}
-                    disabled={isResending}>
+                    disabled={isResending || isProcessing}>
                     <Text variant="link" size="sm" weight="bold">
                       {isResending ? 'Sending...' : 'Resend Code'}
                     </Text>

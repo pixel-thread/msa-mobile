@@ -3,7 +3,12 @@ import { checkRateLimit } from '../utils/rate-limiting';
 import { toast } from 'sonner-native';
 import { IRateLimitOptions } from '../types/rate-limiting';
 
-export const useRateLimit = (key: string, options: IRateLimitOptions) => {
+const defaultOptions: IRateLimitOptions = {
+  limit: 1,
+  windowMs: 60000,
+  message: 'Rate limit reached',
+};
+export const useRateLimit = (key: string, options: IRateLimitOptions = defaultOptions) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [retryAfter, setRetryAfter] = useState<number | null>(null);
 

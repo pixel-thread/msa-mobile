@@ -13,7 +13,7 @@ import { cn } from '@lib/cn';
 const buttonVariants = cva('flex items-center justify-center rounded-md disabled:opacity-50', {
   variants: {
     variant: {
-      default: 'bg-primary shadow-md',
+      default: 'bg-primary shadow-md text-white',
       secondary: 'bg-secondary',
       destructive: 'bg-destructive',
       outline: 'border border-input bg-background',

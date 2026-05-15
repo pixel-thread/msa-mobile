@@ -57,7 +57,7 @@ export const AdminDSARDashboardScreen = () => {
 
   return (
     <Container className="bg-slate-50">
-      <StackHeader title="DSAR Management" showDrawerButton />
+      <StackHeader title="DSAR Management" showBackButton />
 
       <ScrollView className="flex-1" stickyHeaderIndices={[1]}>
         <View className="flex-row justify-between p-4">

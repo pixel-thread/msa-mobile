@@ -33,7 +33,7 @@ export const checkRateLimit = async (
 
     // 3. Log the new timestamp and save
     timestamps.push(now);
-    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(timestamps));
+    SecureStore.setItem(STORAGE_KEY, JSON.stringify(timestamps));
 
     return { limited: false };
   } catch (error) {

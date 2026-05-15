@@ -25,7 +25,9 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
 
   const currentPath = segments.join('/');
 
-  const isAdmin = user?.role.some((r) => ['ADMIN', 'SUPER_ADMIN', 'DPO', 'SECRETARY', 'PRESIDENT'].includes(r));
+  const isAdmin = user?.role.some((r) =>
+    ['ADMIN', 'SUPER_ADMIN', 'DPO', 'SECRETARY', 'PRESIDENT'].includes(r)
+  );
 
   const menuGroups: DrawerMenuGroup[] = [
     {
@@ -35,11 +37,6 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
           label: 'Meetings',
           icon: 'calendar',
           onPress: () => router.push('/(protected)/(drawer)/(tabs)/meetings'),
-        },
-        {
-          label: 'Members',
-          icon: 'people',
-          onPress: () => router.push('/(protected)/admin/members'),
         },
       ],
     },
@@ -68,6 +65,11 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
           label: 'DSAR Management',
           icon: 'shield-checkmark',
           onPress: () => router.push('/(protected)/admin/dsar'),
+        },
+        {
+          label: 'Members',
+          icon: 'people',
+          onPress: () => router.push('/(protected)/admin/members'),
         },
       ],
     });

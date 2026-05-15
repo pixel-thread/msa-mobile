@@ -8,8 +8,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { SignInSchema, type SignInFormData } from '../validators';
 import { useSignIn } from '../hooks';
 import { Button, Text, FieldInput, Card, CardContent } from '@src/shared/components/ui';
+import { useRateLimit } from '@src/shared/hooks/use-rate-limiting';
 
 export const SignInScreen = () => {
+  const { isProcessing, isLimited, executeWithLimit } = useRateLimit('SIGN_IN', {
+    limit: 1,
+    windowMs: 10000,
+  });
+
   const methods = useForm<SignInFormData>({
     resolver: zodResolver(SignInSchema),
     mode: 'onBlur',
@@ -17,9 +23,7 @@ export const SignInScreen = () => {
 
   const { mutate: signIn, isPending } = useSignIn();
 
-  const onSubmit = (data: SignInFormData) => {
-    signIn(data);
-  };
+  const onSubmit = (data: SignInFormData) => executeWithLimit(() => signIn(data));
 
   return (
     <KeyboardAvoidingView
@@ -71,7 +75,7 @@ export const SignInScreen = () => {
                 <Button
                   title={isPending ? 'Verifying...' : 'Authenticate'}
                   onPress={methods.handleSubmit(onSubmit)}
-                  loading={isPending}
+                  loading={isPending || isProcessing || isLimited}
                   className="mt-4 h-14 rounded-2xl"
                 />
               </View>

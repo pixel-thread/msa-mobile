@@ -8,7 +8,12 @@ interface AuthGuardProps {
   children: React.ReactNode;
   publicRoutes?: Route[];
 }
-const authRoutes: Route[] = ['/(auth)/sign-in', '/(auth)/sign-in-verify', '/(auth)/sign-up'];
+const authRoutes: Route[] = [
+  '/(auth)/sign-in',
+  '/(auth)/sign-in-verify',
+  '/(auth)/sign-up',
+  '/(auth)/forgot-password',
+];
 
 export const AuthGuard = ({ children, publicRoutes = authRoutes }: AuthGuardProps) => {
   const router = useRouter();

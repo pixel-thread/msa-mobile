@@ -28,6 +28,9 @@ export default function AdminConsentAuditScreen() {
           renderItem={({ item }) => (
             <View className="mb-3">
               <Text className="mb-1 text-xs text-slate-400">User ID: {item.userId}</Text>
+              <Text className="mb-1 text-xs capitalize text-slate-400">
+                Channel: {item.channel}
+              </Text>
               <ConsentHistoryItem receipt={item} />
             </View>
           )}

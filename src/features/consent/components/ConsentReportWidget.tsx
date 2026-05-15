@@ -10,8 +10,8 @@ export const ConsentReportWidget = ({ report }: { report: ConsentSummaryReport[]
         <View
           key={metrics.purpose}
           className="flex-row justify-between border-b border-slate-100 py-2 last:border-0">
-          <Text className="font-medium text-slate-700">{metrics.purpose}</Text>
-          <Text className="font-semibold text-indigo-600">{metrics.rate}</Text>
+          <Text className="font-medium text-slate-700">{metrics.purpose || 0}</Text>
+          <Text className="font-semibold text-indigo-600">{metrics.totalCount || 0}</Text>
         </View>
       ))}
     </View>

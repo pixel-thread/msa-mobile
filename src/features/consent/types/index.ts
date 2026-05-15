@@ -37,10 +37,10 @@ export interface ConsentReport {
 export type ConsentReceiptRecord = ConsentReceipt;
 
 export interface ConsentSummaryReport {
-  purpose: ConsentPurpose | string;
-  granted: number;
-  withdrawn: number;
-  rate: string;
+  purpose: ConsentPurpose;
+  grantedCount: number;
+  withdrawnCount: number;
+  totalCount: number;
 }
 
 export interface GrantConsentRequest {

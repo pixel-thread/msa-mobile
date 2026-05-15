@@ -12,7 +12,7 @@ export const Container: React.FC<ContainerProps> = ({ children, edges, className
     Platform.OS === 'android' ? ['left', 'right', 'bottom'] : ['left', 'right'];
   return (
     <SafeAreaView
-      className={cn('flex-1 p-4 dark:bg-background', className)}
+      className={cn('flex-1 dark:bg-background', className)}
       edges={edges || edge}
       {...props}>
       {children}

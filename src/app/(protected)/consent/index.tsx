@@ -30,7 +30,7 @@ export default function MemberConsentScreen() {
     <>
       <StackHeader title="Manage Consent" />
       <Container>
-        <ScrollView>
+        <ScrollView className="p-4">
           <Text className="mb-4 text-lg font-bold text-slate-800">Your Data Preferences</Text>
 
           {Object.values(ConsentPurpose).map((purpose) => (

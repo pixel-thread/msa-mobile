@@ -16,7 +16,7 @@ export default function ConsentHistoryScreen() {
   }
 
   return (
-    <Container>
+    <Container className="p-4">
       <StackHeader title="Consent History" showBackButton />
       {history?.length === 0 ? (
         <Text className="mt-10 text-center text-slate-500">No consent history found.</Text>

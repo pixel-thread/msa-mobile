@@ -1,10 +1,11 @@
 import React from 'react';
 import { View, FlatList, ActivityIndicator, Text } from 'react-native';
-import { useAllConsents } from '@src/features/consent/hooks';
+import { useAllConsent } from '@src/features/consent/hooks';
 import { ConsentHistoryItem } from '@src/features/consent/components';
+import { Container, StackHeader } from '@src/shared/components';
 
 export default function AdminConsentAuditScreen() {
-  const { data: allConsents, isLoading } = useAllConsents();
+  const { data: allConsents, isLoading } = useAllConsent();
 
   if (isLoading) {
     return (
@@ -15,7 +16,8 @@ export default function AdminConsentAuditScreen() {
   }
 
   return (
-    <View className="flex-1 bg-white p-4">
+    <Container className="p-4">
+      <StackHeader title="Consent Audit Trail" showBackButton />
       <Text className="mb-4 text-lg font-bold">Association Audit Trail</Text>
       {allConsents?.length === 0 ? (
         <Text className="mt-10 text-center text-slate-500">No consent records found.</Text>
@@ -32,6 +34,6 @@ export default function AdminConsentAuditScreen() {
           contentContainerStyle={{ paddingBottom: 20 }}
         />
       )}
-    </View>
+    </Container>
   );
 }

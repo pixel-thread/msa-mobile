@@ -1,6 +1,6 @@
 import React from 'react';
-import { Stack, useNavigation } from 'expo-router';
-import { Appearance, TouchableOpacity } from 'react-native';
+import { router, Stack, useNavigation } from 'expo-router';
+import { Appearance, Platform, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { DrawerActions } from '@react-navigation/native';
 import { logger } from '@src/shared/utils/logger';
@@ -34,6 +34,42 @@ const CustomDrawerToggleButton = ({ tintColor }: { tintColor?: string }) => {
   );
 };
 
+type HeaderLeftProps = {
+  showDrawerButton: boolean;
+  hasDrawer: boolean;
+  showBackButton: boolean;
+  ableToGoBack: boolean;
+  headerTintColor: string;
+};
+
+const HeaderLeft = ({
+  showDrawerButton,
+  hasDrawer,
+  showBackButton,
+  ableToGoBack,
+  headerTintColor,
+}: HeaderLeftProps) => {
+  if (showDrawerButton && hasDrawer) {
+    return <CustomDrawerToggleButton tintColor={headerTintColor} />;
+  }
+
+  if (showBackButton && ableToGoBack) {
+    return (
+      <TouchableOpacity
+        onPress={() => router.back()} // router.back() is more robust across groups
+        className="p-2 pr-5"
+        hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+        <Ionicons
+          name={Platform.OS === 'ios' ? 'chevron-back' : 'arrow-back'}
+          size={24}
+          color={headerTintColor}
+        />
+      </TouchableOpacity>
+    );
+  }
+
+  return null;
+};
 /**
  * StackHeader: A wrapper for Expo Router's Screen options.
  * Targets the immediate navigator (Stack, Tabs, or Drawer) to avoid context issues.
@@ -71,9 +107,10 @@ export const StackHeader = ({
     <Stack.Screen
       options={{
         headerTitle: title,
+        headerBackButtonMenuEnabled: true,
         headerShown: true,
         headerShadowVisible: false,
-        headerBackVisible: showDrawerButton ? false : showBackButton ? ableToGoBack : false,
+        headerBackVisible: false,
         headerStyle: {
           backgroundColor: isDark ? '#020617' : '#f8fafc',
         },
@@ -93,10 +130,15 @@ export const StackHeader = ({
         },
         headerTintColor: headerTintColor,
         headerRight: rightAction ? () => rightAction : undefined,
-        headerLeft:
-          showDrawerButton && hasDrawer
-            ? () => <CustomDrawerToggleButton tintColor={headerTintColor} />
-            : undefined,
+        headerLeft: () => (
+          <HeaderLeft
+            hasDrawer={hasDrawer}
+            showBackButton={showBackButton}
+            ableToGoBack={ableToGoBack}
+            headerTintColor={headerTintColor}
+            showDrawerButton={showDrawerButton}
+          />
+        ),
       }}
     />
   );

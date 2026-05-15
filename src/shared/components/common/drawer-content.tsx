@@ -38,6 +38,11 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
           icon: 'calendar',
           onPress: () => router.push('/(protected)/(drawer)/(tabs)/meetings'),
         },
+        {
+          label: 'Consent',
+          icon: 'calendar',
+          onPress: () => router.push('/(protected)/(drawer)/(tabs)/meetings'),
+        },
       ],
     },
     {
@@ -70,6 +75,11 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
           label: 'Members',
           icon: 'people',
           onPress: () => router.push('/(protected)/admin/members'),
+        },
+        {
+          label: 'Consent',
+          icon: 'shield-checkmark',
+          onPress: () => router.push('/(protected)/admin/consent'),
         },
       ],
     });

@@ -6,7 +6,7 @@ import { ConsentReportWidget } from '@src/features/consent/components';
 import { Container, StackHeader } from '@src/shared/components';
 
 export default function AdminConsentDashboard() {
-  const { data: report, isLoading } = useConsentReport();
+  const { data: report = [], isLoading } = useConsentReport();
 
   if (isLoading) {
     return (

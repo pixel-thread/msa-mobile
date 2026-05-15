@@ -5,7 +5,6 @@ import { useMember, useUpdateMemberStatus } from '../hooks';
 import { LoadingScreen } from '@src/shared/components/screens';
 import { Container, StackHeader } from '@src/shared/components';
 import { Text, Button } from '@src/shared/components/ui';
-import { ErrorBoundary } from '@src/shared/components/common';
 import { MemberErrorScreen } from './member-error';
 import { MemberInfoCard, ManageRolesModal } from '../components';
 import { cn } from '@src/shared/lib/cn';
@@ -20,7 +19,9 @@ export const MemberDetailScreen = () => {
   const { mutate: updateStatus, isPending: isUpdating } = useUpdateMemberStatus();
   const { user } = useAuthStore();
 
-  const canUpdateStatus = hasHighRoleAccess(user?.role) && member?.status === 'INACTIVE';
+  const canUpdateStatus =
+    (hasHighRoleAccess(user?.role) && member?.status === 'INACTIVE') ||
+    member?.status === 'PENDING';
   const canManageRoles = hasHighRoleAccess(user?.role);
 
   const [isRolesModalVisible, setIsRolesModalVisible] = useState(false);

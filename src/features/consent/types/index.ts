@@ -1,3 +1,5 @@
+import { Platform } from 'react-native';
+
 export enum ConsentPurpose {
   PAYMENTS = 'PAYMENTS',
   COMMUNICATIONS = 'COMMUNICATIONS',
@@ -41,14 +43,14 @@ export interface ConsentSummaryReport {
   rate: string;
 }
 
-export type MyConsentResponse = ConsentReceipt[];
-
 export interface GrantConsentRequest {
-  purpose: ConsentPurpose;
+  purposes: ConsentPurpose[];
+  channel: 'web' | 'mobile' | 'email';
 }
 
 export interface RevokeConsentRequest {
-  purpose: ConsentPurpose;
+  purposes: ConsentPurpose[];
+  channel: 'web' | 'mobile' | 'email';
 }
 
 export interface ConsentActionResponse {

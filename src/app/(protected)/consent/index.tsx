@@ -1,30 +1,22 @@
 import React from 'react';
-import { View, ScrollView, Text, ActivityIndicator } from 'react-native';
+import { ScrollView, Text, ActivityIndicator } from 'react-native';
 import { Link } from 'expo-router';
-import { useMyConsent, useGrantConsent } from '@src/features/consent/hooks';
+import { useGrantConsent, useRevokeConsent } from '@src/features/consent/hooks';
 import { ConsentToggleCard } from '@src/features/consent/components';
 import { ConsentPurpose } from '@src/features/consent/types';
 import { Container, StackHeader } from '@src/shared/components';
 
 export default function MemberConsentScreen() {
-  const { data: consents, isLoading } = useMyConsent();
-  const updateConsent = useGrantConsent();
+  const grantConsent = useGrantConsent();
+  const revokeConsent = useRevokeConsent();
 
   const handleToggle = (purpose: ConsentPurpose, grant: boolean) => {
-    updateConsent.mutate({ purpose, grant });
+    if (grant) {
+      grantConsent.mutate({ purposes: [purpose], channel: 'mobile' });
+    } else {
+      revokeConsent.mutate({ purposes: [purpose], channel: 'mobile' });
+    }
   };
-
-  const getStatus = (purpose: ConsentPurpose) => {
-    return consents?.find((c) => c.purpose === purpose)?.status;
-  };
-
-  if (isLoading) {
-    return (
-      <View className="flex-1 items-center justify-center">
-        <ActivityIndicator size="large" color="#4f46e5" />
-      </View>
-    );
-  }
 
   return (
     <>
@@ -37,8 +29,11 @@ export default function MemberConsentScreen() {
             <ConsentToggleCard
               key={purpose}
               purpose={purpose}
-              status={getStatus(purpose)}
-              isLoading={updateConsent.isPending && updateConsent.variables?.purpose === purpose}
+              // status={getStatus(purpose)}
+              isLoading={
+                (grantConsent.isPending && grantConsent.variables?.purposes.includes(purpose)) ||
+                (revokeConsent.isPending && revokeConsent.variables?.purposes.includes(purpose))
+              }
               onToggle={handleToggle}
             />
           ))}

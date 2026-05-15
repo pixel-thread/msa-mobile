@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, FlatList, ActivityIndicator } from 'react-native';
+import { View, ScrollView, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { Container } from '@src/shared/components/common/Container';
 import { StackHeader } from '@src/shared/components/common/header/stack-header.component';
 import { Text } from '@src/shared/components/ui/text';
@@ -9,10 +9,12 @@ import { DSARStatusBadge } from '../components/DSARStatusBadge';
 import { SLAIndicator } from '../components/SLAIndicator';
 import { DSARRequest } from '../types/dsar.types';
 import { cn } from '@src/shared/lib/cn';
+import { Stack, useRouter } from 'expo-router';
 
 export const AdminDSARDashboardScreen = () => {
   const { data: requests, isLoading: isRequestsLoading } = useAllDSARRequests();
   const { data: slaReport, isLoading: isSlaLoading } = useSlaReport();
+  const router = useRouter();
 
   const renderSLACard = (label: string, count: number, colorClass: string, subtext: string) => (
     <Card className="mx-1 flex-1 border-none shadow-sm">
@@ -56,55 +58,53 @@ export const AdminDSARDashboardScreen = () => {
   );
 
   return (
-    <Container className="bg-slate-50">
-      <StackHeader title="DSAR Management" showBackButton />
-
-      <ScrollView className="flex-1" stickyHeaderIndices={[1]}>
-        <View className="flex-row justify-between p-4">
-          {isSlaLoading ? (
-            <ActivityIndicator size="small" color="#64748b" className="flex-1" />
-          ) : (
-            <>
-              {renderSLACard(
-                'Breached',
-                slaReport?.breached || 0,
-                'text-red-600',
-                'Immediate Action'
-              )}
-              {renderSLACard('At Risk', slaReport?.atRisk || 0, 'text-orange-500', 'Due Soon')}
-              {renderSLACard('On Track', slaReport?.onTrack || 0, 'text-green-600', 'Within SLA')}
-            </>
-          )}
-        </View>
-
-        <View className="border-b border-slate-200 bg-slate-50 px-4 py-2">
-          <Text className="text-sm font-bold uppercase tracking-wider text-slate-500">
-            All Requests {requests ? `(${requests.length})` : ''}
-          </Text>
-        </View>
-
-        {isRequestsLoading ? (
-          <View className="items-center p-8">
-            <ActivityIndicator size="large" color="#0f172a" />
+    <>
+      <Container className="bg-slate-50">
+        <ScrollView className="flex-1" stickyHeaderIndices={[1]}>
+          <StackHeader title="DSAR Management" showDrawerButton />
+          <View className="flex-row justify-between p-4">
+            {isSlaLoading ? (
+              <ActivityIndicator size="small" color="#64748b" className="flex-1" />
+            ) : (
+              <>
+                {renderSLACard(
+                  'Breached',
+                  slaReport?.breached || 0,
+                  'text-red-600',
+                  'Immediate Action'
+                )}
+                {renderSLACard('At Risk', slaReport?.atRisk || 0, 'text-orange-500', 'Due Soon')}
+                {renderSLACard('On Track', slaReport?.onTrack || 0, 'text-green-600', 'Within SLA')}
+              </>
+            )}
           </View>
-        ) : (
-          <FlatList
-            data={requests}
-            renderItem={renderRequestItem}
-            keyExtractor={(item) => item.id}
-            scrollEnabled={false}
-            ListEmptyComponent={
-              <View className="items-center p-8">
-                <Text className="text-slate-400">No requests found</Text>
-              </View>
-            }
-            contentContainerStyle={{ paddingVertical: 12 }}
-          />
-        )}
-      </ScrollView>
-    </Container>
+
+          <View className="border-b border-slate-200 bg-slate-50 px-4 py-2">
+            <Text className="text-sm font-bold uppercase tracking-wider text-slate-500">
+              All Requests {requests ? `(${requests.length})` : ''}
+            </Text>
+          </View>
+
+          {isRequestsLoading ? (
+            <View className="items-center p-8">
+              <ActivityIndicator size="large" color="#0f172a" />
+            </View>
+          ) : (
+            <FlatList
+              data={requests}
+              renderItem={renderRequestItem}
+              keyExtractor={(item) => item.id}
+              scrollEnabled={false}
+              ListEmptyComponent={
+                <View className="items-center p-8">
+                  <Text className="text-slate-400">No requests found</Text>
+                </View>
+              }
+              contentContainerStyle={{ paddingVertical: 12 }}
+            />
+          )}
+        </ScrollView>
+      </Container>
+    </>
   );
 };
-
-import { TouchableOpacity } from 'react-native';
-import { router, useRouter } from 'expo-router';

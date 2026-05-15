@@ -23,7 +23,7 @@ export const AuthGuard = ({ children, publicRoutes = authRoutes }: AuthGuardProp
     const isPublicRoute = publicRoutes.some((route) => currentPath.startsWith(route));
 
     if (isPublicRoute && isAuthenticated && user) {
-      router.replace('/(protected)/(tabs)');
+      router.replace('/(protected)/(drawer)/(tabs)');
     } else if (!isPublicRoute && !isAuthenticated && !user) {
       router.replace('/(auth)/sign-in');
     } else {

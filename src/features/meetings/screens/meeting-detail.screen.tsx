@@ -16,7 +16,6 @@ import {
   AccordionContent,
   Alert,
   AlertTitle,
-  AlertDescription,
 } from '@src/shared/components/ui';
 import { formattedDate, formattedTime } from '@src/shared/utils/format';
 import { cn } from '@lib/cn';
@@ -28,9 +27,7 @@ import { useAuthStore } from '@src/features/auth';
 import { useQueryClient } from '@tanstack/react-query';
 import { MeetingQueryKeys } from '../utils/constants/query-key';
 import { MeetingErrorScreen } from './meeting-error';
-import { ErrorBoundary } from '@src/shared/components/common';
 import { MeetingInfoCard } from '../components/meeting-info-card';
-import { hasHighRoleAccess } from '../utils/permission';
 
 export const MeetingDetailScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();

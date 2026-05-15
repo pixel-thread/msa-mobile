@@ -11,51 +11,23 @@ export enum ConsentStatus {
   WITHDRAWN = 'WITHDRAWN',
 }
 
-export type ConsentChannel = 'web' | 'mobile' | 'email';
-
-export interface ConsentReceiptRecord {
+export interface ConsentReceipt {
   id: string;
+  associationId: string;
   userId: string;
   purpose: ConsentPurpose;
   status: ConsentStatus;
-  ipAddress: string | null;
-  userAgent: string | null;
+  ipAddress?: string;
+  userAgent?: string;
   channel: string;
-  metadata: Record<string, unknown>;
+  metadata?: Record<string, any>;
   createdAt: string;
 }
 
-export interface UserConsentState {
-  purpose: ConsentPurpose;
-  status: ConsentStatus;
-  updatedAt: string;
-}
-
-export interface MyConsentResponse {
-  consentState: UserConsentState[];
-  association: string;
-}
-
-export interface ConsentSummaryReport {
-  purpose: ConsentPurpose;
-  grantedCount: number;
-  withdrawnCount: number;
-  totalCount: number;
-}
-
-export interface GrantConsentRequest {
-  purposes: ConsentPurpose[];
-  channel?: ConsentChannel;
-  metadata?: Record<string, unknown>;
-}
-
-export interface RevokeConsentRequest {
-  purposes: ConsentPurpose[];
-  channel?: ConsentChannel;
-  metadata?: Record<string, unknown>;
-}
-
-export interface ConsentActionResponse {
-  message: string;
-  data: ConsentReceiptRecord[];
+export interface ConsentReport {
+  [purpose: string]: {
+    granted: number;
+    withdrawn: number;
+    rate: string;
+  };
 }

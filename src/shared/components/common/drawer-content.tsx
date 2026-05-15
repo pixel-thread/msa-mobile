@@ -9,6 +9,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Constants from 'expo-constants';
 import { hasHighRoleAccess } from '@src/features/meetings';
 import { Ionicons } from '@expo/vector-icons';
+import { useSignOut } from '@src/features/auth/hooks/use-sign-out';
 
 type DrawerMenuItem = {
   label: string;
@@ -25,10 +26,8 @@ type DrawerMenuGroup = {
 export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
   const router = useRouter();
   const segments = useSegments();
-  const { logout, user } = useAuthStore((state) => ({
-    logout: state.logout,
-    user: state.user,
-  }));
+  const { mutate } = useSignOut();
+  const { user } = useAuthStore();
   const inset = useSafeAreaInsets();
 
   const currentPath = segments.join('/');
@@ -94,7 +93,12 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
   const footerItems: DrawerMenuItem[] = [
     { label: 'Terms & Conditions', icon: 'document-text-outline', onPress: () => {} },
     { label: 'Privacy Policy', icon: 'shield-checkmark-outline', onPress: () => {} },
-    { label: 'Logout', icon: 'log-out-outline', variant: 'destructive' as const, onPress: logout },
+    {
+      label: 'Logout',
+      icon: 'log-out-outline',
+      variant: 'destructive' as const,
+      onPress: () => mutate(),
+    },
   ];
 
   return (

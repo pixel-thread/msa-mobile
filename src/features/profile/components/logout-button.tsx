@@ -11,7 +11,8 @@ import {
   AlertDialogDescription,
 } from '@components/ui';
 import { Ionicons } from '@expo/vector-icons';
-import { useAuthStore, useSecureTokenStore } from '@src/features/auth';
+import { useSecureTokenStore } from '@src/features/auth';
+import { useSignOut } from '@src/features/auth/hooks/use-sign-out';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { View } from 'react-native';
@@ -19,13 +20,10 @@ import { View } from 'react-native';
 export const LogoutButton = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { clearAll } = useSecureTokenStore();
-  const { logout } = useAuthStore();
-  const router = useRouter();
+  const { mutate: logout, isPending } = useSignOut();
 
   const onConfirmLogout = async () => {
-    await clearAll();
     logout();
-    router.replace('/(auth)/sign-in');
   };
 
   const onPressLogout = () => setIsOpen(!isOpen);
@@ -35,6 +33,7 @@ export const LogoutButton = () => {
       <Button
         variant="destructive"
         onPress={onPressLogout}
+        disabled={isPending}
         className="h-14 rounded-2xl shadow-lg shadow-red-100 dark:shadow-none">
         <View className="flex-row items-center gap-x-2">
           <Ionicons name="log-out-outline" size={20} color="white" />

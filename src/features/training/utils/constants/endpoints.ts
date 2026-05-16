@@ -6,3 +6,4 @@ export const trainingEndpoints = {
   completions: '/training/completions',
   assign: (moduleId: string) => `/training/modules/${moduleId}/assign`,
 } as const;
+

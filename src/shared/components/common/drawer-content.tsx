@@ -39,6 +39,11 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
       title: 'Main Menu',
       items: [
         {
+          label: 'Announcements',
+          icon: 'megaphone-outline',
+          onPress: () => router.push('/(protected)/announcements'),
+        },
+        {
           label: 'Meetings',
           icon: 'calendar-outline',
           onPress: () => router.push('/(protected)/(drawer)/(tabs)/meetings'),

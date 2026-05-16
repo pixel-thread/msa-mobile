@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { checkRateLimit } from '../utils/rate-limiting';
 import { toast } from 'sonner-native';
 import { IRateLimitOptions } from '../types/rate-limiting';
@@ -40,6 +40,15 @@ export const useRateLimit = (key: string, options: IRateLimitOptions = defaultOp
     },
     [key, options]
   );
+
+  useEffect(() => {
+    if (retryAfter) {
+      setTimeout(() => {
+        setRetryAfter(null);
+        setIsProcessing(false);
+      }, retryAfter * 1000);
+    }
+  });
 
   return {
     executeWithLimit,

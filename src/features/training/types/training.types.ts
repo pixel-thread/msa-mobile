@@ -59,6 +59,10 @@ export interface UpdateTrainingModuleInput {
   isActive?: boolean;
 }
 
+export interface CompleteTrainingInput {
+  userId?: string;
+}
+
 export interface TrainingAssignment {
   id: string;
   moduleId: string;

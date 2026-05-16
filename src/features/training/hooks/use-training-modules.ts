@@ -13,3 +13,4 @@ export const useTrainingModules = () => {
     enabled: isAuthenticated,
   });
 };
+

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { View, ScrollView, TouchableOpacity } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -7,38 +7,36 @@ import { Text, TextInput, Button } from '@src/shared/components/ui';
 import { useTrainingModules } from '@src/features/training/hooks';
 import { AdminRecordCompletionFormData, AdminRecordCompletionSchema } from '../validators';
 import { useAdminRecordCompletion } from '../hooks/use-admin-record-completion';
+import { useLocalSearchParams } from 'expo-router';
 
 export const AdminRecordCompletionScreen = () => {
-  const [selectedModuleId, setSelectedModuleId] = useState<string>('');
+  const { userId, moduleId } = useLocalSearchParams<{
+    userId: string;
+    moduleId: string;
+  }>();
 
   const { data: modules } = useTrainingModules();
 
   const {
     control,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<AdminRecordCompletionFormData>({
     resolver: zodResolver(AdminRecordCompletionSchema),
     defaultValues: {
-      userId: '',
-      moduleId: '',
+      userId: userId,
+      moduleId: moduleId,
       scorePercent: undefined,
       certificateUrl: undefined,
     },
   });
 
-  const moduleIdValue = watch('moduleId');
-
-  useEffect(() => {
-    if (moduleIdValue) {
-      setSelectedModuleId(moduleIdValue);
-    }
-  }, [moduleIdValue]);
-
   const { mutate, isPending: isSubmitting } = useAdminRecordCompletion();
 
-  const onSubmit = (data: AdminRecordCompletionFormData) => mutate(data);
+  const onSubmit = (data: AdminRecordCompletionFormData) => {
+    if (!data.moduleId || !data.userId) return;
+    mutate(data);
+  };
 
   return (
     <Container>
@@ -49,25 +47,6 @@ export const AdminRecordCompletionScreen = () => {
         contentContainerClassName="p-4"
         showsVerticalScrollIndicator={false}>
         <View className="gap-4">
-          <View>
-            <Text variant="label" className="mb-1">
-              User ID (UUID)
-            </Text>
-            <Controller
-              control={control}
-              name="userId"
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  value={value}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  placeholder="Enter user UUID"
-                  error={errors.userId?.message}
-                />
-              )}
-            />
-          </View>
-
           <View>
             <Text variant="label" className="mb-1">
               Training Module
@@ -159,7 +138,7 @@ export const AdminRecordCompletionScreen = () => {
       <View className="border-t border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-800">
         <Button
           onPress={handleSubmit(onSubmit)}
-          disabled={isSubmitting || !selectedModuleId}
+          disabled={isSubmitting}
           className="w-full"
           title={isSubmitting ? 'Recording...' : 'Record Completion'}
         />
@@ -167,4 +146,3 @@ export const AdminRecordCompletionScreen = () => {
     </Container>
   );
 };
-

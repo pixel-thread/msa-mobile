@@ -1,13 +1,12 @@
 import React from 'react';
-import { View, ScrollView, TouchableOpacity } from 'react-native';
+import { View, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTrainingModule, useMyTrainingCompletions, useCompleteTraining } from '../hooks';
 import { LoadingScreen, ErrorScreen } from '@src/shared/components/screens';
 import { Container, StackHeader } from '@src/shared/components';
-import { Text } from '@src/shared/components/ui';
+import { Text, Button } from '@src/shared/components/ui';
 import { formattedDate } from '@utils/format';
-import { ActivityIndicator } from 'react-native';
 
 export const TrainingDetailScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -128,30 +127,15 @@ export const TrainingDetailScreen = () => {
       </ScrollView>
 
       <View className="border-t border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-800">
-        {isCompleted ? (
-          <View className="flex-row items-center justify-center gap-2">
-            <Ionicons name="checkmark-circle" size={24} color="#16a34a" />
-            <Text variant="heading" size="lg" className="text-green-700 dark:text-green-400">
-              Training Completed
-            </Text>
-          </View>
-        ) : (
-          <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={() => completeTraining}
+        {isCompleted && (
+          <Button
+            onPress={() => {
+              // TODO: download certificate
+            }}
             disabled={completeTraining.isPending}
-            className="flex-row items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-3">
-            {completeTraining.isPending ? (
-              <ActivityIndicator size="small" color="#fff" />
-            ) : (
-              <>
-                <Ionicons name="checkmark" size={20} color="#fff" />
-                <Text variant="heading" size="lg" className="text-white">
-                  Mark as Complete
-                </Text>
-              </>
-            )}
-          </TouchableOpacity>
+            title="Download Certificate"
+            className="px-4 py-3"
+          />
         )}
       </View>
     </Container>

@@ -12,7 +12,7 @@ import { useRateLimit } from '@src/shared/hooks/use-rate-limiting';
 
 export const SignInScreen = () => {
   const { isProcessing, isLimited, executeWithLimit } = useRateLimit('SIGN_IN', {
-    limit: 1,
+    limit: 3,
     windowMs: 10000,
   });
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, ScrollView, TouchableOpacity } from 'react-native';
-import { router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTrainingModule, useMyTrainingCompletions, useCompleteTraining } from '../hooks';
 import { LoadingScreen, ErrorScreen } from '@src/shared/components/screens';
@@ -138,7 +138,7 @@ export const TrainingDetailScreen = () => {
         ) : (
           <TouchableOpacity
             activeOpacity={0.7}
-            onPress={() => router.push('/(protected)/admin/training/completions')}
+            onPress={() => completeTraining}
             disabled={completeTraining.isPending}
             className="flex-row items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-3">
             {completeTraining.isPending ? (

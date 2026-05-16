@@ -7,12 +7,9 @@ import { Text, TextInput, Button } from '@src/shared/components/ui';
 import { useTrainingModules } from '@src/features/training/hooks';
 import { AdminRecordCompletionFormData, AdminRecordCompletionSchema } from '../validators';
 import { useAdminRecordCompletion } from '../hooks/use-admin-record-completion';
-import { useLocalSearchParams } from 'expo-router';
-import { logger } from '@src/shared/utils';
 
 export const AdminRecordCompletionScreen = () => {
   const [selectedModuleId, setSelectedModuleId] = useState<string>('');
-  const moduleId = useLocalSearchParams().moduleId;
 
   const { data: modules } = useTrainingModules();
 
@@ -25,7 +22,7 @@ export const AdminRecordCompletionScreen = () => {
     resolver: zodResolver(AdminRecordCompletionSchema),
     defaultValues: {
       userId: '',
-      moduleId: moduleId.toString(),
+      moduleId: '',
       scorePercent: undefined,
       certificateUrl: undefined,
     },
@@ -41,10 +38,7 @@ export const AdminRecordCompletionScreen = () => {
 
   const { mutate, isPending: isSubmitting } = useAdminRecordCompletion();
 
-  const onSubmit = (data: AdminRecordCompletionFormData) => {
-    logger.debug('data', data);
-    mutate(data);
-  };
+  const onSubmit = (data: AdminRecordCompletionFormData) => mutate(data);
 
   return (
     <Container>

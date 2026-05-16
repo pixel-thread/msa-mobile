@@ -17,6 +17,16 @@ export const TrainingDetailScreen = () => {
 
   const isCompleted = completions?.some((c) => c.moduleId === id) || false;
 
+  const content = React.useMemo(() => {
+    try {
+      if (!module) return;
+      return JSON.parse(module?.content);
+    } catch {
+      if (!module) return;
+      return module.content;
+    }
+  }, [module?.content]);
+
   if (isLoading) return <LoadingScreen message="Loading training module..." />;
 
   if (isError || !module) {
@@ -31,14 +41,6 @@ export const TrainingDetailScreen = () => {
       </>
     );
   }
-
-  const content = React.useMemo(() => {
-    try {
-      return JSON.parse(module.content);
-    } catch {
-      return module.content;
-    }
-  }, [module.content]);
 
   return (
     <Container>
@@ -101,16 +103,25 @@ export const TrainingDetailScreen = () => {
             </Text>
           ) : (
             <View>
-              {content.sections?.map((section: { title: string; content: string }, index: number) => (
-                <View key={index} className="mb-4">
-                  <Text variant="heading" size="lg" weight="semibold" className="mb-2 text-slate-900 dark:text-white">
-                    {section.title}
-                  </Text>
-                  <Text variant="default" size="lg" className="text-slate-600 dark:text-slate-400">
-                    {section.content}
-                  </Text>
-                </View>
-              ))}
+              {content.sections?.map(
+                (section: { title: string; content: string }, index: number) => (
+                  <View key={index} className="mb-4">
+                    <Text
+                      variant="heading"
+                      size="lg"
+                      weight="semibold"
+                      className="mb-2 text-slate-900 dark:text-white">
+                      {section.title}
+                    </Text>
+                    <Text
+                      variant="default"
+                      size="lg"
+                      className="text-slate-600 dark:text-slate-400">
+                      {section.content}
+                    </Text>
+                  </View>
+                )
+              )}
             </View>
           )}
         </View>
@@ -146,3 +157,4 @@ export const TrainingDetailScreen = () => {
     </Container>
   );
 };
+

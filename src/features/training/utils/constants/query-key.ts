@@ -7,4 +7,5 @@ export const TrainingQueryKeys = {
   allCompletions: (params?: Record<string, unknown>) =>
     ['training', 'completions', 'all', params] as const,
   complete: (moduleId: string) => ['training', 'modules', 'complete', moduleId] as const,
+  assignments: (moduleId: string) => ['training', 'assignments', moduleId] as const,
 } as const;

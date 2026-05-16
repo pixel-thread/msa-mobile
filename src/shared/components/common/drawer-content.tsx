@@ -8,6 +8,7 @@ import { DrawerItem } from '../ui/drawer-item';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Constants from 'expo-constants';
 import { hasHighRoleAccess } from '@src/features/meetings';
+import { canManageTraining } from '@src/features/training';
 import { Ionicons } from '@expo/vector-icons';
 import { useSignOut } from '@src/features/auth/hooks/use-sign-out';
 
@@ -49,6 +50,11 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
           onPress: () => router.push('/(protected)/(drawer)/(tabs)/meetings'),
         },
         {
+          label: 'Training',
+          icon: 'school-outline',
+          onPress: () => router.push('/(protected)/training'),
+        },
+        {
           label: 'Consent',
           icon: 'document-lock-outline',
           onPress: () => router.push('/(protected)/consent'),
@@ -73,25 +79,40 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
   ];
 
   if (isAdmin) {
+    const adminItems = [
+      {
+        label: 'DSAR Management',
+        icon: 'shield-checkmark-outline',
+        onPress: () => router.push('/(protected)/admin/dsar'),
+      },
+      {
+        label: 'Members',
+        icon: 'people-outline',
+        onPress: () => router.push('/(protected)/admin/members'),
+      },
+      {
+        label: 'Consents',
+        icon: 'document-lock-outline',
+        onPress: () => router.push('/(protected)/admin/consent'),
+      },
+    ];
+
+    if (canManageTraining(user?.role)) {
+      adminItems.push({
+        label: 'Training Management',
+        icon: 'school-outline',
+        onPress: () => router.push('/(protected)/admin/training'),
+      });
+      adminItems.push({
+        label: 'Training Completions',
+        icon: 'document-text-outline',
+        onPress: () => router.push('/(protected)/admin/training/completions'),
+      });
+    }
+
     menuGroups.push({
       title: 'Administrative',
-      items: [
-        {
-          label: 'DSAR Management',
-          icon: 'shield-checkmark-outline',
-          onPress: () => router.push('/(protected)/admin/dsar'),
-        },
-        {
-          label: 'Members',
-          icon: 'people-outline',
-          onPress: () => router.push('/(protected)/admin/members'),
-        },
-        {
-          label: 'Consents',
-          icon: 'document-lock-outline',
-          onPress: () => router.push('/(protected)/admin/consent'),
-        },
-      ],
+      items: adminItems,
     });
   }
 

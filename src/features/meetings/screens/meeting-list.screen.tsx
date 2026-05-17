@@ -1,11 +1,11 @@
 import React from 'react';
-import { View, RefreshControl, ActivityIndicator } from 'react-native';
+import { View, RefreshControl, ActivityIndicator, FlatList } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import { useMeetings } from '../hooks';
 import { LoadingScreen, ErrorScreen } from '@src/shared/components/screens';
 import { Ionicons } from '@expo/vector-icons';
 import { MeetingCard } from '../components';
-import { Container, StackHeader } from '@src/shared/components';
+import { Container, StackHeader, Ternary } from '@src/shared/components';
 import { Text } from '@src/shared/components/ui';
 
 /**
@@ -21,22 +21,28 @@ export const MeetingListScreen = () => {
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage,
+    isFetching,
   } = useMeetings();
 
-  if (isLoading) return <LoadingScreen message="Fetching meetings..." />;
+  if (isLoading) {
+    return <LoadingScreen message="Fetching meetings..." />;
+  }
 
   if (isError) {
     return (
-      <>
-        <StackHeader showBackButton title="Meetings" />
-        <ErrorScreen
-          title="Failed to load meetings"
-          message="There was an error retrieving the meeting list. Please try again."
-          onRetry={() => refetch()}
-        />
-      </>
+      <ErrorScreen
+        title="Failed to load meetings"
+        message="There was an error retrieving the meeting list. Please try again."
+        onRetry={() => refetch()}
+      />
     );
   }
+
+  const handleEndReached = () => {
+    if (hasNextPage && !isFetchingNextPage && !isFetching) {
+      fetchNextPage();
+    }
+  };
 
   return (
     <Container>
@@ -47,8 +53,8 @@ export const MeetingListScreen = () => {
         keyExtractor={(item) => item.id.toString()}
         contentContainerClassName="p-4"
         showsVerticalScrollIndicator={false}
-        onEndReached={() => hasNextPage && fetchNextPage()}
-        onEndReachedThreshold={0.5}
+        onEndReached={handleEndReached}
+        onEndReachedThreshold={0.1}
         refreshing={isRefetching}
         onRefresh={refetch}
         refreshControl={

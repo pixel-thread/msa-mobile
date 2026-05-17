@@ -63,8 +63,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     },
     owner: 'pixel-thread',
     updates: {
-      checkAutomatically: 'ON_LOAD',
-      // Wait before launching app to fetch update
+      checkAutomatically: 'NEVER',
       fallbackToCacheTimeout: 0,
       url: 'https://u.expo.dev/76bf6558-f870-4eb0-b4a2-698184fefb41',
     },

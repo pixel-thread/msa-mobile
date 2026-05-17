@@ -1,7 +1,7 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import { SECURE_STORE_KEYS } from '@src/shared/constants';
-import { logger } from '../utils';
+import { logger } from '../utils/logger';
 
 /**
  * Base URL for the API.

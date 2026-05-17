@@ -4,10 +4,12 @@ import React from 'react';
 import { AuthGuard } from '../auth';
 import { NotificationProvider, PushNotificationProvider } from './notifications';
 import { ThemeProvider } from './theme.provider';
+import { OtaUpdateProvider } from './ota-update';
 
 export * from './auth';
 export * from './notifications';
 export * from './theme.provider';
+export * from './ota-update';
 
 export const AppProviders = () => {
   return (
@@ -15,11 +17,13 @@ export const AppProviders = () => {
       <ThemeProvider>
         <PushNotificationProvider>
           <AuthProvider>
-            <AuthGuard>
-              <NotificationProvider>
-                <Stack screenOptions={{ headerShown: false }} />
-              </NotificationProvider>
-            </AuthGuard>
+            <OtaUpdateProvider>
+              <AuthGuard>
+                <NotificationProvider>
+                  <Stack screenOptions={{ headerShown: false }} />
+                </NotificationProvider>
+              </AuthGuard>
+            </OtaUpdateProvider>
           </AuthProvider>
         </PushNotificationProvider>
       </ThemeProvider>

@@ -10,7 +10,6 @@ import * as Constants from 'expo-constants';
 import { hasHighRoleAccess } from '@src/features/meetings';
 import { canManageTraining } from '@src/features/training';
 import { Ionicons } from '@expo/vector-icons';
-import { useSignOut } from '@src/features/auth/hooks/use-sign-out';
 
 type DrawerMenuItem = {
   label: string;
@@ -27,8 +26,7 @@ type DrawerMenuGroup = {
 export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
   const router = useRouter();
   const segments = useSegments();
-  const { mutate } = useSignOut();
-  const { user } = useAuthStore();
+  const { user, logout } = useAuthStore();
   const inset = useSafeAreaInsets();
 
   const currentPath = segments.join('/');
@@ -123,7 +121,7 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
       label: 'Logout',
       icon: 'log-out-outline',
       variant: 'destructive' as const,
-      onPress: () => mutate(),
+      onPress: () => logout(),
     },
   ];
 

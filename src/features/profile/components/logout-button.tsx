@@ -11,13 +11,13 @@ import {
   AlertDialogDescription,
 } from '@components/ui';
 import { Ionicons } from '@expo/vector-icons';
-import { useSignOut } from '@src/features/auth/hooks/use-sign-out';
+import { useAuthStore } from '@src/shared/store';
 import { useState } from 'react';
 import { View } from 'react-native';
 
 export const LogoutButton = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const { mutate: logout, isPending } = useSignOut();
+  const { logout } = useAuthStore();
 
   const onConfirmLogout = async () => logout();
 
@@ -28,7 +28,6 @@ export const LogoutButton = () => {
       <Button
         variant="destructive"
         onPress={onPressLogout}
-        disabled={isPending}
         className="h-14 rounded-2xl shadow-lg shadow-red-100 dark:shadow-none">
         <View className="flex-row items-center gap-x-2">
           <Ionicons name="log-out-outline" size={20} color="white" />

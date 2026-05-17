@@ -1,12 +1,13 @@
 import apiClient from '@src/shared/lib/api-client';
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { logger } from '../logger';
+import { PaginationMeta } from '@src/shared/types/pagination';
 
 export interface ApiResponse<T> {
   success: boolean;
   message: string;
   data: T | null;
-  meta?: null;
+  meta?: PaginationMeta;
   error?: string | Record<string, unknown>;
 }
 
@@ -51,7 +52,7 @@ const handleResponse = <T>(response: AxiosResponse<ApiResponse<T>>): ApiResponse
 const http = {
   get: async <T>(url: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>> => {
     try {
-      logger.info(`GET => ${url}`);
+      logger.debug(`GET => ${url}`);
       const response = await apiClient.get<ApiResponse<T>>(url, config);
       return handleResponse<T>(response);
     } catch (error) {
@@ -65,7 +66,7 @@ const http = {
     config?: AxiosRequestConfig
   ): Promise<ApiResponse<T>> => {
     try {
-      logger.info(`POST => ${url}`);
+      logger.debug(`POST => ${url}`);
       const response = await apiClient.post<ApiResponse<T>>(url, data, config);
       return handleResponse<T>(response);
     } catch (error) {
@@ -79,7 +80,7 @@ const http = {
     config?: AxiosRequestConfig
   ): Promise<ApiResponse<T>> => {
     try {
-      logger.info(`PUT => ${url}`);
+      logger.debug(`PUT => ${url}`);
       const response = await apiClient.put<ApiResponse<T>>(url, data, config);
       return handleResponse<T>(response);
     } catch (error) {
@@ -93,7 +94,7 @@ const http = {
     config?: AxiosRequestConfig
   ): Promise<ApiResponse<T>> => {
     try {
-      logger.info(`PATCH => ${url}`);
+      logger.debug(`PATCH => ${url}`);
       const response = await apiClient.patch<ApiResponse<T>>(url, data, config);
       return handleResponse<T>(response);
     } catch (error) {
@@ -103,7 +104,7 @@ const http = {
 
   delete: async <T>(url: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>> => {
     try {
-      logger.info(`DELETE => ${url}`);
+      logger.debug(`DELETE => ${url}`);
       const response = await apiClient.delete<ApiResponse<T>>(url, config);
       return handleResponse<T>(response);
     } catch (error) {

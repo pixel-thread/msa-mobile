@@ -165,9 +165,9 @@ export const SubscriptionScreen = () => {
                       About
                     </Text>
                     <Text className="text-base leading-7 text-slate-600 dark:text-slate-300">
-                      Your subscription supports the association's operations, events, and member
-                      welfare programs. Payments are processed securely through Razorpay and a
-                      receipt will be generated after each transaction.
+                      Your subscription supports the association&apos;s operations, events, and
+                      member welfare programs. Payments are processed securely through Razorpay and
+                      a receipt will be generated after each transaction.
                     </Text>
                   </View>
 

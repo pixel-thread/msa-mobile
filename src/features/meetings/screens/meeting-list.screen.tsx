@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, FlatList, RefreshControl } from 'react-native';
+import { View, FlatList, RefreshControl, ActivityIndicator } from 'react-native';
 import { useMeetings } from '../hooks';
 import { LoadingScreen, ErrorScreen } from '@src/shared/components/screens';
 import { Ionicons } from '@expo/vector-icons';
@@ -11,7 +11,16 @@ import { Text } from '@src/shared/components/ui';
  * Main screen for displaying the list of meetings.
  */
 export const MeetingListScreen = () => {
-  const { data, isLoading, isError, refetch, isRefetching } = useMeetings();
+  const {
+    data,
+    isLoading,
+    isError,
+    refetch,
+    isRefetching,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+  } = useMeetings();
 
   if (isLoading) return <LoadingScreen message="Fetching meetings..." />;
 
@@ -32,11 +41,19 @@ export const MeetingListScreen = () => {
     <Container>
       <StackHeader title="Meetings" showBackButton={false} />
       <FlatList
-        data={data}
-        renderItem={({ item }) => <MeetingCard meeting={item} />}
-        keyExtractor={(item) => item.id}
+        data={data?.meetings}
+        renderItem={({ item }) => item && <MeetingCard meeting={item} />}
+        keyExtractor={(item) => item.id.toString()}
         contentContainerClassName="p-4"
         showsVerticalScrollIndicator={false}
+        onEndReached={() => hasNextPage && fetchNextPage()}
+        onEndReachedThreshold={0.5}
+        initialNumToRender={10}
+        maxToRenderPerBatch={10}
+        windowSize={5}
+        removeClippedSubviews
+        refreshing={isRefetching}
+        onRefresh={refetch}
         refreshControl={
           <RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor="#6366f1" />
         }
@@ -53,6 +70,7 @@ export const MeetingListScreen = () => {
             </Text>
           </View>
         }
+        ListFooterComponent={isFetchingNextPage ? <ActivityIndicator /> : null}
       />
     </Container>
   );

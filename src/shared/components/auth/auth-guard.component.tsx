@@ -21,9 +21,16 @@ export const AuthGuard = ({ children, publicRoutes = authRoutes }: AuthGuardProp
   const segments = useSegments();
   const { user, isAuthenticated, isHydrated } = useAuthStore();
   const [isChecking, setIsChecking] = useState(true);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    if (!isHydrated) return;
+    if (!isMounted) {
+      setIsMounted(true);
+    }
+  }, [isMounted]);
+
+  useEffect(() => {
+    if (!isHydrated || !isMounted) return;
 
     const currentPath = '/' + segments.join('/');
     const isPublicRoute = publicRoutes.some((route) => currentPath.startsWith(route));
@@ -35,7 +42,7 @@ export const AuthGuard = ({ children, publicRoutes = authRoutes }: AuthGuardProp
     }
 
     setIsChecking(false);
-  }, [isHydrated, isAuthenticated, user, segments, publicRoutes, router]);
+  }, [isHydrated, isMounted, isAuthenticated, user, segments, publicRoutes, router]);
 
   if (isChecking) {
     return <LoadingScreen />;

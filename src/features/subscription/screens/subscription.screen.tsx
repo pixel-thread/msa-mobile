@@ -6,13 +6,28 @@ import { Ionicons } from '@expo/vector-icons';
 import { useSubscriptionPlans } from '../hooks';
 
 import { Container, StackHeader } from '@src/shared/components';
-import { Card, CardContent, Text, Button } from '@src/shared/components/ui';
+import { Text, Button } from '@src/shared/components/ui';
 
 import { ErrorScreen } from '@src/shared/components/screens';
 import { ErrorBoundary } from '@components/common/error-boundary';
 
 import { PaymentHistory } from '../components';
 import { PayButton } from '../components/pay-button';
+
+import type { SubscriptionPlan } from '../types';
+
+function formatBillingCycle(cycle: SubscriptionPlan['billingCycle']): string {
+  const map: Record<SubscriptionPlan['billingCycle'], string> = {
+    MONTHLY: 'month',
+    QUARTERLY: 'quarter',
+    HALF_YEARLY: '6 months',
+    YEARLY: 'year',
+    LIFETIME: 'lifetime',
+  };
+  return map[cycle] ?? cycle.toLowerCase();
+}
+
+const Divider = () => <View className="h-px bg-slate-100 dark:bg-slate-800/60" />;
 
 export const SubscriptionScreen = () => {
   const [activeTab, setActiveTab] = useState<'plan' | 'history'>('plan');
@@ -25,8 +40,7 @@ export const SubscriptionScreen = () => {
     return (
       <Container>
         <StackHeader title="Subscription" />
-
-        <View className="flex-1 items-center justify-center bg-slate-50 dark:bg-black">
+        <View className="flex-1 items-center justify-center bg-white dark:bg-black">
           <ActivityIndicator size="large" color="#6366f1" />
         </View>
       </Container>
@@ -51,23 +65,31 @@ export const SubscriptionScreen = () => {
       <Container>
         <StackHeader title="Subscription" />
 
-        {/* Tabs */}
-        <View className="mx-4 mt-3 flex-row rounded-2xl bg-slate-200/70 p-1 dark:bg-slate-900">
+        {/* Tab Bar */}
+        <View className="flex-row border-b border-slate-100 px-6 dark:border-slate-800">
           {(['plan', 'history'] as const).map((tab) => {
             const active = activeTab === tab;
 
             return (
-              <TouchableOpacity
-                key={tab}
-                onPress={() => setActiveTab(tab)}
-                className={`flex-1 rounded-xl py-3 ${active ? 'bg-white dark:bg-slate-800' : ''}`}>
-                <Text
-                  variant="subtext"
-                  className={`text-center text-sm font-semibold capitalize ${
-                    active ? 'text-indigo-600' : 'text-slate-500'
-                  }`}>
-                  {tab}
-                </Text>
+              <TouchableOpacity key={tab} onPress={() => setActiveTab(tab)} className="flex-1 py-4">
+                <View className="flex-row items-center justify-center gap-x-2">
+                  <Ionicons
+                    name={tab === 'plan' ? 'receipt-outline' : 'time-outline'}
+                    size={20}
+                    color={active ? '#6366f1' : '#94a3b8'}
+                  />
+                  <Text
+                    className={`text-center text-base font-semibold capitalize ${
+                      active
+                        ? 'text-indigo-600 dark:text-indigo-400'
+                        : 'text-slate-400 dark:text-slate-500'
+                    }`}>
+                    {tab}
+                  </Text>
+                </View>
+                {active && (
+                  <View className="absolute bottom-0 left-4 right-4 h-0.5 rounded-full bg-indigo-600 dark:bg-indigo-400" />
+                )}
               </TouchableOpacity>
             );
           })}
@@ -79,99 +101,94 @@ export const SubscriptionScreen = () => {
               showsVerticalScrollIndicator={false}
               className="flex-1"
               contentContainerStyle={{
-                padding: 16,
-                paddingBottom: 140,
+                padding: 24,
+                paddingBottom: 160,
               }}>
               {!plan ? (
-                <View className="flex-1 items-center justify-center py-24">
-                  <View className="mb-6 h-20 w-20 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-900">
-                    <Ionicons name="card-outline" size={34} color="#94a3b8" />
+                <View className="items-center justify-center py-24">
+                  <View className="mb-5 h-16 w-16 items-center justify-center rounded-full bg-slate-50 dark:bg-slate-900">
+                    <Ionicons name="receipt-outline" size={28} color="#cbd5e1" />
                   </View>
-
                   <Text variant="heading" size="lg" className="text-slate-900 dark:text-white">
                     No plans available
                   </Text>
-
-                  <Text variant="subtext" size="sm" className="mt-2 text-center">
+                  <Text variant="subtext" size="sm" className="mt-2 px-8 text-center">
                     Check back later for newly available subscription plans.
                   </Text>
-
-                  <Button title="Refresh" onPress={() => refetch()} className="mt-8 px-8" />
+                  <Button
+                    title="Refresh"
+                    onPress={() => refetch()}
+                    variant="outline"
+                    className="mt-6 px-8"
+                  />
                 </View>
               ) : (
-                <>
-                  {/* Hero Card */}
-                  <Card className="overflow-hidden rounded-[32px] border-0 bg-indigo-600 shadow-xl">
-                    <CardContent className="p-0">
-                      {/* Top Gradient Section */}
-                      <View className="bg-indigo-600 px-7 pb-8 pt-8">
-                        <View className="mb-6 flex-row items-center justify-between">
-                          <View className="h-14 w-14 items-center justify-center rounded-2xl bg-white/15">
-                            <Ionicons name="diamond" size={28} color="#fff" />
-                          </View>
+                <View>
+                  {/* Plan Header */}
+                  <View className="mb-8">
+                    <Text
+                      variant="subtext"
+                      size="xs"
+                      className="mb-2 font-medium uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                      Current Plan
+                    </Text>
+                    <Text variant="heading" size="2xl" className="text-slate-900 dark:text-white">
+                      {plan.name}
+                    </Text>
+                    {plan.description && (
+                      <Text variant="subtext" size="sm" className="mt-2 leading-relaxed">
+                        {plan.description}
+                      </Text>
+                    )}
+                  </View>
 
-                          <View className="rounded-full bg-white/15 px-4 py-2">
-                            <Text className="text-xs font-bold uppercase tracking-widest text-white">
-                              Most Popular
-                            </Text>
-                          </View>
-                        </View>
+                  <Divider />
 
-                        <Text variant="heading" size="2xl" className="text-white">
-                          {plan.name}
-                        </Text>
+                  {/* Pricing */}
+                  <View className="my-8 flex-row items-end">
+                    <Text className="text-5xl font-bold tracking-tight text-slate-900 dark:text-white">
+                      ₹{plan.amount}
+                    </Text>
+                    <Text className="mb-1.5 ml-2 text-base text-slate-400 dark:text-slate-500">
+                      / {formatBillingCycle(plan.billingCycle)}
+                    </Text>
+                  </View>
 
-                        <Text className="mt-2 text-base leading-6 text-indigo-100">
-                          {plan.description}
-                        </Text>
+                  <Divider />
 
-                        <View className="mt-8 flex-row items-end">
-                          <Text className="text-5xl font-extrabold text-white">₹{plan.amount}</Text>
+                  {/* Details */}
+                  <View className="mt-8">
+                    <Text
+                      variant="subtext"
+                      size="xs"
+                      className="mb-3 font-medium uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                      About
+                    </Text>
+                    <Text className="text-base leading-7 text-slate-600 dark:text-slate-300">
+                      Your subscription supports the association's operations, events, and member
+                      welfare programs. Payments are processed securely through Razorpay and a
+                      receipt will be generated after each transaction.
+                    </Text>
+                  </View>
 
-                          <Text className="mb-1 ml-2 text-base text-indigo-100">
-                            /&nbsp;{plan.billingCycle}
-                          </Text>
-                        </View>
-                      </View>
-
-                      {/* Features */}
-                      <View className="bg-white px-7 py-7 dark:bg-slate-900">
-                        <Text className="mb-5 text-lg font-bold text-slate-900 dark:text-white">
-                          Included Features
-                        </Text>
-
-                        {[
-                          'Unlimited access',
-                          'Premium support',
-                          'Advanced analytics',
-                          'Priority updates',
-                          'Secure payments',
-                        ].map((feature) => (
-                          <View key={feature} className="mb-4 flex-row items-center">
-                            <View className="mr-4 h-8 w-8 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30">
-                              <Ionicons name="checkmark" size={18} color="#10b981" />
-                            </View>
-
-                            <Text className="flex-1 text-base text-slate-700 dark:text-slate-200">
-                              {feature}
-                            </Text>
-                          </View>
-                        ))}
-                      </View>
-                    </CardContent>
-                  </Card>
-                </>
+                  {/* Info Row */}
+                  <View className="mt-8 flex-row items-center gap-x-3 rounded-xl bg-slate-50 px-4 py-3.5 dark:bg-slate-900/50">
+                    <Ionicons name="shield-checkmark-outline" size={18} color="#6366f1" />
+                    <Text variant="subtext" size="sm" className="flex-1 leading-snug">
+                      Secure payments powered by Razorpay
+                    </Text>
+                  </View>
+                </View>
               )}
             </ScrollView>
 
-            {/* Bottom Fixed CTA */}
             {plan && <PayButton />}
           </>
         ) : (
           <ScrollView
             className="flex-1"
             contentContainerStyle={{
-              padding: 16,
+              padding: 24,
               paddingBottom: 40,
             }}
             showsVerticalScrollIndicator={false}>

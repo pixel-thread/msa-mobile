@@ -39,17 +39,17 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="profile/index"
-        options={{
-          title: 'Profile',
-          tabBarIcon: ({ color }) => <TabBarIcon name="person" color={color} />,
-        }}
-      />
-      <Tabs.Screen
         name="subscription"
         options={{
           title: 'Subscription',
           tabBarIcon: ({ color }) => <TabBarIcon name="card" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="profile/index"
+        options={{
+          title: 'Profile',
+          tabBarIcon: ({ color }) => <TabBarIcon name="person" color={color} />,
         }}
       />
     </Tabs>

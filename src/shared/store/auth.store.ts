@@ -24,17 +24,17 @@ export const useAuthStore = create<AuthState>()(
       setUser: (user) => set({ user, isAuthenticated: !!user }),
       logout: async () => {
         const refreshToken = await SecureStorageManager.getItem(SECURE_STORE_KEYS.REFRESH_TOKEN);
-        const res = await http.post('/auth/logout', {
-          token: refreshToken,
-        });
-
-        if (res.success) {
-          await SecureStorageManager.removeItem(SECURE_STORE_KEYS.ACCESS_TOKEN);
-          await SecureStorageManager.removeItem(SECURE_STORE_KEYS.REFRESH_TOKEN);
-          set({ user: null, isAuthenticated: false, isHydrated: false });
-        } else {
-          logger.error(res.message);
+        if (refreshToken) {
+          try {
+            await http.post('/auth/logout', { token: refreshToken });
+          } catch (e) {
+            logger.error('Logout API call failed', e);
+          }
         }
+
+        await SecureStorageManager.removeItem(SECURE_STORE_KEYS.ACCESS_TOKEN);
+        await SecureStorageManager.removeItem(SECURE_STORE_KEYS.REFRESH_TOKEN);
+        set({ user: null, isAuthenticated: false });
       },
       setHydrated: (value) => set({ isHydrated: value }),
     }),

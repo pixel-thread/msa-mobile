@@ -7,12 +7,11 @@ import { useAuthStore } from '@src/shared/store';
 import { useSecureTokenStore } from '@features/auth/store';
 import http from '@src/shared/utils/http';
 import type { AuthUser } from '@features/auth/types';
-import { LoadingScreen } from '../../screens';
 import { isConnectedToNetwork } from '@src/shared/utils/helper/is-connect-to-network';
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
-  const { user, setUser, logout, setHydrated, isHydrated } = useAuthStore();
+  const { setUser, logout, setHydrated } = useAuthStore();
   const { init: initTokens, accessToken, refreshToken, clearAll } = useSecureTokenStore();
   const [isReady, setIsReady] = useState(false);
   const [isConnected, setIsConnected] = useState<boolean>(false);
@@ -34,7 +33,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
   }, [initTokens, setHydrated]);
 
-  const { data, isLoading, isFetched } = useQuery({
+  const { data, isFetched } = useQuery({
     queryKey: ['auth', 'me'],
     queryFn: () => http.get<AuthUser>('/auth/me'),
     enabled: isReady && !!accessToken && !!refreshToken,
@@ -68,10 +67,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       router.replace('/(auth)/sign-in');
     }
   }, [data, isFetched, isConnected, isReady, setUser, logout, clearAll, router]);
-
-  if (!isReady || (!isHydrated && !user)) {
-    return <LoadingScreen />;
-  }
 
   return <>{children}</>;
 };

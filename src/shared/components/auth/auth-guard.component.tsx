@@ -20,7 +20,7 @@ export const AuthGuard = ({ children, publicRoutes = authRoutes }: AuthGuardProp
   const router = useRouter();
   const segments = useSegments();
   const { user, isAuthenticated, isHydrated } = useAuthStore();
-  const [checked, setChecked] = useState(false);
+  const [isChecking, setIsChecking] = useState(true);
 
   useEffect(() => {
     if (!isHydrated) return;
@@ -29,15 +29,15 @@ export const AuthGuard = ({ children, publicRoutes = authRoutes }: AuthGuardProp
     const isPublicRoute = publicRoutes.some((route) => currentPath.startsWith(route));
 
     if (isPublicRoute && isAuthenticated && user) {
-      router.replace('/(protected)/(drawer)/(tabs)');
+      router.replace('/');
     } else if (!isPublicRoute && !isAuthenticated && !user) {
       router.replace('/(auth)/sign-in');
-    } else {
-      setChecked(true);
     }
+
+    setIsChecking(false);
   }, [isHydrated, isAuthenticated, user, segments, publicRoutes, router]);
 
-  if (!checked || !isHydrated) {
+  if (isChecking) {
     return <LoadingScreen />;
   }
 

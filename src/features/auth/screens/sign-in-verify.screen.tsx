@@ -30,7 +30,10 @@ export const SignInVerifyScreen = () => {
 
   const { mutate: verifySignIn, isPending, error } = useSignInVerify();
   const { mutate: resendCode, isPending: isResending } = useResendSignInVerifyCode();
-  const { executeWithLimit, isProcessing } = useRateLimit('SIGN_IN_VERIFY');
+  const { executeWithLimit, isProcessing, retryAfter } = useRateLimit('SIGN_IN_VERIFY', {
+    limit: 1,
+    windowMs: 30000,
+  });
 
   const onSubmit = (data: SignInVerifyFormData) => {
     const payload = {
@@ -96,7 +99,11 @@ export const SignInVerifyScreen = () => {
                     onPress={() => !isResending && resendCode()}
                     disabled={isResending || isProcessing}>
                     <Text variant="link" size="sm" weight="bold">
-                      {isResending ? 'Sending...' : 'Resend Code'}
+                      {isProcessing
+                        ? `Try again in ${retryAfter} seconds`
+                        : isResending
+                          ? 'Sending...'
+                          : 'Resend Code'}
                     </Text>
                   </TouchableOpacity>
                 </View>

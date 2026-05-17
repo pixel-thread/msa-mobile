@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { checkRateLimit } from '../utils/rate-limiting';
 import { toast } from 'sonner-native';
 import { IRateLimitOptions } from '../types/rate-limiting';
@@ -11,27 +11,27 @@ const defaultOptions: IRateLimitOptions = {
 
 export const useRateLimit = (key: string, options: IRateLimitOptions = defaultOptions) => {
   const [isProcessing, setIsProcessing] = useState(false);
+  const [retryAfter, setRetryAfter] = useState<number | null>(null);
 
   /**
-   * Remaining seconds
+   * Instant client-side lock (prevents double click race)
    */
-  const [retryAfter, setRetryAfter] = useState<number | null>(null);
+  const lockedRef = useRef(false);
+
+  /**
+   * Prevents duplicate clicks inside window instantly
+   */
+  const lastClickRef = useRef(0);
 
   /**
    * Countdown timer
    */
   useEffect(() => {
-    if (retryAfter === null || retryAfter <= 0) {
-      return;
-    }
+    if (retryAfter === null || retryAfter <= 0) return;
 
     const interval = setInterval(() => {
       setRetryAfter((prev) => {
-        if (prev === null || prev <= 1) {
-          clearInterval(interval);
-          return null;
-        }
-
+        if (prev === null || prev <= 1) return null;
         return prev - 1;
       });
     }, 1000);
@@ -41,13 +41,20 @@ export const useRateLimit = (key: string, options: IRateLimitOptions = defaultOp
 
   const executeWithLimit = useCallback(
     async (action: () => Promise<void> | void) => {
-      /**
-       * Prevent parallel execution spam
-       */
-      if (isProcessing) {
-        return;
-      }
+      const now = Date.now();
 
+      /**
+       * 🔥 HARD CLIENT GUARD (fixes "needs 2 clicks")
+       */
+      if (lockedRef.current || isProcessing) return;
+
+      /**
+       * 🔥 instant debounce (fixes rapid double click)
+       */
+      if (now - lastClickRef.current < 300) return;
+
+      lastClickRef.current = now;
+      lockedRef.current = true;
       setIsProcessing(true);
 
       try {
@@ -57,7 +64,7 @@ export const useRateLimit = (key: string, options: IRateLimitOptions = defaultOp
         });
 
         if (status.limited) {
-          const seconds = status.retryAfter ?? 0;
+          const seconds = status.retryAfter ?? Math.ceil(options.windowMs / 1000);
 
           setRetryAfter(seconds);
 
@@ -70,13 +77,18 @@ export const useRateLimit = (key: string, options: IRateLimitOptions = defaultOp
         }
 
         /**
-         * Reset timer if request succeeds
+         * success → clear cooldown
          */
         setRetryAfter(null);
 
         await action();
       } finally {
         setIsProcessing(false);
+
+        /**
+         * unlock safely after render cycle
+         */
+        lockedRef.current = false;
       }
     },
     [key, options, isProcessing]
@@ -84,8 +96,16 @@ export const useRateLimit = (key: string, options: IRateLimitOptions = defaultOp
 
   return {
     executeWithLimit,
+
+    /**
+     * UI states
+     */
     isProcessing,
+    retryAfter,
+
+    /**
+     * true while cooldown active
+     */
     isLimited: retryAfter !== null && retryAfter > 0,
-    retryAfter: retryAfter ?? '',
   };
 };

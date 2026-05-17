@@ -11,16 +11,23 @@ import {
 } from '@features/auth/validators/reset-password';
 import { useResetPassword } from '@features/auth/hooks/use-reset-password';
 import { Button, Text, FieldInput, Card, CardContent } from '@src/shared/components/ui';
+import { useRateLimit } from '@src/shared/hooks/use-rate-limiting';
 
 export default function ResetPasswordPage() {
   const methods = useForm<ResetPasswordInput>({
     resolver: zodResolver(ResetPasswordSchema),
     mode: 'onBlur',
   });
+  const { isLimited, retryAfter, executeWithLimit } = useRateLimit('RESEND_RESET_PASSWORD', {
+    limit: 1,
+    windowMs: 30000,
+  });
 
   const { mutate: resetPassword, isPending } = useResetPassword();
 
   const onSubmit = (data: ResetPasswordInput) => resetPassword(data);
+
+  const handleResend = () => executeWithLimit(() => {});
 
   return (
     <KeyboardAvoidingView
@@ -75,11 +82,11 @@ export default function ResetPasswordPage() {
           <Text variant="subtext" size="sm">
             Did not receive a code?
           </Text>
-          <Link href="/(auth)/forgot-password">
-            <Text variant="link" size="sm" weight="bold">
-              Resend Code
-            </Text>
-          </Link>
+          <Button
+            onPress={handleResend}
+            variant={'ghost'}
+            title={isLimited ? `${retryAfter} seconds` : 'Resend'}
+          />
         </View>
 
         <View className="mt-8 flex-row items-center justify-center gap-x-2">
@@ -103,4 +110,3 @@ export default function ResetPasswordPage() {
     </KeyboardAvoidingView>
   );
 }
-

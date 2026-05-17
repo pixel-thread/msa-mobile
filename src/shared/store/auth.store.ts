@@ -23,15 +23,14 @@ export const useAuthStore = create<AuthState>()(
       isHydrated: false,
       setUser: (user) => set({ user, isAuthenticated: !!user }),
       logout: async () => {
-        const refreshToken = SecureStorageManager.getItem(SECURE_STORE_KEYS.REFRESH_TOKEN);
-
+        const refreshToken = await SecureStorageManager.getItem(SECURE_STORE_KEYS.REFRESH_TOKEN);
         const res = await http.post('/auth/logout', {
           token: refreshToken,
         });
 
         if (res.success) {
-          SecureStorageManager.removeItem(SECURE_STORE_KEYS.ACCESS_TOKEN);
-          SecureStorageManager.removeItem(SECURE_STORE_KEYS.REFRESH_TOKEN);
+          await SecureStorageManager.removeItem(SECURE_STORE_KEYS.ACCESS_TOKEN);
+          await SecureStorageManager.removeItem(SECURE_STORE_KEYS.REFRESH_TOKEN);
           set({ user: null, isAuthenticated: false, isHydrated: false });
         } else {
           logger.error(res.message);

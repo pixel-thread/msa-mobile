@@ -7,7 +7,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { AnnouncementCard } from '../components';
 import { Container, StackHeader } from '@src/shared/components';
 import { Text } from '@src/shared/components/ui';
-import { FLASHLIST_ESTIMATED_ITEM_SIZE } from '@src/shared/constants';
 
 export const AnnouncementListScreen = () => {
   const { data, isLoading, isError, refetch, isRefetching } = useAnnouncements();
@@ -44,7 +43,6 @@ export const AnnouncementListScreen = () => {
         keyExtractor={(item) => item.id}
         contentContainerClassName="p-4"
         showsVerticalScrollIndicator={false}
-        estimatedItemSize={FLASHLIST_ESTIMATED_ITEM_SIZE.ANNOUNCEMENT_CARD}
         refreshControl={
           <RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor="#6366f1" />
         }

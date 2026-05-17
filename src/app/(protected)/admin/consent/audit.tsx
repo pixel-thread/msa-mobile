@@ -4,7 +4,6 @@ import { FlashList } from '@shopify/flash-list';
 import { useAllConsent } from '@src/features/consent/hooks';
 import { ConsentHistoryItem } from '@src/features/consent/components';
 import { Container, StackHeader } from '@src/shared/components';
-import { FLASHLIST_ESTIMATED_ITEM_SIZE } from '@src/shared/constants';
 
 export default function AdminConsentAuditScreen() {
   const { data: allConsents, isLoading } = useAllConsent();

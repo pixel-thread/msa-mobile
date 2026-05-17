@@ -7,7 +7,6 @@ import { useTrainingModules } from '../hooks';
 import { LoadingScreen, ErrorScreen } from '@src/shared/components/screens';
 import { Container, StackHeader } from '@src/shared/components';
 import { Text } from '@src/shared/components/ui';
-import { FLASHLIST_ESTIMATED_ITEM_SIZE } from '@src/shared/constants';
 import type { TrainingModule } from '../types';
 
 const HeaderActions = () => {

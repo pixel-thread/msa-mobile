@@ -7,7 +7,6 @@ import { useTrainingModules, useMyTrainingCompletions } from '../hooks';
 import { LoadingScreen, ErrorScreen } from '@src/shared/components/screens';
 import { Container, StackHeader } from '@src/shared/components';
 import { Text } from '@src/shared/components/ui';
-import { FLASHLIST_ESTIMATED_ITEM_SIZE } from '@src/shared/constants';
 import type { TrainingModule } from '../types';
 
 interface TrainingCardProps {
@@ -96,7 +95,6 @@ export const TrainingListScreen = () => {
         keyExtractor={(item) => item.id}
         contentContainerClassName="p-4"
         showsVerticalScrollIndicator={false}
-        estimatedItemSize={FLASHLIST_ESTIMATED_ITEM_SIZE.TRAINING_CARD}
         refreshControl={
           <RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor="#6366f1" />
         }

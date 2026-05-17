@@ -7,7 +7,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { MeetingCard } from '../components';
 import { Container, StackHeader } from '@src/shared/components';
 import { Text } from '@src/shared/components/ui';
-import { FLASHLIST_ESTIMATED_ITEM_SIZE } from '@src/shared/constants';
 
 /**
  * Main screen for displaying the list of meetings.

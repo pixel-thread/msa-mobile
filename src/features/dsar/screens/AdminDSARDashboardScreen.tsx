@@ -8,7 +8,6 @@ import { Card, CardContent } from '@src/shared/components/ui/card';
 import { useAllDSARRequests, useSlaReport } from '../hooks/use-dsar';
 import { DSARStatusBadge } from '../components/DSARStatusBadge';
 import { SLAIndicator } from '../components/SLAIndicator';
-import { FLASHLIST_ESTIMATED_ITEM_SIZE } from '@src/shared/constants';
 import { DSARRequest } from '../types/dsar.types';
 import { cn } from '@src/shared/lib/cn';
 import { Stack, useRouter } from 'expo-router';
@@ -96,7 +95,6 @@ export const AdminDSARDashboardScreen = () => {
               data={requests}
               renderItem={renderRequestItem}
               keyExtractor={(item) => item.id}
-              estimatedItemSize={FLASHLIST_ESTIMATED_ITEM_SIZE.DSAR_REQUEST}
               scrollEnabled={false}
               ListEmptyComponent={
                 <View className="items-center p-8">

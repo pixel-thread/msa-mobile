@@ -7,7 +7,6 @@ import { MemberCard } from '../components';
 import { LoadingScreen, ErrorScreen } from '@src/shared/components/screens';
 import { Container, StackHeader } from '@src/shared/components';
 import { Text } from '@src/shared/components/ui';
-import { FLASHLIST_ESTIMATED_ITEM_SIZE } from '@src/shared/constants';
 
 export const MemberListScreen = () => {
   const { data, isLoading, isError, refetch, isRefetching } = useMembers();
@@ -36,7 +35,6 @@ export const MemberListScreen = () => {
         keyExtractor={(item) => item.id}
         contentContainerClassName="p-4"
         showsVerticalScrollIndicator={false}
-        estimatedItemSize={FLASHLIST_ESTIMATED_ITEM_SIZE.MEMBER_CARD}
         refreshControl={
           <RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor="#6366f1" />
         }

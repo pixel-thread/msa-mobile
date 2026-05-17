@@ -5,7 +5,6 @@ import { StackHeader, Container } from '@src/shared/components';
 import { Text } from '@src/shared/components/ui';
 import { useInvoices } from '@src/features/invoice/hooks/use-invoices';
 import { InvoiceListItem } from '@src/features/invoice/components/invoice-list-item';
-import { FLASHLIST_ESTIMATED_ITEM_SIZE } from '@src/shared/constants';
 
 export const InvoicesScreen = () => {
   const { data: invoices = [], isFetching, isError } = useInvoices();
@@ -25,7 +24,6 @@ export const InvoicesScreen = () => {
         <FlashList
           data={invoices}
           keyExtractor={(item) => item.id}
-          estimatedItemSize={FLASHLIST_ESTIMATED_ITEM_SIZE.INVOICE_ITEM}
           renderItem={({ item }) => <InvoiceListItem invoice={item} />}
           showsVerticalScrollIndicator={false}
         />

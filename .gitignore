@@ -1,4 +1,4 @@
-node_modules/
+node_trainingModules/
 .expo/
 dist/
 npm-debug.*
@@ -25,3 +25,4 @@ android
 .env
 .worktrees/
 *.apk
+node_modules

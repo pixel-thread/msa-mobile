@@ -4,7 +4,6 @@ import { FlashList } from '@shopify/flash-list';
 import { useConsentHistory } from '@src/features/consent/hooks';
 import { ConsentHistoryItem } from '@src/features/consent/components';
 import { Container, StackHeader } from '@src/shared/components';
-import { FLASHLIST_ESTIMATED_ITEM_SIZE } from '@src/shared/constants';
 
 export default function ConsentHistoryScreen() {
   const { data: history, isLoading } = useConsentHistory();
@@ -26,7 +25,6 @@ export default function ConsentHistoryScreen() {
         <FlashList
           data={history}
           keyExtractor={(item) => item.id}
-          estimatedItemSize={FLASHLIST_ESTIMATED_ITEM_SIZE.CONSENT_ITEM}
           renderItem={({ item }) => <ConsentHistoryItem receipt={item} />}
           contentContainerStyle={{ paddingBottom: 20 }}
         />

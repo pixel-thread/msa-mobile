@@ -9,7 +9,6 @@ import { Container } from '@src/shared/components/common/Container';
 import { StackHeader } from '@src/shared/components/common/header/stack-header.component';
 import { useMyDSARRequests } from '../hooks/use-dsar';
 import { DSARListItem } from '../components/DSARListItem';
-import { FLASHLIST_ESTIMATED_ITEM_SIZE } from '@src/shared/constants';
 
 export const MemberDSARListScreen = () => {
   const router = useRouter();
@@ -44,8 +43,7 @@ export const MemberDSARListScreen = () => {
       <FlashList
         data={requests}
         keyExtractor={(item) => item.id}
-        estimatedItemSize={FLASHLIST_ESTIMATED_ITEM_SIZE.DSAR_REQUEST}
-        renderItem={({ item }) => <DSARListItem request={item} onPress={(req) => {}} />}
+        renderItem={({ item }) => <DSARListItem request={item} onPress={(req) => { }} />}
         contentContainerStyle={{ padding: 16, paddingBottom: 40 }}
         refreshControl={<RefreshControl refreshing={isLoading} onRefresh={refetch} />}
         ListEmptyComponent={

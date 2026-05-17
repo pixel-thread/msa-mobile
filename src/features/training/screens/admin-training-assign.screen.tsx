@@ -8,33 +8,32 @@ import { LoadingScreen, ErrorScreen } from '@src/shared/components/screens';
 import { Container, StackHeader } from '@src/shared/components';
 import { Text, TextInput, Button } from '@src/shared/components/ui';
 import { useMembers } from '@src/features/members';
-import { FLASHLIST_ESTIMATED_ITEM_SIZE } from '@src/shared/constants';
 import type { TrainingAssignmentWithUser, TrainingAssignmentStatus } from '../types';
 import { formattedDate } from '@utils/format';
 
 const statusColors: Record<TrainingAssignmentStatus, { bg: string; text: string; label: string }> =
-  {
-    ASSIGNED: {
-      bg: 'bg-slate-100 dark:bg-slate-700',
-      text: 'text-slate-600 dark:text-slate-400',
-      label: 'Assigned',
-    },
-    IN_PROGRESS: {
-      bg: 'bg-amber-100 dark:bg-amber-900/30',
-      text: 'text-amber-700 dark:text-amber-400',
-      label: 'In Progress',
-    },
-    COMPLETED: {
-      bg: 'bg-green-100 dark:bg-green-900/30',
-      text: 'text-green-700 dark:text-green-400',
-      label: 'Completed',
-    },
-    EXPIRED: {
-      bg: 'bg-red-100 dark:bg-red-900/30',
-      text: 'text-red-700 dark:text-red-400',
-      label: 'Expired',
-    },
-  };
+{
+  ASSIGNED: {
+    bg: 'bg-slate-100 dark:bg-slate-700',
+    text: 'text-slate-600 dark:text-slate-400',
+    label: 'Assigned',
+  },
+  IN_PROGRESS: {
+    bg: 'bg-amber-100 dark:bg-amber-900/30',
+    text: 'text-amber-700 dark:text-amber-400',
+    label: 'In Progress',
+  },
+  COMPLETED: {
+    bg: 'bg-green-100 dark:bg-green-900/30',
+    text: 'text-green-700 dark:text-green-400',
+    label: 'Completed',
+  },
+  EXPIRED: {
+    bg: 'bg-red-100 dark:bg-red-900/30',
+    text: 'text-red-700 dark:text-red-400',
+    label: 'Expired',
+  },
+};
 
 export const AdminTrainingAssignScreen = () => {
   const { id } = useLocalSearchParams();
@@ -227,19 +226,16 @@ export const AdminTrainingAssignAddScreen = () => {
       <FlashList
         data={filteredMembers}
         keyExtractor={(item) => item.id}
-        estimatedItemSize={FLASHLIST_ESTIMATED_ITEM_SIZE.MEMBER_SELECT_ROW}
         renderItem={({ item }) => {
           const isSelected = selectedUsers.includes(item.id);
           return (
             <TouchableOpacity
               onPress={() => toggleUserSelection(item.id)}
-              className={`flex-row items-center gap-3 border-b border-slate-100 p-4 dark:border-slate-800 ${
-                isSelected ? 'bg-indigo-50 dark:bg-indigo-900/20' : ''
-              }`}>
-              <View
-                className={`h-5 w-5 rounded-full border-2 ${
-                  isSelected ? 'border-indigo-600 bg-indigo-600' : 'border-slate-300'
+              className={`flex-row items-center gap-3 border-b border-slate-100 p-4 dark:border-slate-800 ${isSelected ? 'bg-indigo-50 dark:bg-indigo-900/20' : ''
                 }`}>
+              <View
+                className={`h-5 w-5 rounded-full border-2 ${isSelected ? 'border-indigo-600 bg-indigo-600' : 'border-slate-300'
+                  }`}>
                 {isSelected && <Ionicons name="checkmark" size={14} color="#fff" />}
               </View>
               <View>

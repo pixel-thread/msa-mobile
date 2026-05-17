@@ -1,49 +1,78 @@
 const isProduction = process.env.NODE_ENV === 'production';
 
+const sensitiveKeys = new Set([
+  'password',
+  'token',
+  'jwt',
+  'authorization',
+  'secret',
+  'cookie',
+  'sig',
+  'apikey',
+  'api_key',
+]);
+
+const MAX_DEPTH = 10;
+
+const shouldRedact = (key: string): boolean => {
+  const normalized = key.toLowerCase().replace(/[-_\s]/g, '');
+  return sensitiveKeys.has(normalized);
+};
+
 export const safeStringify = (obj: unknown): string => {
-  const sensitiveKeys = [
-    'password',
-    'token',
-    'jwt',
-    'authorization',
-    'secret',
-    'key',
-    'cookie',
-    'sig',
-  ];
+  const seen = new WeakSet<object>();
 
-  const seen = new WeakSet();
+  const redacted = (value: unknown, depth = 0): unknown => {
+    if (depth > MAX_DEPTH) {
+      return '[Max Depth Reached]';
+    }
 
-  const redacted = (value: unknown): unknown => {
     if (typeof value === 'bigint') {
       return value.toString();
     }
 
+    if (value instanceof Date) {
+      return value.toISOString();
+    }
+
+    if (value instanceof Error) {
+      return {
+        name: value.name,
+        message: value.message,
+        stack: isProduction ? undefined : value.stack,
+      };
+    }
+
+    if (value instanceof Map) {
+      return Object.fromEntries(value);
+    }
+
+    if (value instanceof Set) {
+      return [...value];
+    }
+
     if (value && typeof value === 'object') {
-      if (seen.has(value)) {
+      const objValue = value as object;
+
+      if (seen.has(objValue)) {
         return '[Circular]';
       }
-      seen.add(value);
+
+      seen.add(objValue);
 
       if (Array.isArray(value)) {
-        return value.map(redacted);
+        return value.map((v) => redacted(v, depth + 1));
       }
 
-      if (value instanceof Error) {
-        return {
-          name: value.name,
-          message: value.message,
-          stack: isProduction ? undefined : value.stack,
-        };
+      const result: Record<string, unknown> = {};
+
+      for (const [k, v] of Object.entries(value)) {
+        result[k] = shouldRedact(k) ? '[REDACTED]' : redacted(v, depth + 1);
       }
 
-      return Object.fromEntries(
-        Object.entries(value).map(([k, v]) => [
-          k,
-          sensitiveKeys.some((sk) => k.toLowerCase().includes(sk)) ? '[REDACTED]' : redacted(v),
-        ])
-      );
+      return result;
     }
+
     return value;
   };
 

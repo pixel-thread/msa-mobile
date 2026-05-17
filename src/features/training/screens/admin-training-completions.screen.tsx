@@ -7,7 +7,6 @@ import { useAllTrainingCompletions, useTrainingModules } from '../hooks';
 import { LoadingScreen, ErrorScreen } from '@src/shared/components/screens';
 import { Container, StackHeader } from '@src/shared/components';
 import { Text } from '@src/shared/components/ui';
-import { FLASHLIST_ESTIMATED_ITEM_SIZE } from '@src/shared/constants';
 import { formattedDate, formattedTime } from '@utils/format';
 import type { TrainingCompletionWithUser } from '../types';
 
@@ -23,11 +22,10 @@ export const AdminTrainingCompletionsScreen = () => {
   const renderFilterChip = (moduleId: string | undefined, label: string) => (
     <TouchableOpacity
       onPress={() => setSelectedModuleId(moduleId)}
-      className={`rounded-full px-3 py-1.5 ${
-        selectedModuleId === moduleId
+      className={`rounded-full px-3 py-1.5 ${selectedModuleId === moduleId
           ? 'bg-indigo-600'
           : 'border border-slate-300 bg-white dark:border-slate-600 dark:bg-slate-800'
-      }`}>
+        }`}>
       <Text
         size="sm"
         className={selectedModuleId === moduleId ? 'text-white' : 'text-slate-600 dark:text-slate-400'}>
@@ -38,7 +36,7 @@ export const AdminTrainingCompletionsScreen = () => {
 
   const renderCompletionItem = ({ item }: { item: TrainingCompletionWithUser }) => {
     const completedDate = new Date(item.completedAt);
-    
+
     return (
       <View className="mb-3 rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-800">
         <View className="flex-row items-start justify-between">
@@ -94,7 +92,7 @@ export const AdminTrainingCompletionsScreen = () => {
   return (
     <Container>
       <StackHeader title="Training Completions" showBackButton />
-      
+
       <View className="border-b border-slate-200 bg-slate-50 px-4 py-3 dark:bg-slate-900">
         <View className="flex-row flex-wrap gap-2">
           {renderFilterChip(undefined, 'All')}
@@ -110,7 +108,6 @@ export const AdminTrainingCompletionsScreen = () => {
         keyExtractor={(item) => item.id}
         contentContainerClassName="p-4"
         showsVerticalScrollIndicator={false}
-        estimatedItemSize={FLASHLIST_ESTIMATED_ITEM_SIZE.TRAINING_COMPLETION}
         refreshControl={
           <RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor="#6366f1" />
         }

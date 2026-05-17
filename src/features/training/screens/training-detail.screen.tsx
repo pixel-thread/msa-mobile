@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTrainingModule, useMyTrainingCompletions, useCompleteTraining } from '../hooks';

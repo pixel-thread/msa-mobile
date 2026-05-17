@@ -78,7 +78,7 @@ const HeaderLeft = ({
 export const StackHeader = ({
   title,
   rightAction,
-  showBackButton = true,
+  showBackButton = false,
   showDrawerButton = false,
 }: StackHeaderProps) => {
   const isDark = Appearance.getColorScheme() === 'dark';

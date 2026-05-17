@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
   }, [initTokens, setHydrated]);
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, isFetched } = useQuery({
     queryKey: ['auth', 'me'],
     queryFn: () => http.get<AuthUser>('/auth/me'),
     enabled: isReady && !!accessToken && !!refreshToken,
@@ -42,11 +42,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     if (!isReady) return;
 
-    if (data?.success && data.data) {
+    if (data?.success) {
       setUser(data.data);
-    } else if (isError || (!isLoading && data && !data.success)) {
-      logout();
+    } else if (!data?.success && isFetched) {
       clearAll();
+      logout();
       router.replace('/(auth)/sign-in');
     }
   }, [data, isError, isLoading, isReady, setUser, logout, clearAll, router]);

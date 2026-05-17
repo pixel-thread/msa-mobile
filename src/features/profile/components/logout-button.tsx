@@ -11,20 +11,15 @@ import {
   AlertDialogDescription,
 } from '@components/ui';
 import { Ionicons } from '@expo/vector-icons';
-import { useSecureTokenStore } from '@src/features/auth';
 import { useSignOut } from '@src/features/auth/hooks/use-sign-out';
-import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { View } from 'react-native';
 
 export const LogoutButton = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const { clearAll } = useSecureTokenStore();
   const { mutate: logout, isPending } = useSignOut();
 
-  const onConfirmLogout = async () => {
-    logout();
-  };
+  const onConfirmLogout = async () => logout();
 
   const onPressLogout = () => setIsOpen(!isOpen);
 

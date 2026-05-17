@@ -109,7 +109,6 @@ export const AdminTrainingListScreen = () => {
         keyExtractor={(item) => item.id}
         contentContainerClassName="p-4"
         showsVerticalScrollIndicator={false}
-        estimatedItemSize={FLASHLIST_ESTIMATED_ITEM_SIZE.TRAINING_CARD}
         refreshControl={
           <RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor="#6366f1" />
         }

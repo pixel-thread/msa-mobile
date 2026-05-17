@@ -7,12 +7,14 @@ import { useSecureTokenStore } from '@features/auth/store';
 import http from '@src/shared/utils/http';
 import type { AuthUser } from '@features/auth/types';
 import { LoadingScreen } from '../../screens';
+import { isConnectedToNetwork } from '@src/shared/utils/helper/is-connect-to-network';
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const { setUser, logout, setHydrated, isHydrated } = useAuthStore();
   const { init: initTokens, accessToken, refreshToken, clearAll } = useSecureTokenStore();
   const [isReady, setIsReady] = useState(false);
+  const [isConnected, setIsConnected] = useState<boolean>(false);
 
   useEffect(() => {
     let mounted = true;
@@ -42,14 +44,26 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     if (!isReady) return;
 
+    if (!isConnected) {
+      return;
+    }
+
     if (data?.success) {
       setUser(data.data);
     } else if (!data?.success && isFetched) {
-      clearAll();
       logout();
       router.replace('/(auth)/sign-in');
     }
   }, [data, isError, isLoading, isReady, setUser, logout, clearAll, router]);
+
+  useEffect(() => {
+    async function checkConnection() {
+      const isConnected = await isConnectedToNetwork();
+      setIsConnected(isConnected);
+    }
+
+    checkConnection();
+  }, []);
 
   if (!isReady || !isHydrated) {
     return <LoadingScreen />;

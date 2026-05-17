@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import * as Network from 'expo-network';
 import { useRouter } from 'expo-router';
 import { useQuery } from '@tanstack/react-query';
 
@@ -11,7 +12,7 @@ import { isConnectedToNetwork } from '@src/shared/utils/helper/is-connect-to-net
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
-  const { setUser, logout, setHydrated, isHydrated } = useAuthStore();
+  const { user, setUser, logout, setHydrated, isHydrated } = useAuthStore();
   const { init: initTokens, accessToken, refreshToken, clearAll } = useSecureTokenStore();
   const [isReady, setIsReady] = useState(false);
   const [isConnected, setIsConnected] = useState<boolean>(false);
@@ -33,20 +34,32 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
   }, [initTokens, setHydrated]);
 
-  const { data, isLoading, isError, isFetched } = useQuery({
+  const { data, isLoading, isFetched } = useQuery({
     queryKey: ['auth', 'me'],
     queryFn: () => http.get<AuthUser>('/auth/me'),
     enabled: isReady && !!accessToken && !!refreshToken,
     retry: 1,
     staleTime: 5 * 60 * 1000,
+    networkMode: 'offlineFirst',
   });
 
   useEffect(() => {
-    if (!isReady) return;
-
-    if (!isConnected) {
-      return;
+    async function checkConnection() {
+      const connected = await isConnectedToNetwork();
+      setIsConnected(connected);
     }
+
+    checkConnection();
+
+    const subscription = Network.addNetworkStateListener((state) => {
+      setIsConnected(Boolean(state.isConnected && state.isInternetReachable));
+    });
+
+    return () => subscription.remove();
+  }, []);
+
+  useEffect(() => {
+    if (!isReady || !isConnected) return;
 
     if (data?.success) {
       setUser(data.data);
@@ -54,18 +67,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       logout();
       router.replace('/(auth)/sign-in');
     }
-  }, [data, isError, isLoading, isReady, setUser, logout, clearAll, router]);
+  }, [data, isFetched, isConnected, isReady, setUser, logout, clearAll, router]);
 
-  useEffect(() => {
-    async function checkConnection() {
-      const isConnected = await isConnectedToNetwork();
-      setIsConnected(isConnected);
-    }
-
-    checkConnection();
-  }, []);
-
-  if (!isReady || !isHydrated) {
+  if (!isReady || (!isHydrated && !user)) {
     return <LoadingScreen />;
   }
 

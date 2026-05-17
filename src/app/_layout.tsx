@@ -1,7 +1,7 @@
 import '@src/shared/styles/global.css';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import * as SplashScreen from 'expo-splash-screen';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
 
@@ -14,7 +14,20 @@ export const unstable_settings = {
   initialRouteName: '(drawer)',
 };
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  mutationCache: new MutationCache(),
+  queryCache: new QueryCache(),
+  defaultOptions: {
+    queries: {
+      networkMode: 'offlineFirst',
+      retry: 3,
+    },
+    mutations: {
+      networkMode: 'offlineFirst',
+      retry: 1,
+    },
+  },
+});
 
 SplashScreen.setOptions({
   duration: 1000,

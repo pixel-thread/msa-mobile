@@ -8,12 +8,46 @@ const defaultOptions: IRateLimitOptions = {
   windowMs: 60000,
   message: 'Rate limit reached',
 };
+
 export const useRateLimit = (key: string, options: IRateLimitOptions = defaultOptions) => {
   const [isProcessing, setIsProcessing] = useState(false);
+
+  /**
+   * Remaining seconds
+   */
   const [retryAfter, setRetryAfter] = useState<number | null>(null);
+
+  /**
+   * Countdown timer
+   */
+  useEffect(() => {
+    if (retryAfter === null || retryAfter <= 0) {
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setRetryAfter((prev) => {
+        if (prev === null || prev <= 1) {
+          clearInterval(interval);
+          return null;
+        }
+
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [retryAfter]);
 
   const executeWithLimit = useCallback(
     async (action: () => Promise<void> | void) => {
+      /**
+       * Prevent parallel execution spam
+       */
+      if (isProcessing) {
+        return;
+      }
+
       setIsProcessing(true);
 
       try {
@@ -23,37 +57,35 @@ export const useRateLimit = (key: string, options: IRateLimitOptions = defaultOp
         });
 
         if (status.limited) {
-          setRetryAfter(status.retryAfter ?? 0);
-          toast.warning('Rate limit reached', {
-            description: `Please wait ${status.retryAfter}s before trying again.`,
+          const seconds = status.retryAfter ?? 0;
+
+          setRetryAfter(seconds);
+
+          toast.warning(options.message ?? 'Rate limit reached', {
+            description: `Please wait ${seconds}s before trying again.`,
             dismissible: false,
           });
+
           return;
         }
 
-        // If not limited, reset the retry state and run the action
+        /**
+         * Reset timer if request succeeds
+         */
         setRetryAfter(null);
+
         await action();
       } finally {
         setIsProcessing(false);
       }
     },
-    [key, options]
+    [key, options, isProcessing]
   );
-
-  useEffect(() => {
-    if (retryAfter) {
-      setTimeout(() => {
-        setRetryAfter(null);
-        setIsProcessing(false);
-      }, retryAfter * 1000);
-    }
-  });
 
   return {
     executeWithLimit,
     isProcessing,
-    isLimited: !!retryAfter,
-    retryAfter,
+    isLimited: retryAfter !== null && retryAfter > 0,
+    retryAfter: retryAfter ?? '',
   };
 };

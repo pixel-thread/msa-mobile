@@ -1,5 +1,6 @@
 import React from 'react';
-import { FlatList, View, ActivityIndicator, RefreshControl, TouchableOpacity } from 'react-native';
+import { View, ActivityIndicator, RefreshControl, TouchableOpacity } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Text } from '@src/shared/components/ui/text';
@@ -8,6 +9,7 @@ import { Container } from '@src/shared/components/common/Container';
 import { StackHeader } from '@src/shared/components/common/header/stack-header.component';
 import { useMyDSARRequests } from '../hooks/use-dsar';
 import { DSARListItem } from '../components/DSARListItem';
+import { FLASHLIST_ESTIMATED_ITEM_SIZE } from '@src/shared/constants';
 
 export const MemberDSARListScreen = () => {
   const router = useRouter();
@@ -39,9 +41,10 @@ export const MemberDSARListScreen = () => {
         }
       />
 
-      <FlatList
+      <FlashList
         data={requests}
         keyExtractor={(item) => item.id}
+        estimatedItemSize={FLASHLIST_ESTIMATED_ITEM_SIZE.DSAR_REQUEST}
         renderItem={({ item }) => <DSARListItem request={item} onPress={(req) => {}} />}
         contentContainerStyle={{ padding: 16, paddingBottom: 40 }}
         refreshControl={<RefreshControl refreshing={isLoading} onRefresh={refetch} />}

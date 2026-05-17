@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { View, FlatList, RefreshControl, TouchableOpacity } from 'react-native';
+import { View, RefreshControl, TouchableOpacity } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAllTrainingCompletions, useTrainingModules } from '../hooks';
 import { LoadingScreen, ErrorScreen } from '@src/shared/components/screens';
 import { Container, StackHeader } from '@src/shared/components';
 import { Text } from '@src/shared/components/ui';
+import { FLASHLIST_ESTIMATED_ITEM_SIZE } from '@src/shared/constants';
 import { formattedDate, formattedTime } from '@utils/format';
 import type { TrainingCompletionWithUser } from '../types';
 
@@ -102,12 +104,13 @@ export const AdminTrainingCompletionsScreen = () => {
         </View>
       </View>
 
-      <FlatList
+      <FlashList
         data={completions}
         renderItem={renderCompletionItem}
         keyExtractor={(item) => item.id}
         contentContainerClassName="p-4"
         showsVerticalScrollIndicator={false}
+        estimatedItemSize={FLASHLIST_ESTIMATED_ITEM_SIZE.TRAINING_COMPLETION}
         refreshControl={
           <RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor="#6366f1" />
         }

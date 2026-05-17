@@ -1,9 +1,11 @@
 import React from 'react';
-import { View, FlatList, ActivityIndicator } from 'react-native';
+import { View, ActivityIndicator } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
 import { StackHeader, Container } from '@src/shared/components';
 import { Text } from '@src/shared/components/ui';
 import { useInvoices } from '@src/features/invoice/hooks/use-invoices';
 import { InvoiceListItem } from '@src/features/invoice/components/invoice-list-item';
+import { FLASHLIST_ESTIMATED_ITEM_SIZE } from '@src/shared/constants';
 
 export const InvoicesScreen = () => {
   const { data: invoices = [], isFetching, isError } = useInvoices();
@@ -20,9 +22,10 @@ export const InvoicesScreen = () => {
     <Container>
       <StackHeader title="Invoices" />
       <View className="flex-1 px-4 pt-6">
-        <FlatList
+        <FlashList
           data={invoices}
           keyExtractor={(item) => item.id}
+          estimatedItemSize={FLASHLIST_ESTIMATED_ITEM_SIZE.INVOICE_ITEM}
           renderItem={({ item }) => <InvoiceListItem invoice={item} />}
           showsVerticalScrollIndicator={false}
         />

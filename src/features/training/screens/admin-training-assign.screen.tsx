@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, FlatList, TouchableOpacity, ScrollView } from 'react-native';
+import { View, TouchableOpacity, ScrollView } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTrainingAssignments, useBulkAssignTraining } from '../hooks';
@@ -7,6 +8,7 @@ import { LoadingScreen, ErrorScreen } from '@src/shared/components/screens';
 import { Container, StackHeader } from '@src/shared/components';
 import { Text, TextInput, Button } from '@src/shared/components/ui';
 import { useMembers } from '@src/features/members';
+import { FLASHLIST_ESTIMATED_ITEM_SIZE } from '@src/shared/constants';
 import type { TrainingAssignmentWithUser, TrainingAssignmentStatus } from '../types';
 import { formattedDate } from '@utils/format';
 
@@ -222,9 +224,10 @@ export const AdminTrainingAssignAddScreen = () => {
         />
       </View>
 
-      <FlatList
+      <FlashList
         data={filteredMembers}
         keyExtractor={(item) => item.id}
+        estimatedItemSize={FLASHLIST_ESTIMATED_ITEM_SIZE.MEMBER_SELECT_ROW}
         renderItem={({ item }) => {
           const isSelected = selectedUsers.includes(item.id);
           return (

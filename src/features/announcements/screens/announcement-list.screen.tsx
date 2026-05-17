@@ -1,11 +1,13 @@
 import React from 'react';
-import { View, FlatList, RefreshControl } from 'react-native';
+import { View, RefreshControl } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
 import { useAnnouncements } from '../hooks';
 import { LoadingScreen, ErrorScreen } from '@src/shared/components/screens';
 import { Ionicons } from '@expo/vector-icons';
 import { AnnouncementCard } from '../components';
 import { Container, StackHeader } from '@src/shared/components';
 import { Text } from '@src/shared/components/ui';
+import { FLASHLIST_ESTIMATED_ITEM_SIZE } from '@src/shared/constants';
 
 export const AnnouncementListScreen = () => {
   const { data, isLoading, isError, refetch, isRefetching } = useAnnouncements();
@@ -36,12 +38,13 @@ export const AnnouncementListScreen = () => {
   return (
     <Container>
       <StackHeader title="Announcements" showBackButton={true} />
-      <FlatList
+      <FlashList
         data={sortedData}
         renderItem={({ item }) => <AnnouncementCard announcement={item} />}
         keyExtractor={(item) => item.id}
         contentContainerClassName="p-4"
         showsVerticalScrollIndicator={false}
+        estimatedItemSize={FLASHLIST_ESTIMATED_ITEM_SIZE.ANNOUNCEMENT_CARD}
         refreshControl={
           <RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor="#6366f1" />
         }
@@ -62,4 +65,3 @@ export const AnnouncementListScreen = () => {
     </Container>
   );
 };
-

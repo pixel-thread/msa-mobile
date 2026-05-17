@@ -1,8 +1,10 @@
 import React from 'react';
-import { View, FlatList, ActivityIndicator, Text } from 'react-native';
+import { View, ActivityIndicator, Text } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
 import { useAllConsent } from '@src/features/consent/hooks';
 import { ConsentHistoryItem } from '@src/features/consent/components';
 import { Container, StackHeader } from '@src/shared/components';
+import { FLASHLIST_ESTIMATED_ITEM_SIZE } from '@src/shared/constants';
 
 export default function AdminConsentAuditScreen() {
   const { data: allConsents, isLoading } = useAllConsent();
@@ -22,7 +24,7 @@ export default function AdminConsentAuditScreen() {
       {allConsents?.length === 0 ? (
         <Text className="mt-10 text-center text-slate-500">No consent records found.</Text>
       ) : (
-        <FlatList
+        <FlashList
           data={allConsents}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (

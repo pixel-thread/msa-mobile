@@ -1,8 +1,10 @@
 import React from 'react';
-import { View, FlatList, ActivityIndicator, Text } from 'react-native';
+import { View, ActivityIndicator, Text } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
 import { useConsentHistory } from '@src/features/consent/hooks';
 import { ConsentHistoryItem } from '@src/features/consent/components';
 import { Container, StackHeader } from '@src/shared/components';
+import { FLASHLIST_ESTIMATED_ITEM_SIZE } from '@src/shared/constants';
 
 export default function ConsentHistoryScreen() {
   const { data: history, isLoading } = useConsentHistory();
@@ -21,9 +23,10 @@ export default function ConsentHistoryScreen() {
       {history?.length === 0 ? (
         <Text className="mt-10 text-center text-slate-500">No consent history found.</Text>
       ) : (
-        <FlatList
+        <FlashList
           data={history}
           keyExtractor={(item) => item.id}
+          estimatedItemSize={FLASHLIST_ESTIMATED_ITEM_SIZE.CONSENT_ITEM}
           renderItem={({ item }) => <ConsentHistoryItem receipt={item} />}
           contentContainerStyle={{ paddingBottom: 20 }}
         />

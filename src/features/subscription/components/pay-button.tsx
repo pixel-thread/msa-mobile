@@ -11,11 +11,17 @@ import { isRazorpayError } from '../types/razorpay';
 import { usePaymentOption } from '../hooks/use-payment-order';
 import { useVerifyPayment } from '../hooks/use-verify-payment';
 import { useSubscriptionPlans } from '../hooks';
+import { useRateLimit } from '@src/shared/hooks/use-rate-limiting';
 
 export const PayButton = () => {
   const { data: plans = [], isFetching } = useSubscriptionPlans();
   const { mutateAsync: createPaymentOrder, isPending: isOrderPending } = usePaymentOption();
   const { mutate: verifyPayment, isPending: isVerifyPending } = useVerifyPayment();
+  const { isLimited, executeWithLimit, retryAfter } = useRateLimit('PAYMENT_BUTTON', {
+    limit: 1,
+    windowMs: 10000,
+    message: 'You can only pay once every 10 seconds',
+  });
 
   const plan = plans?.[0];
   const baseAmount = Number(plan?.amount ?? 200);
@@ -88,7 +94,11 @@ export const PayButton = () => {
               'h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800',
               (isDecreasingDisabled || isProcessing) && 'opacity-40'
             )}>
-            <Ionicons name="remove" size={18} color={isDecreasingDisabled ? '#cbd5e1' : '#475569'} />
+            <Ionicons
+              name="remove"
+              size={18}
+              color={isDecreasingDisabled ? '#cbd5e1' : '#475569'}
+            />
           </TouchableOpacity>
 
           <View className="w-24 items-center">
@@ -112,9 +122,11 @@ export const PayButton = () => {
 
       {/* Pay Button */}
       <Button
-        title={isProcessing ? 'Processing...' : `Pay ₹${amount}`}
-        onPress={onClickPay}
-        disabled={isProcessing || isFetching}
+        title={
+          isLimited ? retryAfter.toString() : isProcessing ? 'Processing...' : `Pay ₹${amount}`
+        }
+        onPress={() => executeWithLimit(() => onClickPay())}
+        disabled={isProcessing || isFetching || isLimited}
         className="h-14 rounded-2xl"
       />
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { View, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
-import { Link } from 'expo-router';
+import { Link, Redirect } from 'expo-router';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -9,8 +9,10 @@ import { SignInSchema, type SignInFormData } from '../validators';
 import { useSignIn } from '../hooks';
 import { Button, Text, FieldInput, Card, CardContent } from '@src/shared/components/ui';
 import { useRateLimit } from '@src/shared/hooks/use-rate-limiting';
+import { useAuthStore } from '../store';
 
 export const SignInScreen = () => {
+  const { isAuthenticated } = useAuthStore();
   const { isProcessing, isLimited, executeWithLimit } = useRateLimit('SIGN_IN', {
     limit: 3,
     windowMs: 10000,
@@ -24,6 +26,10 @@ export const SignInScreen = () => {
   const { mutate: signIn, isPending } = useSignIn();
 
   const onSubmit = (data: SignInFormData) => executeWithLimit(() => signIn(data));
+
+  if (isAuthenticated) {
+    return <Redirect href={'/'} />;
+  }
 
   return (
     <KeyboardAvoidingView

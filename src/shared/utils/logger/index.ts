@@ -14,7 +14,6 @@ interface QueuedLog {
 }
 
 const isProduction = process.env.NODE_ENV === 'production';
-const isServer = typeof window === 'undefined';
 
 const BATCH_SIZE = 10;
 const FLUSH_INTERVAL_MS = 5000;
@@ -90,23 +89,23 @@ const log = (level: LogLevel, message: string, context?: LogContext) => {
   if (__DEV__) {
     switch (level) {
       case 'info':
-        console.info(formatted);
+        console.log(formatted);
         break;
       case 'warn':
-        console.warn(formatted);
+        console.log(formatted);
         break;
       case 'error':
-        console.error(formatted);
+        console.log(formatted);
         break;
       case 'debug':
-        console.debug(formatted);
+        console.log(formatted);
         break;
     }
   }
   enqueue(level, message, context);
 };
 
-if (isServer && isProduction) {
+if (isProduction) {
   process.on('beforeExit', () => {
     flush();
     if (flushTimer) clearInterval(flushTimer);

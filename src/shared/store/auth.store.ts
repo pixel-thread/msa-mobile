@@ -28,7 +28,7 @@ export const useAuthStore = create<AuthState>()(
           try {
             await http.post('/auth/logout', { token: refreshToken });
           } catch (e) {
-            logger.error('Logout API call failed', e);
+            logger.error('Logout API call failed', { e });
           }
         }
 

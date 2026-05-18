@@ -8,6 +8,7 @@ import { LoadingScreen, ErrorScreen } from '@src/shared/components/screens';
 import { Container, StackHeader } from '@src/shared/components';
 import { Text } from '@src/shared/components/ui';
 import type { TrainingModule } from '../types';
+import { truncateText } from '@src/shared/utils';
 
 const HeaderActions = () => {
   const router = useRouter();
@@ -42,12 +43,22 @@ const AdminTrainingCard: React.FC<AdminTrainingCardProps> = ({ module, onPress }
     <View className="flex-row items-start justify-between">
       <View className="flex-1">
         <View className="flex-row items-center gap-2">
-          <Text variant="heading" size="lg" weight="semibold" className="text-slate-900 dark:text-white">
-            {module.title}
+          <Text
+            variant="heading"
+            size="lg"
+            weight="semibold"
+            className="text-slate-900 dark:text-white">
+            {truncateText({ text: module.title, maxLength: 30 })}
           </Text>
           <View
             className={`rounded-full px-2 py-0.5 ${module.isActive ? 'bg-green-100 dark:bg-green-900/30' : 'bg-slate-100 dark:bg-slate-700'}`}>
-            <Text size="xs" className={module.isActive ? 'text-green-700 dark:text-green-400' : 'text-slate-600 dark:text-slate-400'}>
+            <Text
+              size="xs"
+              className={
+                module.isActive
+                  ? 'text-green-700 dark:text-green-400'
+                  : 'text-slate-600 dark:text-slate-400'
+              }>
               {module.isActive ? 'Active' : 'Inactive'}
             </Text>
           </View>
@@ -63,9 +74,7 @@ const AdminTrainingCard: React.FC<AdminTrainingCardProps> = ({ module, onPress }
 
     <View className="mt-3 flex-row flex-wrap items-center gap-2">
       {module.requiredForRoles.map((role) => (
-        <View
-          key={role}
-          className="rounded-full bg-indigo-50 px-2 py-1 dark:bg-indigo-900/30">
+        <View key={role} className="rounded-full bg-indigo-50 px-2 py-1 dark:bg-indigo-900/30">
           <Text size="xs" className="text-indigo-700 dark:text-indigo-400">
             {role.replace('_', ' ')}
           </Text>

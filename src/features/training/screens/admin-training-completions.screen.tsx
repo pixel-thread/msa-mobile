@@ -11,10 +11,15 @@ import { formattedDate, formattedTime } from '@utils/format';
 import type { TrainingCompletionWithUser } from '../types';
 
 export const AdminTrainingCompletionsScreen = () => {
-  const router = useRouter();
   const [selectedModuleId, setSelectedModuleId] = useState<string | undefined>();
 
-  const { data: completions, isLoading, isError, refetch, isRefetching } = useAllTrainingCompletions({
+  const {
+    data: completions,
+    isLoading,
+    isError,
+    refetch,
+    isRefetching,
+  } = useAllTrainingCompletions({
     moduleId: selectedModuleId,
   });
   const { data: modules } = useTrainingModules();
@@ -22,13 +27,16 @@ export const AdminTrainingCompletionsScreen = () => {
   const renderFilterChip = (moduleId: string | undefined, label: string) => (
     <TouchableOpacity
       onPress={() => setSelectedModuleId(moduleId)}
-      className={`rounded-full px-3 py-1.5 ${selectedModuleId === moduleId
+      className={`rounded-full px-3 py-1.5 ${
+        selectedModuleId === moduleId
           ? 'bg-indigo-600'
           : 'border border-slate-300 bg-white dark:border-slate-600 dark:bg-slate-800'
-        }`}>
+      }`}>
       <Text
         size="sm"
-        className={selectedModuleId === moduleId ? 'text-white' : 'text-slate-600 dark:text-slate-400'}>
+        className={
+          selectedModuleId === moduleId ? 'text-white' : 'text-slate-600 dark:text-slate-400'
+        }>
         {label}
       </Text>
     </TouchableOpacity>
@@ -41,7 +49,11 @@ export const AdminTrainingCompletionsScreen = () => {
       <View className="mb-3 rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-800">
         <View className="flex-row items-start justify-between">
           <View className="flex-1">
-            <Text variant="heading" size="lg" weight="semibold" className="text-slate-900 dark:text-white">
+            <Text
+              variant="heading"
+              size="lg"
+              weight="semibold"
+              className="text-slate-900 dark:text-white">
               {item.module.title}
             </Text>
             <View className="mt-1 flex-row items-center gap-2">
@@ -96,9 +108,7 @@ export const AdminTrainingCompletionsScreen = () => {
       <View className="border-b border-slate-200 bg-slate-50 px-4 py-3 dark:bg-slate-900">
         <View className="flex-row flex-wrap gap-2">
           {renderFilterChip(undefined, 'All')}
-          {modules?.map((module) =>
-            renderFilterChip(module.id, module.title)
-          )}
+          {modules?.map((module) => renderFilterChip(module.id, module.title))}
         </View>
       </View>
 

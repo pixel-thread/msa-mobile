@@ -1,19 +1,16 @@
 import { cn } from '@src/shared/lib/cn';
-import { Platform } from 'react-native';
-import { SafeAreaView, type SafeAreaViewProps } from 'react-native-safe-area-context';
+import React from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-interface ContainerProps extends SafeAreaViewProps {
+interface ContainerProps extends React.ComponentProps<typeof SafeAreaView> {
   children: React.ReactNode;
-  className?: string;
 }
 
 export const Container: React.FC<ContainerProps> = ({ children, edges, className, ...props }) => {
-  const edge: SafeAreaViewProps['edges'] =
-    Platform.OS === 'android' ? ['left', 'right', 'bottom'] : ['left', 'right'];
   return (
     <SafeAreaView
       className={cn('flex-1 dark:bg-background', className)}
-      edges={edges || edge}
+      edges={edges || ['top', 'left', 'right', 'bottom']}
       {...props}>
       {children}
     </SafeAreaView>

@@ -7,5 +7,6 @@ export interface Member {
   role: UserRole[];
   status: UserStatus;
   membershipNumber: string | null;
+  memberTypeId: string;
   createdAt: string;
 }

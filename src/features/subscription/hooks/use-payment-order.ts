@@ -2,6 +2,8 @@ import http from '@src/shared/utils/http';
 import { useMutation } from '@tanstack/react-query';
 import { SubscriptionEndpoints } from '../utils/constants';
 import { RazorpayOptions } from '../types/razorpay';
+import { logger } from '@src/shared/utils';
+import { toast } from 'sonner-native';
 
 /**
  * Creates a new payment order with Razorpay.
@@ -73,9 +75,13 @@ import { RazorpayOptions } from '../types/razorpay';
  */
 export function usePaymentOption() {
   return useMutation({
-    mutationFn: (amount: number) =>
-      http.post<RazorpayOptions>(SubscriptionEndpoints.paymentOrder(), { amount }),
-    onSuccess: (data) => data.data,
+    mutationFn: () => http.post<RazorpayOptions>(SubscriptionEndpoints.paymentOrder(), {}),
+    onSuccess: (data) => {
+      if (data.success) {
+        return data.data;
+      }
+      toast.error(data.message);
+      return data.data;
+    },
   });
 }
-

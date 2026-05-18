@@ -49,20 +49,15 @@ export const PayButton = () => {
 
   const onClickPay = useCallback(async () => {
     try {
-      const res = await createPaymentOrder(amount);
-      const data = res.data;
-
-      if (!data) {
-        throw new Error('Failed to create payment order');
+      const { data } = await createPaymentOrder();
+      if (data) {
+        const response = await RazorpayCheckout.open(data);
+        verifyPayment({
+          razorpayOrderId: response.razorpay_order_id,
+          razorpayPaymentId: response.razorpay_payment_id,
+          razorpaySignature: response.razorpay_signature,
+        });
       }
-
-      const response = await RazorpayCheckout.open(data);
-
-      verifyPayment({
-        razorpayOrderId: response.razorpay_order_id,
-        razorpayPaymentId: response.razorpay_payment_id,
-        razorpaySignature: response.razorpay_signature,
-      });
     } catch (error) {
       if (isRazorpayError(error)) {
         logger.error('Razorpay Error', {
@@ -75,7 +70,7 @@ export const PayButton = () => {
         logger.error('Payment Error', { error });
       }
     }
-  }, [amount, createPaymentOrder, verifyPayment]);
+  }, [createPaymentOrder, verifyPayment]);
 
   return (
     <View className="absolute bottom-0 left-0 right-0 border-t border-slate-100 bg-white px-6 pb-10 pt-5 dark:border-slate-800 dark:bg-slate-950">
@@ -123,7 +118,7 @@ export const PayButton = () => {
       {/* Pay Button */}
       <Button
         title={
-          isLimited ? retryAfter.toString() : isProcessing ? 'Processing...' : `Pay ₹${amount}`
+          isLimited ? retryAfter?.toString() : isProcessing ? 'Processing...' : `Pay ₹${amount}`
         }
         onPress={() => executeWithLimit(() => onClickPay())}
         disabled={isProcessing || isFetching || isLimited}

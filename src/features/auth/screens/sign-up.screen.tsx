@@ -17,6 +17,7 @@ import {
   AlertTitle,
   AlertDescription,
 } from '@src/shared/components/ui';
+import { useRateLimit } from '@src/shared/hooks/use-rate-limiting';
 
 export const SignUpScreen = () => {
   const methods = useForm<SignUpFormData>({
@@ -27,8 +28,13 @@ export const SignUpScreen = () => {
   const { mutate: signUp, isPending, error } = useSignUp();
   const passwordValue = methods.watch('password') || '';
 
+  const { isLimited, retryAfter, executeWithLimit } = useRateLimit('SIGN_UP_BUTTON', {
+    limit: 1,
+    windowMs: 30000,
+  });
+
   const onSubmit = (data: SignUpFormData) => {
-    signUp(data);
+    executeWithLimit(() => signUp(data));
   };
 
   const requirements = [
@@ -130,9 +136,14 @@ export const SignUpScreen = () => {
                 )}
 
                 <Button
-                  title={isPending ? 'Processing...' : 'Register Account'}
+                  title={
+                    isLimited
+                      ? `Try again in ${retryAfter} seconds`
+                      : isPending
+                        ? 'Processing...'
+                        : 'Register Account'
+                  }
                   onPress={methods.handleSubmit(onSubmit)}
-                  loading={isPending}
                   className="mt-2 h-14 rounded-2xl bg-indigo-600"
                 />
               </View>

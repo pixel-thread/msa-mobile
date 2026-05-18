@@ -88,6 +88,12 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
         icon: 'people-outline',
         onPress: () => router.push('/(protected)/admin/members'),
       },
+
+      {
+        label: 'Payments Provider',
+        icon: 'people-outline',
+        onPress: () => router.push('/(protected)/admin/payment'),
+      },
       {
         label: 'Consents',
         icon: 'document-lock-outline',

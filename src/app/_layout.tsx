@@ -37,9 +37,9 @@ SplashScreen.setOptions({
 export default function RootLayout() {
   return (
     <GlobalErrorBoundary>
+      <StatusBar translucent={false} style="auto" />
       <SafeAreaProvider>
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <StatusBar style="auto" />
+        <GestureHandlerRootView className="flex-1">
           <QueryClientProvider client={queryClient}>
             <AppProviders />
           </QueryClientProvider>
